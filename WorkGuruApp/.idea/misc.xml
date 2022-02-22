@@ -4,7 +4,11 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.22552083333333334" />
+        <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/drawable/color_cursor.xml" value="0.22552083333333334" />
         <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/drawable/ic_splash_screen.xml" value="0.22552083333333334" />
+        <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/font/inter.xml" value="0.23958333333333334" />
+        <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/layout/fragment_sign_up.xml" value="0.22" />
         <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.22552083333333334" />
         <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.22552083333333334" />
       </map>
