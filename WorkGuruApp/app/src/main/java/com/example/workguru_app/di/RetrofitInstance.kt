@@ -1,6 +1,7 @@
 package com.example.workguru_app.di
 
 //import com.example.workguru_app.authentification.data.remote.AuthentificationApi
+import com.example.workguru_app.authentification.data.remote.AuthentificationApi
 import com.example.workguru_app.utils.Constants.BASE_URL
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -17,7 +18,7 @@ object RetrofitInstance {
         .baseUrl(BASE_URL)
         .build()
 
-//    val api: AuthentificationApi by lazy{
-//        retrofit.create(AuthentificationApi :: class.java)
-//    }
+    val api: AuthentificationApi by lazy{
+        retrofit.create(AuthentificationApi :: class.java)
+    }
 }
