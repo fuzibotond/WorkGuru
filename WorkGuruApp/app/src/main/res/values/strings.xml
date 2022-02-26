@@ -11,4 +11,15 @@
     <string name="sign_up">Sign up</string>
     <string name="sign_in_to_your_account">Sign in to your
         account</string>
+    <string name="sign_up_as_a_client">Sign Up</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="i_agree_to_the_terms_and_conditions">I agree to the Terms and Conditions</string>
+    <string name="terms_and_conditions_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In vestibulum phasellus pellentesque arcu, cursus pellentesque elementum. Curabitur ultrices ut blandit facilisis vitae venenatis. Eget nec fringilla volutpat aliquam, nunc, egestas orci ipsum blandit. Dolor eu sed tellus ullamcorper sed nunc. Bibendum adipiscing sapien sagittis ut orci. Non purus augue imperdiet tristique phasellus in. Auctor nunc, odio nibh aliquet eget aliquam. Risus viverra eu mattis elementum leo, tempus massa risus. Sapien fringilla ut cursus morbi mauris nibh sollicitudin. Cum et ut sapien scelerisque neque dolor. Non pulvinar risus viverra vitae id sed. Lacus est aliquam id sit sit pulvinar sit. Dui sit consectetur eget orci diam odio at. Eros, potenti non placerat eu ut eu sed.</string>
+    <string name="i_accept">I accept</string>
+    <string name="reset_your_password">Reset your password</string>
+    <string name="enter_the_email">Enter the email address asociated with your account and we’ll send you a link to reset your password.</string>
+    <string name="continue_for_btn">Continue</string>
+    <string name="forgot_your_password">Forgot your Password?</string>
+    <string name="sign_up_with_google">Sign up with Google</string>
+    <string name="fullname">Fullname</string>
 </resources>
