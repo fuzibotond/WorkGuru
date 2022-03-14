@@ -13,13 +13,14 @@
         android:background="@color/white">
 
         <LinearLayout
+            android:id="@+id/linearLayout2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
+            android:layout_marginBottom="20dp"
             android:orientation="horizontal"
             app:layout_constraintBottom_toTopOf="@+id/title_txt"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginBottom="20dp">
+            app:layout_constraintStart_toStartOf="parent">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -35,8 +36,17 @@
                 android:fontFamily="@font/inter"
                 android:text="@string/app_name"
                 android:textColor="@color/black"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
+
+            <ProgressBar
+                android:id="@+id/sign_in_progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"/>
+
         </LinearLayout>
+
+
 
         <TextView
             android:id="@+id/title_txt"
@@ -231,5 +241,7 @@
             android:layout_marginEnd="40dp"
             />
 
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </ScrollView>
