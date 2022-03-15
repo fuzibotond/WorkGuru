@@ -1,5 +1,9 @@
-package com.example.workguru_app.authentification.data.remote.DTO
+package com.license.workguru_app.authentification.data.remote.DTO
+
+import com.squareup.moshi.JsonClass
+
+@JsonClass(generateAdapter = true)
 
 data class Errors(
-    val email: List<String>
+    var email: List<String> = listOf()
 )

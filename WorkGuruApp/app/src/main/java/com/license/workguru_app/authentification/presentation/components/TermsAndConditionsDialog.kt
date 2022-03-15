@@ -1,4 +1,4 @@
-package com.example.workguru_app.authentification.presentation.components
+package com.license.workguru_app.authentification.presentation.components
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -9,12 +9,10 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.example.workguru_app.R
-import com.example.workguru_app.authentification.presentation.SharedViewModel
-import com.example.workguru_app.databinding.TermsAndConditionsModelBinding
-import kotlinx.coroutines.GlobalScope
+import com.license.workguru_app.R
+import com.license.workguru_app.authentification.presentation.SharedViewModel
+import com.license.workguru_app.databinding.TermsAndConditionsModelBinding
 
 class TermsAndConditionsDialog(
 ): DialogFragment() {
