@@ -219,26 +219,38 @@
             android:id="@+id/sign_in_btn"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_marginBottom="30dp"
             android:backgroundTint="@color/teal_500"
             android:text="@string/sign_in"
-            app:layout_constraintBottom_toTopOf="@+id/sign_in_with_google_btn"
-            android:layout_margin="40dp"
+            app:layout_constraintBottom_toTopOf="@+id/sign_in_button"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
 
             />
 
-        <Button
-            android:id="@+id/sign_in_with_google_btn"
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/sign_in_button"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_marginBottom="100dp"
+            android:layout_marginBottom="110dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
+            />
+        <Button
+            android:id="@+id/sign_in_with_face_btn"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginBottom="45dp"
             android:backgroundTint="@color/white"
-            android:drawableLeft="@drawable/ic_logo_googleg_48dp"
-            android:text="@string/sign_in_with_google"
+            android:drawableLeft="@drawable/ic_baseline_face_24"
+            android:text="@string/sign_in_with_face_recognition"
             android:textColor="@color/grey_600"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginStart="40dp"
             android:layout_marginEnd="40dp"
+            android:padding="5dp"
             />
 
 
