@@ -1,4 +1,4 @@
-package com.example.workguru_app
+package com.license.workguru_app
 
 import org.junit.Test
 

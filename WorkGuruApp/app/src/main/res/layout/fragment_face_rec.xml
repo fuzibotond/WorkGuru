@@ -1,14 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".authentification.presentation.components.FaceRecFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <com.wonderkiln.camerakit.CameraView
+        android:id="@+id/face_rec_camera_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_above="@+id/face_rec_accept_btn"/>
+    <com.license.workguru_app.authentification.data.source.helper.GraphicOverlay
+        android:id="@+id/face_rec_graphic_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/face_rec_accept_btn"/>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/face_rec_accept_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/teal_500"
+        android:text="@string/i_accept"
+        android:layout_alignParentBottom="true"
+        />
 
-</FrameLayout>
+</RelativeLayout>

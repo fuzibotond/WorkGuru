@@ -1,60 +1,124 @@
 package com.license.workguru_app.authentification.presentation.components
 
+import android.app.AlertDialog
+import android.graphics.Bitmap
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.license.workguru_app.R
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import com.google.firebase.ml.vision.FirebaseVision
+import com.google.firebase.ml.vision.common.FirebaseVisionImage
+import com.google.firebase.ml.vision.face.FirebaseVisionFace
+import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions
+import com.license.workguru_app.authentification.data.source.helper.RectOverlay
+import com.license.workguru_app.databinding.FragmentFaceRecBinding
+import com.wonderkiln.camerakit.*
+import dmax.dialog.SpotsDialog
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [FaceRecFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class FaceRecFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    var _binding: FragmentFaceRecBinding? = null
+    val binding get() = _binding!!
+    lateinit var waitingDialog: AlertDialog
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_face_rec, container, false)
+        _binding =  FragmentFaceRecBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+    override fun onResume() {
+        super.onResume()
+        binding.faceRecCameraView.start()
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment FaceRecFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            FaceRecFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onPause() {
+        super.onPause()
+        binding.faceRecCameraView.stop()
     }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+//        detectBtn = rootview.findViewById(R.id.face_rec_accept_btn)
+//        cameraView = rootview.findViewById(R.id.face_rec_camera_view)
+//        graphicOverlay = rootview.findViewById(R.id.face_rec_graphic_overlay)
+
+        waitingDialog = SpotsDialog.Builder().setContext(context)
+            .setMessage("Please wait...")
+            .setCancelable(false)
+            .build()
+
+        binding.faceRecAcceptBtn.setOnClickListener {
+            binding.faceRecCameraView.start()
+            binding.faceRecCameraView.captureImage()
+            binding.faceRecGraphicOverlay.clear()
+        }
+
+        binding.faceRecCameraView.addCameraKitListener(object : CameraKitEventListener {
+            override fun onEvent(p0: CameraKitEvent?) {
+            }
+
+            override fun onError(p0: CameraKitError?) {
+            }
+
+            override fun onImage(p0: CameraKitImage?) {
+                waitingDialog.show()
+
+                var bitmap = p0!!.bitmap
+                bitmap = Bitmap.createScaledBitmap(bitmap, binding.faceRecCameraView.width, binding.faceRecCameraView.height, false)
+                binding.faceRecCameraView.stop()
+                runFaceDetector(bitmap)
+            }
+
+            override fun onVideo(p0: CameraKitVideo?) {
+
+            }
+
+        })
+    }
+    private fun runFaceDetector(bitmap: Bitmap) {
+        val image = FirebaseVisionImage.fromBitmap(bitmap)
+        val options = FirebaseVisionFaceDetectorOptions.Builder().build()
+        val detector = FirebaseVision.getInstance().getVisionFaceDetector(options)
+
+        detector.detectInImage(image)
+            .addOnSuccessListener { result -> processFaceResult(result) }
+            .addOnFailureListener{ e -> Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()}
+    }
+
+    private fun processFaceResult(result: List<FirebaseVisionFace>) {
+
+        var count = 0
+        for(face in result)
+        {
+            val bounds = face.boundingBox
+
+            val rectOverlay = RectOverlay(binding.faceRecGraphicOverlay, bounds )
+            binding.faceRecGraphicOverlay.add(rectOverlay)
+
+            count++
+        }
+        waitingDialog.dismiss()
+        Toast.makeText(context, String.format("Detect %d faces in pictures", count), Toast.LENGTH_SHORT).show()
+    }
+//    override fun onStart() {
+//        super.onStart()
+//        val width = (resources.displayMetrics.widthPixels * 0.85).toInt()
+//        val height = (resources.displayMetrics.heightPixels * 0.40).toInt()
+//        dialog!!.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
+//    }
+//    private fun handleThatBackPress(){
+//        val callback: OnBackPressedCallback = object: OnBackPressedCallback(true){
+//            override fun handleOnBackPressed() {
+//                findNavController().navigate(R.id.signUpFragment)
+//            }
+//        }
+//        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+//    }
+
 }
