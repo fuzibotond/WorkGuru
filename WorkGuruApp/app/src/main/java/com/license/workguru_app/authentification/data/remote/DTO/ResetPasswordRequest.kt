@@ -1,4 +1,4 @@
-package com.example.workguru_app.authentification.data.remote.DTO
+package com.license.workguru_app.authentification.data.remote.DTO
 
 import com.squareup.moshi.JsonClass
 
