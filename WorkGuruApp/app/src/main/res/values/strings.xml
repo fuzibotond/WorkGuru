@@ -23,4 +23,5 @@
     <string name="sign_up_with_google">Sign up with Google</string>
     <string name="fullname">Fullname</string>
     <string name="sign_in_with_face_recognition">Sign in with face recognition</string>
+    <string name="detect_your_face">Detect your face</string>
 </resources>

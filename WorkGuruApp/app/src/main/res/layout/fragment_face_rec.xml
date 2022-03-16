@@ -1,27 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="8dp"
     tools:context=".authentification.presentation.components.FaceRecFragment">
-
-    <com.wonderkiln.camerakit.CameraView
-        android:id="@+id/face_rec_camera_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/face_rec_accept_btn"/>
-    <com.license.workguru_app.authentification.data.source.helper.GraphicOverlay
-        android:id="@+id/face_rec_graphic_overlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/face_rec_accept_btn"/>
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/face_rec_accept_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/teal_500"
-        android:text="@string/i_accept"
-        android:layout_alignParentBottom="true"
+    <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        <com.wonderkiln.camerakit.CameraView
+            android:id="@+id/face_rec_camera_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/face_rec_accept_btn"/>
+        <com.license.workguru_app.authentification.data.source.helper.GraphicOverlay
+            android:id="@+id/face_rec_graphic_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/face_rec_accept_btn"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/face_rec_accept_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/teal_500"
+            android:text="@string/detect_your_face"
+            android:layout_alignParentBottom="true"
         />
-
-</RelativeLayout>
+    </RelativeLayout>
+</com.google.android.material.card.MaterialCardView>
