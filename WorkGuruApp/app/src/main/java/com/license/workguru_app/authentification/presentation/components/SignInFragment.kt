@@ -39,7 +39,7 @@ import com.google.android.gms.tasks.Task
 import com.license.workguru_app.utils.Constants
 
 
-const val RC_SIGN_IN = 123
+const val RC_SIGN_IN = 100
 
 class SignInFragment : Fragment() {
     private lateinit var loginViewModel: LoginViewModel
@@ -63,13 +63,11 @@ class SignInFragment : Fragment() {
         // Configure sign-in to request the user's ID, email address,  and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         var gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(Constants.CLIENT_ID_GOOGLE)
             .requestEmail()
             .build()
         // Build a GoogleSignInClient with the options specified by gso.
 
-        val mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
-        binding.signInButton.setSize(SignInButton.SIZE_STANDARD)
+        val mGoogleSignInClient = GoogleSignIn.getClient(this.requireActivity(), gso);
         binding.signInButton.visibility = View.VISIBLE
         binding.signInButton.setSize(SignInButton.SIZE_WIDE)
         binding.signInButton.setOnClickListener {
@@ -79,12 +77,13 @@ class SignInFragment : Fragment() {
         val acct = GoogleSignIn.getLastSignedInAccount(requireActivity())
         if (acct != null) {
             Log.d("GOOGLE-SIGN-IN", "signInResult is successful ${acct}")
-//            val personName = acct.displayName
-//            val personGivenName = acct.givenName
-//            val personFamilyName = acct.familyName
-//            val personEmail = acct.email
-//            val personId = acct.id
-//            val personPhoto: Uri? = acct.photoUrl
+            val personName = acct.displayName
+            val personGivenName = acct.givenName
+            val personFamilyName = acct.familyName
+            val personEmail = acct.email
+            val personId = acct.id
+            val personPhoto: Uri? = acct.photoUrl
+            Toast.makeText(requireContext(), "Hello ${personName}: ${personEmail}", Toast.LENGTH_SHORT).show()
         }
 
 
