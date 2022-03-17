@@ -36,6 +36,8 @@ import com.license.workguru_app.R
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import com.license.workguru_app.authentification.domain.use_case.log_in_with_google.GoogleLoginViewModel
+import com.license.workguru_app.authentification.domain.use_case.log_in_with_google.GoogleLoginViewModelFactory
 import com.license.workguru_app.utils.Constants
 
 
@@ -43,6 +45,7 @@ const val RC_SIGN_IN = 100
 
 class SignInFragment : Fragment() {
     private lateinit var loginViewModel: LoginViewModel
+    private lateinit var googleLoginViewModel: GoogleLoginViewModel
     private var _binding: FragmentSignInBinding? = null
     private val binding get() = _binding!!
 
@@ -64,6 +67,7 @@ class SignInFragment : Fragment() {
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         var gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
+            .requestIdToken(Constants.CLIENT_ID_GOOGLE)
             .build()
         // Build a GoogleSignInClient with the options specified by gso.
 
@@ -76,17 +80,15 @@ class SignInFragment : Fragment() {
         }
         val acct = GoogleSignIn.getLastSignedInAccount(requireActivity())
         if (acct != null) {
-            Log.d("GOOGLE-SIGN-IN", "signInResult is successful ${acct}")
+            Log.d("GOOGLE-SIGN-IN", "signInResult is successful ${acct.idToken}")
             val personName = acct.displayName
             val personGivenName = acct.givenName
             val personFamilyName = acct.familyName
             val personEmail = acct.email
             val personId = acct.id
             val personPhoto: Uri? = acct.photoUrl
-            Toast.makeText(requireContext(), "Hello ${personName}: ${personEmail}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Hello ${personName}!", Toast.LENGTH_SHORT).show()
         }
-
-
     }
 
     private fun initialize() {
@@ -104,6 +106,8 @@ class SignInFragment : Fragment() {
         super.onCreate(savedInstanceState)
         val factory = LoginViewModelFactory(this.requireContext(), AuthRepository())
         loginViewModel = ViewModelProvider(this, factory).get(LoginViewModel::class.java)
+        val googleFactory = GoogleLoginViewModelFactory(this.requireContext(), AuthRepository())
+        googleLoginViewModel = ViewModelProvider(this, googleFactory).get(GoogleLoginViewModel::class.java)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -226,10 +230,17 @@ class SignInFragment : Fragment() {
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account: GoogleSignInAccount = completedTask.getResult(ApiException::class.java)
-
+            googleLoginViewModel.access_token.value = account.idToken
             // Signed in successfully, show authenticated UI.
             Log.d("GOOGLE-SIGN-IN", "signInResult is successful")
             binding.signInButton.visibility = View.VISIBLE
+            binding.signInProgressBar.visibility = View.GONE
+            googleLoginViewModel.access_token.observe(viewLifecycleOwner){
+                lifecycleScope.launch {
+                    googleLoginViewModel.googleLogin()
+                }
+            }
+
         } catch (e: ApiException) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.

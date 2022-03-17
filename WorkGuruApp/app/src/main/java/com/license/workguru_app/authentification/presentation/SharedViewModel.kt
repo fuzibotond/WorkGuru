@@ -14,7 +14,6 @@ class SharedViewModel : ViewModel() {
     fun acceptTermsAndConditions(isAccepted:Boolean){
         isTermsAndConditionsAccepted.value = isAccepted
     }
-
     fun saveImage(image:Bitmap){
         signInImageWithFace.value = image
     }
