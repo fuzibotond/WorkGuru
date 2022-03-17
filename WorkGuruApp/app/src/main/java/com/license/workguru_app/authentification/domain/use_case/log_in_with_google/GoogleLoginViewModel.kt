@@ -6,10 +6,8 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.license.workguru_app.authentification.data.remote.DTO.GoogleLoginRequest
-import com.license.workguru_app.authentification.data.remote.DTO.LoginRequest
+import com.license.workguru_app.authentification.data.remote.DTO.GoogleRequest
 import com.license.workguru_app.authentification.domain.repository.AuthRepository
-import com.license.workguru_app.utils.Constants
 
 class GoogleLoginViewModel(val context: Context, val repository: AuthRepository) : ViewModel() {
 
@@ -17,7 +15,7 @@ class GoogleLoginViewModel(val context: Context, val repository: AuthRepository)
 
     suspend fun googleLogin():Boolean {
         Log.d("AUTH", access_token.value!!)
-        val request = GoogleLoginRequest(
+        val request = GoogleRequest(
             token = access_token.value!!,false)
 
         try {
@@ -37,11 +35,11 @@ class GoogleLoginViewModel(val context: Context, val repository: AuthRepository)
 private fun saveUserData(context: Context, access_token:String, expires_at:String ){
     val sharedPreferences: SharedPreferences = context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
     val editor = sharedPreferences.edit()
-    Log.d("AUTH", "Testing expires date:${expires_at}")
+
 
     editor.apply{
         putString("ACCESS_TOKEN", access_token)
         putString("EXPIRES_AT", expires_at)
     }.apply()
-    Toast.makeText(context, "Saved access token data!", Toast.LENGTH_SHORT).show()
+    Log.d("AUTH", "Saved access token data! Expires date:${expires_at}")
 }

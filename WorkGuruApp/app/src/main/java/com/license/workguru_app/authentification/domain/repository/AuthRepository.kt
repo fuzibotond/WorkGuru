@@ -19,7 +19,7 @@ class AuthRepository {
         return RetrofitInstance.api.forgotPassword(request)
     }
 
-    suspend fun googleLogin(request: GoogleLoginRequest): GoogleLoginResponse {
+    suspend fun googleLogin(request: GoogleRequest): GoogleResponse {
         return RetrofitInstance.api.googleLogin(request)
     }
 }

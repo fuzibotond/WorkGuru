@@ -46,11 +46,11 @@ class LoginViewModel(val context: Context, val repository: AuthRepository) : Vie
 private fun saveUserData(context: Context, access_token:String, expires_at:String ){
     val sharedPreferences: SharedPreferences = context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
     val editor = sharedPreferences.edit()
-    Log.d("TIME", "Testing axpires date:${expires_at}")
+
 
     editor.apply{
         putString("ACCESS_TOKEN", access_token)
         putString("EXPIRES_AT", expires_at)
     }.apply()
-    Toast.makeText(context, "Saved access token data!", Toast.LENGTH_SHORT).show()
+    Log.d("AUTH", "Saved access token data! Expires date:${expires_at}")
 }

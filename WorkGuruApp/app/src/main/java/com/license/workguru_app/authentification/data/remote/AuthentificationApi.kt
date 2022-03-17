@@ -19,5 +19,5 @@ interface AuthentificationApi {
     suspend fun forgotPassword(@Body request: ForgotPasswordRequest): ForgotPasswordResponse
 
     @POST(Constants.GOOGLE_LOGIN_URL)
-    suspend fun googleLogin(@Body request: GoogleLoginRequest): GoogleLoginResponse
+    suspend fun googleLogin(@Body request: GoogleRequest): GoogleResponse
 }

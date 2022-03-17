@@ -243,19 +243,17 @@
             android:backgroundTint="@color/teal_500"
             android:text="@string/sign_up"
 
-            app:layout_constraintBottom_toTopOf="@+id/sign_up_with_google_btn"
+            app:layout_constraintBottom_toTopOf="@+id/sign_up_button"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <Button
-            android:id="@+id/sign_up_with_google_btn"
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/sign_up_button"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_marginBottom="30dp"
-            android:backgroundTint="@color/white"
-            android:drawableLeft="@drawable/ic_logo_googleg_48dp"
-            android:text="@string/sign_up_with_google"
-            android:textColor="@color/grey_600"
+            android:layout_marginBottom="110dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="40dp"
             android:layout_marginEnd="40dp"
             />
