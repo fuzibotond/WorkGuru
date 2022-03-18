@@ -13,17 +13,16 @@ class GoogleLoginViewModel(val context: Context, val repository: AuthRepository)
 
     var access_token: MutableLiveData<String> = MutableLiveData()
 
-    suspend fun googleLogin():Boolean {
-        Log.d("AUTH", access_token.value!!)
+    suspend fun googleLogin(token:String):Boolean {
         val request = GoogleRequest(
-            token = access_token.value!!,false)
-
+            token = token)
         try {
             val result = request.let { repository.googleLogin(it) }
             Log.d("AUTH", "Login with google, just made successfully! ${result.access_token} Expires at: ${result.expires_at}")
             saveUserData(context, access_token = result.access_token, expires_at = result.expires_at)
             val sharedPreferences: SharedPreferences = context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
             access_token.value = sharedPreferences.getString("TOKEN_KEY", null)
+            Log.d("AUTH", "Still have the token: ${access_token.value}")
             return true
         } catch (e: Exception) {
             Log.d("AUTH", "GoogleLoginViewModel - exception: ${e.toString()}")

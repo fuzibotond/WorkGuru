@@ -16,7 +16,7 @@ class GoogleRegisterViewModel(val context: Context, val repository: AuthReposito
     suspend fun googleRegister():Boolean {
         Log.d("AUTH", access_token.value!!)
         val request = GoogleRequest(
-            token = access_token.value!!,false)
+            token = access_token.value!!)
 
         try {
             val result = request.let { repository.googleLogin(it) }

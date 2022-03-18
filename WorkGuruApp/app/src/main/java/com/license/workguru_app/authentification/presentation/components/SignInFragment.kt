@@ -26,6 +26,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import java.time.LocalDateTime
@@ -48,7 +49,7 @@ class SignInFragment : Fragment() {
     private lateinit var googleLoginViewModel: GoogleLoginViewModel
     private var _binding: FragmentSignInBinding? = null
     private val binding get() = _binding!!
-
+    val token:MutableLiveData<String> = MutableLiveData<String>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -63,6 +64,7 @@ class SignInFragment : Fragment() {
     }
 
     private fun settingListenersToGoogleAuth() {
+        binding.signInProgressBar.visibility = View.VISIBLE
         // Configure sign-in to request the user's ID, email address,  and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         var gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -80,13 +82,14 @@ class SignInFragment : Fragment() {
         }
         val acct = GoogleSignIn.getLastSignedInAccount(requireActivity())
         if (acct != null) {
-            Log.d("GOOGLE-SIGN-IN", "signInResult is successful ${acct.idToken}")
             val personName = acct.displayName
             val personGivenName = acct.givenName
             val personFamilyName = acct.familyName
             val personEmail = acct.email
             val personId = acct.id
             val personPhoto: Uri? = acct.photoUrl
+            token.value = acct.idToken
+            Log.d("GOOGLE-SIGN-IN", "signInResult is successful ${acct.idToken}")
             Toast.makeText(requireContext(), "Hello ${personName}!", Toast.LENGTH_SHORT).show()
         }
     }
@@ -94,12 +97,20 @@ class SignInFragment : Fragment() {
     private fun initialize() {
         binding.signInProgressBar.visibility = View.GONE
         loginViewModel.access_token.observe(viewLifecycleOwner){
-            Log.d("xxx", "navigate to list")
+            Log.d("AUTH", "Login with email")
             val intent = Intent(context, AuthorizedActivity::class.java).apply {
                 putExtra(AlarmClock.EXTRA_MESSAGE, "You are logged in!${loginViewModel.access_token.value}")
             }
             startActivity(intent)
         }
+        googleLoginViewModel.access_token.observe(viewLifecycleOwner){
+            Log.d("AUTH", "Login with google ${googleLoginViewModel.access_token.value}")
+            val intent = Intent(context, AuthorizedActivity::class.java).apply {
+                putExtra(AlarmClock.EXTRA_MESSAGE, "You are logged in!${googleLoginViewModel.access_token.value}")
+            }
+            startActivity(intent)
+        }
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -229,14 +240,13 @@ class SignInFragment : Fragment() {
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account: GoogleSignInAccount = completedTask.getResult(ApiException::class.java)
-            googleLoginViewModel.access_token.value = account.idToken
             // Signed in successfully, show authenticated UI.
             Log.d("GOOGLE-SIGN-IN", "signInResult is successful")
             binding.signInButton.visibility = View.VISIBLE
             binding.signInProgressBar.visibility = View.GONE
-            googleLoginViewModel.access_token.observe(viewLifecycleOwner){
+            token.observe(viewLifecycleOwner){
                 lifecycleScope.launch {
-                    googleLoginViewModel.googleLogin()
+                    googleLoginViewModel.googleLogin(token.value!!)
                 }
             }
 
