@@ -1,5 +1,6 @@
 package com.license.workguru_app.authentification.presentation.components
 
+import android.accounts.AccountManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -88,8 +89,10 @@ class SignInFragment : Fragment() {
             val personEmail = acct.email
             val personId = acct.id
             val personPhoto: Uri? = acct.photoUrl
-            token.value = acct.idToken
-            Log.d("GOOGLE-SIGN-IN", "signInResult is successful ${acct.idToken}")
+//            token.value = acct.serverAuthCode
+
+            val am = acct.idToken
+            Log.d("GOOGLE-SIGN-IN", "signInResult is successful ${am}")
             Toast.makeText(requireContext(), "Hello ${personName}!", Toast.LENGTH_SHORT).show()
         }
     }
