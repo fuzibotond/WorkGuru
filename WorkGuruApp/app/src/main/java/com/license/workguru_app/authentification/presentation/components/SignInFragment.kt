@@ -57,7 +57,7 @@ class SignInFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentSignInBinding.inflate(inflater, container, false)
-//        clearDate()
+        clearDate()
         settingListeners()
         settingListenersToGoogleAuth()
         initialize()
