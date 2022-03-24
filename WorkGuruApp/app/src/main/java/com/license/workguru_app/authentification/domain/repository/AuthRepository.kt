@@ -22,4 +22,11 @@ class AuthRepository {
     suspend fun googleLogin(request: GoogleRequest): GoogleResponse {
         return RetrofitInstance.api.googleLogin(request)
     }
+
+    suspend fun logout(access_token:String): LogoutResponse {
+        return RetrofitInstance.api.logout(access_token)
+    }
+    suspend fun logout(): LogoutResponse {
+        return RetrofitInstance.api.logout()
+    }
 }

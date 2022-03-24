@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group
+        android:id="@+id/menu"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/dashboard"
+            android:icon="@drawable/ic_baseline_home_24"
+            android:title="@string/dashboard"
+            android:checked="true" />
+        <item
+            android:id="@+id/projects"
+            android:icon="@drawable/ic_baseline_folder_24"
+            android:title="@string/projects"
+            android:checked="true" />
+        <item
+            android:id="@+id/profile"
+            android:icon="@drawable/ic_baseline_person_24"
+            android:title="@string/profile"
+            android:checked="true" />
+        <item
+            android:id="@+id/colleagues"
+            android:icon="@drawable/ic_baseline_people_24"
+            android:title="@string/colleagues"
+            android:checked="true" />
+        <item
+            android:id="@+id/help_requests"
+            android:icon="@drawable/ic_baseline_waving_hand_24"
+            android:title="@string/help_requests"
+            android:checked="true" />
+        <item
+            android:id="@+id/settings"
+            android:icon="@drawable/ic_baseline_settings_24"
+            android:title="@string/settings"
+            android:checked="true" />
+        <item
+            android:id="@+id/about"
+            android:icon="@drawable/ic_baseline_coffee_24"
+            android:title="@string/about_us"
+            android:checked="true" />
+        <item
+            android:id="@+id/help"
+            android:icon="@drawable/ic_baseline_error_outline_24"
+            android:title="@string/help"
+            android:checked="true" />
+    </group>
+</menu>

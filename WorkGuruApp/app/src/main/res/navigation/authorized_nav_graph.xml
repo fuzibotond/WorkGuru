@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/authorized_nav_graph"
+    app:startDestination="@id/projectListFragment">
+
+
+    <fragment
+        android:id="@+id/dashboardFragment"
+        android:name="com.license.workguru_app.timetracking.presentation.components.DashboardFragment"
+        android:label="DashboardFragment" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.license.workguru_app.profile.presentation.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/projectListFragment"
+        android:name="com.license.workguru_app.timetracking.presentation.components.ProjectListFragment"
+        android:label="fragment_project_list"
+        tools:layout="@layout/fragment_project_list" />
+</navigation>

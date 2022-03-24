@@ -3,6 +3,7 @@ package com.license.workguru_app.authentification.data.remote
 import com.license.workguru_app.authentification.data.remote.DTO.*
 import com.license.workguru_app.utils.Constants
 import retrofit2.http.Body
+import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface AuthentificationApi {
@@ -20,4 +21,10 @@ interface AuthentificationApi {
 
     @POST(Constants.GOOGLE_LOGIN_URL)
     suspend fun googleLogin(@Body request: GoogleRequest): GoogleResponse
+
+    @POST(Constants.LOGOUT_URL)
+    suspend fun logout(@Header("access_token") token: String?): LogoutResponse
+
+    @POST(Constants.LOGOUT_URL)
+    suspend fun logout(): LogoutResponse
 }

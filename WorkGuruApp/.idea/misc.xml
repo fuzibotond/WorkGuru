@@ -9,16 +9,26 @@
         <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/drawable/ic_baseline_error_outline_24.xml" value="0.21296296296296297" />
         <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/drawable/ic_mark.xml" value="0.21296296296296297" />
         <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/drawable/ic_splash_screen.xml" value="0.22552083333333334" />
+        <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/drawable/stroke_color.xml" value="0.3015625" />
         <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/drawable/terms_and_conditions_icon_foreground.xml" value="0.22552083333333334" />
+        <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/drawable/transparent_background.xml" value="0.3015625" />
         <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/font/inter.xml" value="0.23958333333333334" />
+        <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/layout-v28/project_item_layout.xml" value="0.1983695652173913" />
         <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/layout/activity_authorized.xml" value="0.209375" />
         <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/layout/face_recognition_dialog.xml" value="0.22" />
+        <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/layout/fragment_dashboard.xml" value="0.2390625" />
         <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/layout/fragment_face_rec.xml" value="0.209375" />
         <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/layout/fragment_forgot_password.xml" value="0.2951048951048951" />
+        <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/layout/fragment_profile.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/layout/fragment_project_list.xml" value="0.1983695652173913" />
         <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/layout/fragment_sig_up.xml" value="0.22" />
         <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/layout/fragment_sign_in.xml" value="0.3723958333333333" />
         <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/layout/fragment_sign_up.xml" value="0.22" />
+        <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/layout/header_navigation_drawer.xml" value="0.1983695652173913" />
+        <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/layout/list_group.xml" value="0.3723958333333333" />
+        <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/layout/list_item.xml" value="0.3723958333333333" />
+        <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/layout/project_item_layout.xml" value="0.3333333333333333" />
         <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/layout/terms_and_conditions_model.xml" value="0.39740820734341253" />
         <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.22552083333333334" />
         <entry key="..\:/Users/fuzib/OneDrive/Dokumentumok/GitHub/WorkGuru/WorkGuruApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.22552083333333334" />

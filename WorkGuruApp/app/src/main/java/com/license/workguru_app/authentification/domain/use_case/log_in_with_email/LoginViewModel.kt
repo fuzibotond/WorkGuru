@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.navigation.Navigator
 import com.license.workguru_app.authentification.data.remote.DTO.LoginRequest
 import com.license.workguru_app.authentification.domain.repository.AuthRepository
 import com.license.workguru_app.utils.Constants
@@ -18,7 +19,7 @@ class LoginViewModel(val context: Context, val repository: AuthRepository) : Vie
     var remember_me:MutableLiveData<Boolean> = MutableLiveData()
     var access_token:MutableLiveData<String> = MutableLiveData()
 
-    suspend fun login():Boolean {
+    suspend fun login(userName:String, userEmail:String):Boolean {
         val request = LoginRequest(
             client_id = Constants.CLIENT_ID,
             client_secret = Constants.CLIENT_SECRET,
@@ -31,7 +32,7 @@ class LoginViewModel(val context: Context, val repository: AuthRepository) : Vie
             val result = request.let { repository.login(it) }
             Log.d("AUTH", "Login with email, just made successfully! ${result.access_token} Expires at: ${result.expires_at}")
             if (remember_me.value!!){
-                saveUserData(context, access_token = result.access_token, expires_at = result.expires_at)
+                saveUserData(context, access_token = result.access_token, expires_at = result.expires_at, name = userName.takeWhile { it!='@' }, email = userEmail)
             }
             val sharedPreferences:SharedPreferences = context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
             access_token.value = sharedPreferences.getString("TOKEN_KEY", null)
@@ -43,13 +44,15 @@ class LoginViewModel(val context: Context, val repository: AuthRepository) : Vie
     }
 }
 
-private fun saveUserData(context: Context, access_token:String, expires_at:String ){
+private fun saveUserData(context: Context, access_token:String, expires_at:String, name:String, email:String ){
     val sharedPreferences: SharedPreferences = context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
     val editor = sharedPreferences.edit()
 
 
     editor.apply{
         putString("ACCESS_TOKEN", access_token)
+        putString("USER_NAME", name)
+        putString("USER_EMAIL", email)
         putString("EXPIRES_AT", expires_at)
     }.apply()
     Log.d("AUTH", "Saved access token data! Expires date:${expires_at}")

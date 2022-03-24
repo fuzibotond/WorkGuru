@@ -142,7 +142,9 @@ class SignInFragment : Fragment() {
             if (NetworkHelper.isNetworkConnected(this.requireActivity())){
                 if (binding.emailAddressInput.text.toString().isNotEmpty() && binding.emailAddressInput.text.toString().isNotEmpty()){
                     lifecycleScope.launch {
-                        binding.signInBtn.isEnabled = !loginViewModel.login()
+                        binding.signInBtn.isEnabled = !loginViewModel.login(binding.emailAddressInput.text.toString(),
+                            binding.emailAddressInput.text.toString()
+                        )
                     }
                 }else{
                     binding.emailAddressLayoutInput.helperText = "This field is required!"
