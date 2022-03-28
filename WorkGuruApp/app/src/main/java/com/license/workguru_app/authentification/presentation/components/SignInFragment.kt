@@ -40,6 +40,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.license.workguru_app.authentification.domain.use_case.log_in_with_google.GoogleLoginViewModel
 import com.license.workguru_app.authentification.domain.use_case.log_in_with_google.GoogleLoginViewModelFactory
+import com.license.workguru_app.di.SessionManager
 import com.license.workguru_app.utils.Constants
 
 
@@ -51,13 +52,16 @@ class SignInFragment : Fragment() {
     private var _binding: FragmentSignInBinding? = null
     private val binding get() = _binding!!
     val token:MutableLiveData<String> = MutableLiveData<String>()
+
+    private lateinit var sessionManager: SessionManager
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentSignInBinding.inflate(inflater, container, false)
-        clearDate()
+//        clearDate()
         settingListeners()
         settingListenersToGoogleAuth()
         initialize()
@@ -207,6 +211,7 @@ class SignInFragment : Fragment() {
     }
     @RequiresApi(Build.VERSION_CODES.O)
     private fun loadData() {
+
         val sharedPreferences: SharedPreferences = requireContext().getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
         val savedToken = sharedPreferences.getString("ACCESS_TOKEN", null)
         val expiresAt = sharedPreferences.getString("EXPIRES_AT", null)

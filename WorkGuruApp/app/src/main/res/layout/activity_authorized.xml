@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".AuthorizedActivity"
-    android:background="#161616"
+    android:background="@color/white_wrapped"
     android:orientation="vertical"
     >
     <androidx.drawerlayout.widget.DrawerLayout
@@ -15,9 +15,6 @@
         android:layout_height="match_parent"
         tools:openDrawer="start"
         tools:ignore="ExtraText">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
             <androidx.coordinatorlayout.widget.CoordinatorLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -110,7 +107,6 @@
                 <!-- Use app:layout_behavior="@string/appbar_scrolling_view_behavior" to fit below top app bar -->
 
             </androidx.coordinatorlayout.widget.CoordinatorLayout>
-        </RelativeLayout>
 
 
         <com.google.android.material.navigation.NavigationView

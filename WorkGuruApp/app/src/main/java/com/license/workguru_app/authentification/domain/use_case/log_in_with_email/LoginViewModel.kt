@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.Navigator
 import com.license.workguru_app.authentification.data.remote.DTO.LoginRequest
 import com.license.workguru_app.authentification.domain.repository.AuthRepository
+import com.license.workguru_app.di.SessionManager
 import com.license.workguru_app.utils.Constants
 
 
@@ -18,8 +19,10 @@ class LoginViewModel(val context: Context, val repository: AuthRepository) : Vie
     val grant_type = "password"
     var remember_me:MutableLiveData<Boolean> = MutableLiveData()
     var access_token:MutableLiveData<String> = MutableLiveData()
+    lateinit var sessionManager: SessionManager
 
     suspend fun login(userName:String, userEmail:String):Boolean {
+        sessionManager = SessionManager(context)
         val request = LoginRequest(
             client_id = Constants.CLIENT_ID,
             client_secret = Constants.CLIENT_SECRET,
@@ -33,6 +36,7 @@ class LoginViewModel(val context: Context, val repository: AuthRepository) : Vie
             Log.d("AUTH", "Login with email, just made successfully! ${result.access_token} Expires at: ${result.expires_at}")
             if (remember_me.value!!){
                 saveUserData(context, access_token = result.access_token, expires_at = result.expires_at, name = userName.takeWhile { it!='@' }, email = userEmail)
+                sessionManager.saveAuthToken(result.access_token)
             }
             val sharedPreferences:SharedPreferences = context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
             access_token.value = sharedPreferences.getString("TOKEN_KEY", null)

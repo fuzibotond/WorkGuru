@@ -2,6 +2,8 @@ package com.license.workguru_app.authentification.domain.repository
 
 import com.license.workguru_app.authentification.data.remote.DTO.*
 import com.license.workguru_app.di.RetrofitInstance
+import okhttp3.MediaType
+import okhttp3.RequestBody
 
 class AuthRepository {
     suspend fun login(request: LoginRequest): LoginResponse {
@@ -24,9 +26,7 @@ class AuthRepository {
     }
 
     suspend fun logout(access_token:String): LogoutResponse {
-        return RetrofitInstance.api.logout(access_token)
+        return RetrofitInstance.api.logout(  access_token)
     }
-    suspend fun logout(): LogoutResponse {
-        return RetrofitInstance.api.logout()
-    }
+
 }
