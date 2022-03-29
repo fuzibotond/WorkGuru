@@ -15,7 +15,8 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_margin="10dp"
-            app:srcCompat="@drawable/ic_baseline_account_circle_24" />
+            app:srcCompat="@drawable/ic_baseline_account_circle_24"
+            app:tint="@color/white_wrapped" />
         <LinearLayout
             android:layout_weight="6"
             android:layout_width="wrap_content"
@@ -26,11 +27,12 @@
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif"
-                android:textColor="#000000"
+                android:fontFamily="@font/inter"
+                android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:text="John McDonald"
+
                />
 
             <TextView
@@ -38,6 +40,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="jhonmacdonald123@gmail.com"
+                android:fontFamily="@font/intermedium"
+                android:textColor="@color/white"
                 />
         </LinearLayout>
 
