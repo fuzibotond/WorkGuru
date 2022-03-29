@@ -60,7 +60,6 @@
                     </androidx.core.widget.NestedScrollView>
 
                     <com.google.android.material.bottomappbar.BottomAppBar
-                        style="@style/BottomAppBarTheme"
                         android:id="@+id/bottomAppBar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -71,10 +70,10 @@
                         app:menu="@menu/bottom_app_bar"
                         app:backgroundTint="@color/teal_900"
                         app:navigationIcon="@null"
-                        android:theme="@style/BottomAppBarStyle"
                         app:hideOnScroll="true"
                         app:elevation="0dp"
                         android:background="@android:color/transparent"
+                        app:theme="@style/Theme.AppCompat.DayNight.DarkActionBar"
                         >
                     </com.google.android.material.bottomappbar.BottomAppBar>
 
@@ -95,7 +94,10 @@
             android:layout_gravity="start"
             app:menu="@menu/navigation_menu"
             app:headerLayout="@layout/header_navigation_drawer"
-            android:background="@color/teal_900"/>
+            android:background="@color/teal_900"
+            app:itemTextColor="@color/drawer_item"
+            app:itemIconTint="@color/drawer_item"
+            />
 
     </androidx.drawerlayout.widget.DrawerLayout>
 

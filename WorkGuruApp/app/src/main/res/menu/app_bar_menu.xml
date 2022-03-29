@@ -8,6 +8,7 @@
         app:showAsAction="always|collapseActionView"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         android:icon="@drawable/ic_baseline_search_24"
+        app:iconTint="@color/white"
         />
 
     <!-- action button for copy -->
@@ -15,5 +16,6 @@
         android:id="@+id/profile"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_baseline_account_circle_24"
+        app:iconTint="@color/white"
         />
 </menu>
