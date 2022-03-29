@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white_wrapped"
-    tools:context=".timetracking.presentation.components.ProjectListFragment">
+    tools:context=".timetracking.presentation.components.ProjectListFragment"
+    >
     <LinearLayout
         android:id="@+id/sum_and_date"
         android:layout_width="match_parent"
@@ -21,9 +22,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="left"
+                android:textSize="24sp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/interlight"
                 android:layout_margin="10dp"
-                android:fontFamily="@font/intermedium"
-                android:textSize="24dp"
                 android:text="@string/projects"
                 />
         </LinearLayout>
@@ -54,7 +56,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/sum_and_date"
-
         >
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
