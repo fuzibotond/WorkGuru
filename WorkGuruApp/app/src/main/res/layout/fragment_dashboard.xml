@@ -1,15 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.license.workguru_app.timetracking.presentation.components.DashboardFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_height="match_parent"
-        android:text="@string/dashboard"
-        android:layout_gravity="center"/>
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        tools:context="com.license.workguru_app.timetracking.presentation.components.DashboardFragment"
+    android:background="@color/white_wrapped">
+    <com.google.android.material.tabs.TabLayout
+            android:id="@+id/ongoing_sales_and_orders"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:backgroundTint="@color/teal_900"
+            app:tabTextColor="@color/white"
+            app:tabIconTint="@color/white"
+            app:tabIndicatorColor="@color/white"
+        >
+            <com.google.android.material.tabs.TabItem
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:text="@string/insights"
+                android:icon="@drawable/ic_baseline_pie_chart_24"
+                >
 
-</FrameLayout>
+            </com.google.android.material.tabs.TabItem>
+            <com.google.android.material.tabs.TabItem
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:text="@string/statements"
+                android:icon="@drawable/ic_baseline_insights_24">
+
+            </com.google.android.material.tabs.TabItem>
+
+        </com.google.android.material.tabs.TabLayout>
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/my_fares_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+        </androidx.viewpager2.widget.ViewPager2>
+    </LinearLayout>
