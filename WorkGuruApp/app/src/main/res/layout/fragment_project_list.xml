@@ -7,7 +7,6 @@
     android:background="@color/white_wrapped"
     tools:context=".timetracking.presentation.components.ProjectListFragment">
     <LinearLayout
-        android:layout_marginTop="20dp"
         android:id="@+id/sum_and_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -51,27 +50,32 @@
 
         </LinearLayout>
     </LinearLayout>
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/sum_and_date"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="0dp"
-        tools:ignore="NotSibling"
-        tools:itemCount="10"
-        tools:listitem="@layout/project_item_layout" />
+
+        >
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="0dp"
+            tools:ignore="NotSibling"
+            tools:itemCount="10"
+            tools:listitem="@layout/project_item_layout"
+            />
+
+    </LinearLayout>
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_add_new_project"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentRight="true"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_gravity="center"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="70dp"
         android:backgroundTint="@color/teal_500"
         android:insetLeft="0dp"
         android:insetTop="0dp"

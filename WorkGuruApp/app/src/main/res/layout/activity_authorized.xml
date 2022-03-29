@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".AuthorizedActivity"
     android:background="@color/white_wrapped"
-    android:orientation="vertical"
     >
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawerLayout"
@@ -15,47 +14,38 @@
         android:layout_height="match_parent"
         tools:openDrawer="start"
         tools:ignore="ExtraText">
-            <androidx.coordinatorlayout.widget.CoordinatorLayout
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            android:layout_alignParentTop="true"
+            >
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/topAppBarLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fitsSystemWindows="true"
-                >
-
-                <com.google.android.material.appbar.AppBarLayout
-                    android:id="@+id/topAppBarLayout"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.AppBarLayout.PrimarySurface"
+                android:layout_alignParentTop="true">
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/topAppBar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/Widget.MaterialComponents.AppBarLayout.PrimarySurface"
-                    android:layout_alignParentTop="true"
-                    >
-
-                    <com.google.android.material.appbar.MaterialToolbar
-                        android:id="@+id/topAppBar"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        style="@style/Widget.MaterialComponents.Toolbar.PrimarySurface"
-                        android:background="@color/teal_900"
-                        android:elevation="0dp"
-                        app:menu="@menu/app_bar_menu"
-                        app:navigationIcon="@drawable/ic_mark"
-
-                        />
-
+                    style="@style/Widget.MaterialComponents.Toolbar.PrimarySurface"
+                    android:background="@color/teal_900"
+                    android:elevation="0dp"
+                    app:menu="@menu/app_bar_menu"
+                    app:navigationIcon="@drawable/ic_mark"
+                     />
                 </com.google.android.material.appbar.AppBarLayout>
 
-
-                <androidx.coordinatorlayout.widget.CoordinatorLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
 
                     <!-- Note: A RecyclerView can also be used -->
                     <androidx.core.widget.NestedScrollView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:clipToPadding="false"
-                        android:fitsSystemWindows="true"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                        android:fillViewport="true"
                         >
-
                         <!-- Scrollable content -->
                         <fragment
                             android:id="@+id/auth_nav_host_fragment"
@@ -65,8 +55,6 @@
                             app:defaultNavHost="true"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.476"
-                            app:layout_constraintStart_toStartOf="@id/topAppBarLayout"
                             app:navGraph="@navigation/authorized_nav_graph" />
 
                     </androidx.core.widget.NestedScrollView>
@@ -82,13 +70,12 @@
                         app:fabCradleVerticalOffset="5dp"
                         app:menu="@menu/bottom_app_bar"
                         app:backgroundTint="@color/teal_900"
-                        app:navigationIcon="@drawable/ic_baseline_menu_24"
+                        app:navigationIcon="@null"
                         android:theme="@style/BottomAppBarStyle"
                         app:hideOnScroll="true"
                         app:elevation="0dp"
                         android:background="@android:color/transparent"
                         >
-
                     </com.google.android.material.bottomappbar.BottomAppBar>
 
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -98,16 +85,8 @@
                         app:layout_anchor="@id/bottomAppBar"
                         app:tint="@color/white"
                         android:backgroundTint="@color/teal_500"
-
                         />
-
                 </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-                <!-- Screen content -->
-                <!-- Use app:layout_behavior="@string/appbar_scrolling_view_behavior" to fit below top app bar -->
-
-            </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/menu_navigation_view"
@@ -120,7 +99,4 @@
 
     </androidx.drawerlayout.widget.DrawerLayout>
 
-
-
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

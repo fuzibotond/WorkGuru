@@ -126,6 +126,7 @@
                 android:maxLength="50"
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
+                android:inputType="textEmailAddress"
                 app:boxStrokeColor="@color/red_500"
                 android:textCursorDrawable="@drawable/color_cursor">
 

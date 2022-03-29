@@ -93,7 +93,7 @@ class AuthorizedActivity : AppCompatActivity() {
         bottomAppBar.setupWithNavController(navController)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
-        topAppBarLayout.setExpanded(true)
+//        topAppBarLayout.setExpanded(true)
 
     }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
