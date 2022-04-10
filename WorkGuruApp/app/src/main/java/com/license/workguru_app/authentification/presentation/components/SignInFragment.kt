@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -26,6 +27,7 @@ import com.license.workguru_app.utils.NetworkHelper
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -42,6 +44,8 @@ import com.license.workguru_app.authentification.domain.use_case.log_in_with_goo
 import com.license.workguru_app.authentification.domain.use_case.log_in_with_google.GoogleLoginViewModelFactory
 import com.license.workguru_app.di.SessionManager
 import com.license.workguru_app.utils.Constants
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 const val RC_SIGN_IN = 100
@@ -61,6 +65,7 @@ class SignInFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentSignInBinding.inflate(inflater, container, false)
+        handleThatBackPress()
 //        clearDate()
         settingListeners()
         settingListenersToGoogleAuth()
@@ -146,9 +151,15 @@ class SignInFragment : Fragment() {
             if (NetworkHelper.isNetworkConnected(this.requireActivity())){
                 if (binding.emailAddressInput.text.toString().isNotEmpty() && binding.emailAddressInput.text.toString().isNotEmpty()){
                     lifecycleScope.launch {
-                        binding.signInBtn.isEnabled = !loginViewModel.login(binding.emailAddressInput.text.toString(),
-                            binding.emailAddressInput.text.toString()
-                        )
+                        if (loginViewModel.login(binding.emailAddressInput.text.toString(),
+                                binding.emailAddressInput.text.toString()
+                            )){
+                            binding.signInBtn.isEnabled = false
+                        }else{
+                            binding.signInBtn.isEnabled = true
+                            binding.signInProgressBar.visibility = View.GONE
+                        }
+
                     }
                 }else{
                     binding.emailAddressLayoutInput.helperText = "This field is required!"
@@ -217,16 +228,19 @@ class SignInFragment : Fragment() {
         val expiresAt = sharedPreferences.getString("EXPIRES_AT", null)
         Log.d("Time", "Exp original: ${expiresAt?.substring(0,19)}")
         if (expiresAt != null){
-            val localDateTime:LocalDateTime  = LocalDateTime.parse(expiresAt.substring(0,19));
-            val  formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-            val date = localDateTime.atZone(ZoneOffset.UTC).toEpochSecond()
-            val nowdate = LocalDateTime.now().atZone(ZoneOffset.UTC).toEpochSecond()
+            val localDateTime: LocalDateTime = LocalDateTime.parse(expiresAt.substring(0,19));
+
+            val date = localDateTime.atZone(ZoneOffset.UTC)?.toInstant()?.toEpochMilli()
+            val nowdate = System.currentTimeMillis()
+
             Log.d("Time", "Exp: ${date} and now: ${nowdate}")
-            if (date > nowdate){
-                loginViewModel.access_token.value = savedToken
-            }else{
-                sharedPreferences.edit().clear().commit()
-                Toast.makeText(requireContext(), "Your session has been expired! You need to log in again...", Toast.LENGTH_SHORT).show()
+            if (date != null) {
+                if (date > nowdate){
+                    loginViewModel.access_token.value = savedToken
+                }else{
+                    sharedPreferences.edit().clear().commit()
+                    Toast.makeText(requireContext(), "Your session has been expired! You need to log in again...", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
@@ -266,5 +280,37 @@ class SignInFragment : Fragment() {
             Log.d("GOOGLE-SIGN-IN", "signInResult:failed code=" + e.statusCode)
             binding.signInButton.visibility = View.VISIBLE
         }
+    }
+
+    private fun handleThatBackPress(){
+        val callback: OnBackPressedCallback = object: OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                val builder = AlertDialog.Builder(requireActivity())
+                builder.setTitle("Exit")
+                builder.setMessage("Are you sure you want to exit?")
+//builder.setPositiveButton("OK", DialogInterface.OnClickListener(function = x))
+
+                builder.setPositiveButton(android.R.string.yes) { dialog, which ->
+                    requireActivity().finish()
+                }
+
+                builder.setNegativeButton("Cancel") { dialog, which ->
+
+                }
+
+
+                builder.show()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+    }
+    fun convertLongToTime(time: Long?): String {
+        val date = Date(time!!)
+        val format = SimpleDateFormat("yyyy.MM.dd HH:mm")
+        return format.format(date)
+    }
+    fun convertDateToLong(date: String): Long {
+        val df = SimpleDateFormat("yyyy.MM.dd HH:mm")
+        return df.parse(date).time
     }
 }

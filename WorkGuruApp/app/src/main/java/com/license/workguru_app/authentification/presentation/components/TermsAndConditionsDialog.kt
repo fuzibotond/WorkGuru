@@ -11,7 +11,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.license.workguru_app.R
-import com.license.workguru_app.authentification.presentation.SharedViewModel
+import com.license.workguru_app.di.SharedViewModel
 import com.license.workguru_app.databinding.TermsAndConditionsModelBinding
 
 class TermsAndConditionsDialog(

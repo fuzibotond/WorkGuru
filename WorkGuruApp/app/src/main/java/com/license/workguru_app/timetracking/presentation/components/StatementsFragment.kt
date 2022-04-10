@@ -7,13 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.license.workguru_app.R
-import com.license.workguru_app.authentification.presentation.SharedViewModel
-import com.license.workguru_app.databinding.FragmentProjectListBinding
+import com.license.workguru_app.di.SharedViewModel
 import com.license.workguru_app.databinding.FragmentStatmentsBinding
-import com.license.workguru_app.timetracking.domain.model.Project
 import com.license.workguru_app.timetracking.domain.model.Statement
-import com.license.workguru_app.timetracking.presentation.adapters.ProjectAdapter
 import com.license.workguru_app.timetracking.presentation.adapters.StatementAdapter
 
 class StatementsFragment : Fragment(), StatementAdapter.OnItemLongClickListener,

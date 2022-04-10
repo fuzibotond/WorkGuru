@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.license.workguru_app.R
-import com.license.workguru_app.authentification.presentation.SharedViewModel
+import com.license.workguru_app.di.SharedViewModel
 import com.license.workguru_app.timetracking.domain.model.Statement
 
 class StatementAdapter(

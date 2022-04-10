@@ -8,7 +8,7 @@
     tools:context=".timetracking.presentation.components.ProjectListFragment"
     >
     <LinearLayout
-        android:id="@+id/sum_and_date"
+        android:id="@+id/project_title_and_progressbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -52,10 +52,57 @@
 
         </LinearLayout>
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/project_filter_and_order"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/project_title_and_progressbar"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/open_filter_modal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:backgroundTint="@color/teal_700"
+                android:fontFamily="@font/inter"
+                android:text="@string/filter"
+
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <Spinner
+                android:overlapAnchor="false"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:id="@+id/project_order"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/gradient_spinner"
+                android:fontFamily="@font/interlight"
+                android:text="@string/order_by"
+                android:textColor="@color/black" />
+        </LinearLayout>
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/sum_and_date"
+        android:layout_below="@+id/project_filter_and_order"
         >
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"

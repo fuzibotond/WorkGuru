@@ -31,6 +31,8 @@
                     android:layout_gravity="left"
                     android:text="Name"
                     android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:fontFamily="@font/intermedium"
                     />
                 <TextView
                     android:layout_marginStart="20dp"
@@ -40,6 +42,7 @@
                     android:padding="5dp"
                     android:layout_gravity="left"
                     android:text="Category name"
+                    android:fontFamily="@font/interlight"
                     />
             </LinearLayout>
             <androidx.cardview.widget.CardView
@@ -49,8 +52,7 @@
                 android:layout_weight="1"
                 android:layout_gravity="center"
                 android:backgroundTint="@color/teal_500"
-                android:layout_marginStart="50dp"
-                android:layout_marginEnd="50dp"
+
                 >
                 <TextView
                     android:id="@+id/tracked_time"
@@ -95,6 +97,7 @@
                     android:layout_margin="10dp"
                     android:gravity="left"/>
                 <TextView
+                    android:id="@+id/start_date"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -121,6 +124,7 @@
                     android:layout_margin="10dp"
                     android:gravity="left"/>
                 <TextView
+                    android:id="@+id/task_amount"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -148,10 +152,11 @@
                     android:layout_margin="10dp"
                     android:gravity="left"/>
                 <TextView
+                    android:id="@+id/number_of_member"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="2022.01.21."
+                    android:text="1"
                     android:textAllCaps="true"
                     android:layout_margin="10dp"/>
             </LinearLayout>
@@ -163,11 +168,6 @@
 
         </LinearLayout>
 
-        <com.google.android.material.divider.MaterialDivider
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:dividerInsetStart="16dp"
-            app:dividerInsetEnd="16dp"/>
     </LinearLayout>
 
     

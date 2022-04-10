@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -23,17 +22,12 @@ import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.license.workguru_app.R
-import com.license.workguru_app.authentification.data.remote.DTO.RegisterRequest
 import com.license.workguru_app.authentification.domain.repository.AuthRepository
-import com.license.workguru_app.authentification.domain.use_case.log_in_with_google.GoogleLoginViewModel
-import com.license.workguru_app.authentification.domain.use_case.log_in_with_google.GoogleLoginViewModelFactory
 import com.license.workguru_app.authentification.domain.use_case.register_manually.RegisterViewModel
 import com.license.workguru_app.authentification.domain.use_case.register_manually.RegisterViewModelFactory
 import com.license.workguru_app.authentification.domain.use_case.register_with_google.GoogleRegisterViewModel
 import com.license.workguru_app.authentification.domain.use_case.register_with_google.GoogleRegisterViewModelFactory
-import com.license.workguru_app.authentification.domain.use_case.reset_your_password.ForgotPasswordViewModel
-import com.license.workguru_app.authentification.domain.use_case.reset_your_password.ForgotPasswordViewModelFactory
-import com.license.workguru_app.authentification.presentation.SharedViewModel
+import com.license.workguru_app.di.SharedViewModel
 import com.license.workguru_app.databinding.FragmentSignUpBinding
 import com.license.workguru_app.utils.Constants
 import kotlinx.coroutines.launch

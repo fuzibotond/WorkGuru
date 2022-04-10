@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.ContentProviderCompat.requireContext
 import com.license.workguru_app.authentification.data.remote.AuthentificationApi
+import com.license.workguru_app.timetracking.data.remote.TimeTrackingApi
 import com.license.workguru_app.utils.Constants.BASE_URL
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -34,5 +35,8 @@ object RetrofitInstance {
 
     val api: AuthentificationApi by lazy{
         retrofit.create(AuthentificationApi :: class.java)
+    }
+    val apiTimeTracking: TimeTrackingApi by lazy{
+        retrofit.create(TimeTrackingApi :: class.java)
     }
 }

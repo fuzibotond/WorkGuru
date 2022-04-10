@@ -13,8 +13,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.camerakit.type.CameraFacing
-import com.google.android.material.button.MaterialButton
 import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import com.google.firebase.ml.vision.face.FirebaseVisionFace
@@ -22,8 +20,7 @@ import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions
 import com.license.workguru_app.R
 import com.license.workguru_app.authentification.data.source.helper.GraphicOverlay
 import com.license.workguru_app.authentification.data.source.helper.RectOverlay
-import com.license.workguru_app.authentification.presentation.SharedViewModel
-import com.license.workguru_app.databinding.FragmentFaceRecBinding
+import com.license.workguru_app.di.SharedViewModel
 import com.wonderkiln.camerakit.*
 import dmax.dialog.SpotsDialog
 import kotlinx.coroutines.delay

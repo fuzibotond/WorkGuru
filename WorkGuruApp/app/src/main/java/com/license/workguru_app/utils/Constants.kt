@@ -13,4 +13,6 @@ object Constants {
     const val GOOGLE_LOGIN_URL = "api/login/google"
     const val GOOGLE_REGISTER_URL = "api/register/google"
     const val LOGOUT_URL = "api/logout"
+    const val GET_PROJECT_URL = "api/projects"
+    const val GET_CATEGORIES_URL = "api/categories"
 }

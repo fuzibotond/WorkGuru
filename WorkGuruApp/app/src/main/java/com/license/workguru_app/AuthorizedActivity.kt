@@ -7,10 +7,8 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.AlarmClock
-import android.util.Log
 import android.view.Gravity
 import android.view.Menu
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -31,15 +29,10 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.navigation.NavigationView
 import com.license.workguru_app.authentification.domain.repository.AuthRepository
-import com.license.workguru_app.authentification.domain.use_case.log_in_with_email.LoginViewModel
-import com.license.workguru_app.authentification.domain.use_case.log_in_with_email.LoginViewModelFactory
 import com.license.workguru_app.authentification.domain.use_case.log_out.LogoutViewModel
 import com.license.workguru_app.authentification.domain.use_case.log_out.LogoutViewModelFactory
-import com.license.workguru_app.authentification.presentation.SharedViewModel
+import com.license.workguru_app.di.SharedViewModel
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
 
 
 class AuthorizedActivity : AppCompatActivity() {
@@ -155,24 +148,7 @@ class AuthorizedActivity : AppCompatActivity() {
         topAppBar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.profile -> {
-                    lifecycleScope.launch {
-                        val sharedPreferences: SharedPreferences = this@AuthorizedActivity.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
-                        val savedToken = sharedPreferences.getString("ACCESS_TOKEN", null)
 
-                        if (savedToken != null) {
-                            if(logoutViewModel.logout(savedToken)){
-                                val intent = Intent(this@AuthorizedActivity, MainActivity::class.java).apply {
-                                    putExtra(AlarmClock.EXTRA_MESSAGE, "You are logged out!")
-                                    Toast.makeText( this@AuthorizedActivity, "Logged out", Toast.LENGTH_SHORT).show()
-                                    clearDate()
-                                }
-                                startActivity(intent)
-                            }
-                        }
-                        else{
-                            Toast.makeText( this@AuthorizedActivity, "Not Logged in ", Toast.LENGTH_SHORT).show()
-                        }
-                    }
                     // Handle more item (inside overflow menu) press
                     true
                 }
@@ -187,6 +163,27 @@ class AuthorizedActivity : AppCompatActivity() {
                 R.id.dashboard -> findNavController(R.id.auth_nav_host_fragment).navigate(R.id.dashboardFragment)
                 R.id.profile -> findNavController(R.id.auth_nav_host_fragment).navigate(R.id.profileFragment)
                 R.id.projects -> findNavController(R.id.auth_nav_host_fragment).navigate(R.id.projectListFragment)
+                R.id.sign_out->{
+                    lifecycleScope.launch {
+                        val sharedPreferences: SharedPreferences = this@AuthorizedActivity.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
+                        val savedToken = sharedPreferences.getString("ACCESS_TOKEN", null)
+
+                        if (savedToken != null) {
+                            if(logoutViewModel.logout(savedToken)){
+                                val intent = Intent(this@AuthorizedActivity, MainActivity::class.java).apply {
+                                    putExtra(AlarmClock.EXTRA_MESSAGE, "You are logged out!")
+                                    Toast.makeText( this@AuthorizedActivity, "Logged out", Toast.LENGTH_SHORT).show()
+                                    clearDate()
+                                }
+                                finish()
+                                startActivity(intent)
+                            }
+                        }
+                        else{
+                            Toast.makeText( this@AuthorizedActivity, "Not Logged in ", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
             }
 
             drawerLayout.close()

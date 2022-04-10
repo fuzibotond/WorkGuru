@@ -123,12 +123,12 @@
                 android:id="@+id/email_address_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
                 android:maxLength="50"
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
-                android:inputType="textEmailAddress"
-                app:boxStrokeColor="@color/red_500"
-                android:textCursorDrawable="@drawable/color_cursor">
+                android:textCursorDrawable="@drawable/color_cursor"
+                app:boxStrokeColor="@color/red_500">
 
             </com.google.android.material.textfield.TextInputEditText>
 

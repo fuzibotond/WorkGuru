@@ -43,6 +43,7 @@ class LoginViewModel(val context: Context, val repository: AuthRepository) : Vie
             return true
         } catch (e: Exception) {
             Log.d("AUTH", "LoginViewModel - exception: ${e.toString()}")
+            Toast.makeText(context, "Something went wrong! Try again :(", Toast.LENGTH_SHORT).show()
             return false
         }
     }

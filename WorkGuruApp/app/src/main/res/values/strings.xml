@@ -54,4 +54,7 @@
     <string name="projects">Projects</string>
     <string name="insights">Insights</string>
     <string name="statements">Statements</string>
+    <string name="sign_out">Sign out</string>
+    <string name="filter">Filter</string>
+    <string name="order_by">Order by</string>
 </resources>
