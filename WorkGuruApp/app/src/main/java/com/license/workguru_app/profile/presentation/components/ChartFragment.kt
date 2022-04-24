@@ -1,4 +1,4 @@
-package com.license.workguru_app.timetracking.presentation.components
+package com.license.workguru_app.profile.presentation.components
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,43 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.license.workguru_app.databinding.FragmentChartBinding
-import kotlinx.android.synthetic.main.fragment_chart.*
 import com.anychart.enums.LegendLayout
 
 import com.anychart.chart.common.dataentry.ValueDataEntry
 
 import com.anychart.chart.common.dataentry.DataEntry
 
-import android.widget.Toast
-
-import com.anychart.chart.common.listener.ListenersInterface
-
 import com.anychart.AnyChart
 
 
-import com.anychart.chart.common.listener.Event
 import com.anychart.enums.Align
-import android.R
 import android.annotation.SuppressLint
 import android.content.res.Configuration
-import android.graphics.Color
-import android.graphics.Color.WHITE
-import androidx.core.content.ContextCompat
-
-import com.anychart.AnyChartView
-
-import com.anychart.charts.Pie
-import com.anychart.core.ui.ChartCredits
-import com.anychart.AnyChart.sunburst
-
-
-
-
-
-
-
-
-
 
 
 class ChartFragment : Fragment() {

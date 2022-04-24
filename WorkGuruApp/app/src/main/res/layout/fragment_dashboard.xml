@@ -6,7 +6,7 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:orientation="vertical"
-        tools:context="com.license.workguru_app.timetracking.presentation.components.DashboardFragment"
+        tools:context="com.license.workguru_app.profile.presentation.components.DashboardFragment"
     android:background="@color/white_wrapped">
     <com.google.android.material.tabs.TabLayout
             android:id="@+id/ongoing_sales_and_orders"

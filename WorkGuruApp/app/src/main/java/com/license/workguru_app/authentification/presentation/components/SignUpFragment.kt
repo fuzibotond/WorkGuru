@@ -144,7 +144,7 @@ class SignUpFragment : Fragment() {
             // Signed in successfully, show authenticated UI.
             Log.d("GOOGLE-SIGN-IN", "signInResult is successful")
             binding.signUpButton.visibility = View.VISIBLE
-            binding.signUpButton.visibility = View.GONE
+//            binding.signUpButton.visibility = View.GONE
             googleRegisterViewModel.access_token.observe(viewLifecycleOwner){
                 lifecycleScope.launch {
                     googleRegisterViewModel.googleRegister()
@@ -155,7 +155,7 @@ class SignUpFragment : Fragment() {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.d("GOOGLE-SIGN-IN", "signInResult:failed code=" + e.statusCode)
-            binding.signUpButton.visibility = View.VISIBLE
+//            binding.signUpButton.visibility = View.VISIBLE
         }
     }
 }

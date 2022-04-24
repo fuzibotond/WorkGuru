@@ -10,9 +10,10 @@ object Constants {
     const val REGISTER_URL = "api/register"
     const val FORGOT_PASSWORD_URL = "api/password/forgot"
     const val RESET_PASSWORD_URL = "api/password/reset"
-    const val GOOGLE_LOGIN_URL = "api/login/google"
-    const val GOOGLE_REGISTER_URL = "api/register/google"
+    const val GOOGLE_LOGIN_URL = "api/login/google/id"
+    const val GOOGLE_REGISTER_URL = "api/register/google/id"
     const val LOGOUT_URL = "api/logout"
     const val GET_PROJECT_URL = "api/projects"
     const val GET_CATEGORIES_URL = "api/categories"
+
 }

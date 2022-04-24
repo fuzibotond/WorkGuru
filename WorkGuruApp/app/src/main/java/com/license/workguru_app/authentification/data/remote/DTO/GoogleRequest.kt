@@ -4,5 +4,5 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class GoogleRequest(
-    val token:String
+    val id_token:String
 )

@@ -66,7 +66,7 @@ class SignInFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentSignInBinding.inflate(inflater, container, false)
         handleThatBackPress()
-//        clearDate()
+        clearDate()
         settingListeners()
         settingListenersToGoogleAuth()
         initialize()
@@ -103,6 +103,7 @@ class SignInFragment : Fragment() {
             val am = acct.idToken
             Log.d("GOOGLE-SIGN-IN", "signInResult is successful ${am}")
             Toast.makeText(requireContext(), "Hello ${personName}!", Toast.LENGTH_SHORT).show()
+            token.value = acct.idToken
         }
     }
 
@@ -116,7 +117,7 @@ class SignInFragment : Fragment() {
             startActivity(intent)
         }
         googleLoginViewModel.access_token.observe(viewLifecycleOwner){
-            Log.d("AUTH", "Login with google ${googleLoginViewModel.access_token.value}")
+            Log.d("GOOGLE-SIGN-IN", "Login with google ${googleLoginViewModel.access_token.value}")
             val intent = Intent(context, AuthorizedActivity::class.java).apply {
                 putExtra(AlarmClock.EXTRA_MESSAGE, "You are logged in!${googleLoginViewModel.access_token.value}")
             }
@@ -219,6 +220,12 @@ class SignInFragment : Fragment() {
         binding.signInWithFaceBtn.setOnClickListener {
            findNavController().navigate(R.id.action_signInFragment_to_faceRecFragment)
         }
+
+        token.observe(viewLifecycleOwner){
+            lifecycleScope.launch {
+                googleLoginViewModel.googleLogin(token.value!!)
+            }
+        }
     }
     @RequiresApi(Build.VERSION_CODES.O)
     private fun loadData() {
@@ -265,14 +272,13 @@ class SignInFragment : Fragment() {
         try {
             val account: GoogleSignInAccount = completedTask.getResult(ApiException::class.java)
             // Signed in successfully, show authenticated UI.
-            Log.d("GOOGLE-SIGN-IN", "signInResult is successful")
+            Log.d("GOOGLE-SIGN-IN", "signInResult  is successful: ${account.idToken}")
+
+            token.value = account.idToken
+
             binding.signInButton.visibility = View.VISIBLE
             binding.signInProgressBar.visibility = View.GONE
-            token.observe(viewLifecycleOwner){
-                lifecycleScope.launch {
-                    googleLoginViewModel.googleLogin(token.value!!)
-                }
-            }
+
 
         } catch (e: ApiException) {
             // The ApiException status code indicates the detailed failure reason.

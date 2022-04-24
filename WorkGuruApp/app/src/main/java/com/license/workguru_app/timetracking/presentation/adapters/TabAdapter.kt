@@ -4,8 +4,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.license.workguru_app.timetracking.presentation.components.ChartFragment
-import com.license.workguru_app.timetracking.presentation.components.StatementsFragment
+import com.license.workguru_app.profile.presentation.components.ChartFragment
+import com.license.workguru_app.profile.presentation.components.StatementsFragment
 
 class TabAdapter (fm: FragmentManager, lifecycle: Lifecycle): FragmentStateAdapter(fm,lifecycle) {
 

@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/dashboardFragment"
-        android:name="com.license.workguru_app.timetracking.presentation.components.DashboardFragment"
+        android:name="com.license.workguru_app.profile.presentation.components.DashboardFragment"
         android:label="DashboardFragment" />
     <fragment
         android:id="@+id/profileFragment"
