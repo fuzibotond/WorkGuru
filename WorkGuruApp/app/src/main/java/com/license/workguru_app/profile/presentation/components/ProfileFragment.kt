@@ -1,4 +1,4 @@
-package com.license.workguru_app.profile.presentation
+package com.license.workguru_app.profile.presentation.components
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

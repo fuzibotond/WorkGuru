@@ -66,7 +66,7 @@ class SignInFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentSignInBinding.inflate(inflater, container, false)
         handleThatBackPress()
-        clearDate()
+//        clearDate()
         settingListeners()
         settingListenersToGoogleAuth()
         initialize()
@@ -223,7 +223,12 @@ class SignInFragment : Fragment() {
 
         token.observe(viewLifecycleOwner){
             lifecycleScope.launch {
-                googleLoginViewModel.googleLogin(token.value!!)
+                if(googleLoginViewModel.googleLogin(token.value!!)){
+                    val intent = Intent(context, AuthorizedActivity::class.java).apply {
+                        putExtra(AlarmClock.EXTRA_MESSAGE, "You are logged in!${googleLoginViewModel.access_token.value}")
+                    }
+                    startActivity(intent)
+                }
             }
         }
     }
@@ -319,4 +324,5 @@ class SignInFragment : Fragment() {
         val df = SimpleDateFormat("yyyy.MM.dd HH:mm")
         return df.parse(date).time
     }
+
 }

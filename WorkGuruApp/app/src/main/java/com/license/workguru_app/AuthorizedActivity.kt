@@ -4,11 +4,14 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.AlarmClock
+import android.util.Log
 import android.view.Gravity
 import android.view.Menu
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -24,6 +27,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomappbar.BottomAppBar
@@ -33,6 +37,16 @@ import com.license.workguru_app.authentification.domain.use_case.log_out.LogoutV
 import com.license.workguru_app.authentification.domain.use_case.log_out.LogoutViewModelFactory
 import com.license.workguru_app.di.SharedViewModel
 import kotlinx.coroutines.launch
+import android.provider.MediaStore
+
+import android.graphics.Bitmap
+import android.graphics.Color
+import androidx.appcompat.widget.AppCompatImageView
+import com.bumptech.glide.Glide
+import com.squareup.picasso.Picasso
+import de.hdodenhof.circleimageview.CircleImageView
+import java.io.File
+import java.lang.Exception
 
 
 class AuthorizedActivity : AppCompatActivity() {
@@ -48,6 +62,7 @@ class AuthorizedActivity : AppCompatActivity() {
     private lateinit var logoutViewModel: LogoutViewModel
     val email:MutableLiveData<String> = MutableLiveData()
     val name:MutableLiveData<String> = MutableLiveData()
+    val photo:MutableLiveData<Uri> = MutableLiveData()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -195,11 +210,30 @@ class AuthorizedActivity : AppCompatActivity() {
             val header = navigationView.getHeaderView(0)
             val userEmail: TextView = header.findViewById(R.id.sub_name)
             val userName: TextView = header.findViewById(R.id.name)
+            val userPhoto: CircleImageView = header.findViewById(R.id.avatar)
+            val acct = GoogleSignIn.getLastSignedInAccount(this)
+            if (acct != null) {
+                val personName = acct.displayName
+                val personGivenName = acct.givenName
+                val personFamilyName = acct.familyName
+                val personEmail = acct.email
+                val personId = acct.id
+                val personPhoto: Uri? = acct.photoUrl
+                userEmail.setText(personEmail)
+                userName.setText(personName)
+                Glide.with(this)
+                    .load(personPhoto)
+                    .centerCrop()
+                    .into(userPhoto);
 
-            email.observe(this){
+            }else{
+                email.observe(this){
                 userEmail.setText(email.value!!)
                 userName.setText(name.value!!)
+
+                }
             }
+
 
         }
 

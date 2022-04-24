@@ -4,12 +4,15 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.Navigator
 import com.license.workguru_app.authentification.data.remote.DTO.LoginRequest
 import com.license.workguru_app.authentification.domain.repository.AuthRepository
 import com.license.workguru_app.di.SessionManager
+import com.license.workguru_app.di.SharedViewModel
 import com.license.workguru_app.utils.Constants
 
 
@@ -34,9 +37,11 @@ class LoginViewModel(val context: Context, val repository: AuthRepository) : Vie
         try {
             val result = request.let { repository.login(it) }
             Log.d("AUTH", "Login with email, just made successfully! ${result.access_token} Expires at: ${result.expires_at}")
-            if (remember_me.value!!){
-                saveUserData(context, access_token = result.access_token, expires_at = result.expires_at, name = userName.takeWhile { it!='@' }, email = userEmail)
-                sessionManager.saveAuthToken(result.access_token)
+
+            saveUserData(context, access_token = result.access_token, expires_at = result.expires_at, name = userName.takeWhile { it!='@' }, email = userEmail)
+            sessionManager.saveAuthToken(result.access_token)
+            if(remember_me.value == true){
+
             }
             val sharedPreferences:SharedPreferences = context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
             access_token.value = sharedPreferences.getString("TOKEN_KEY", null)

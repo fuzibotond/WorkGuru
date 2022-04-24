@@ -2,6 +2,7 @@ package com.license.workguru_app.authentification.domain.use_case.log_in_with_go
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
@@ -24,10 +25,21 @@ class GoogleLoginViewModel(val context: Context, val repository: AuthRepository)
         try {
             val result = request.let { repository.googleLogin(it) }
             Log.d("GOOGLE-SIGN-IN", "Login with google, just made successfully! ${result.access_token} Expires at: ${result.expires_at}")
-            saveUserData(context, access_token = result.access_token, expires_at = result.expires_at)
-            val sharedPreferences: SharedPreferences = context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
-            access_token.value = sharedPreferences.getString("TOKEN_KEY", null)
-            Log.d("GOOGLE-SIGN-IN", "Still have the token: ${access_token.value}")
+            val acct = GoogleSignIn.getLastSignedInAccount(context)
+            if (acct != null) {
+                val personName = acct.displayName
+                val personGivenName = acct.givenName
+                val personFamilyName = acct.familyName
+                val personEmail = acct.email
+                val personId = acct.id
+                val personPhoto: Uri? = acct.photoUrl
+                saveUserData(context, access_token = result.access_token, expires_at = result.expires_at, email = personEmail!!, name = personGivenName!!)
+            }else{
+                saveUserData(context, access_token = result.access_token, expires_at = result.expires_at, "Add name", "Add email")
+
+            }
+
+
             return true
         } catch (e: Exception) {
             Log.d("GOOGLE-SIGN-IN", "GoogleLoginViewModel - exception: ${e.toString()}")
@@ -43,13 +55,15 @@ class GoogleLoginViewModel(val context: Context, val repository: AuthRepository)
     }
 }
 
-private fun saveUserData(context: Context, access_token:String, expires_at:String ){
+private fun saveUserData(context: Context, access_token:String, expires_at:String, name:String, email:String ){
     val sharedPreferences: SharedPreferences = context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
     val editor = sharedPreferences.edit()
 
 
     editor.apply{
         putString("ACCESS_TOKEN", access_token)
+        putString("USER_NAME", name)
+        putString("USER_EMAIL", email)
         putString("EXPIRES_AT", expires_at)
     }.apply()
     Log.d("AUTH", "Saved access token data! Expires date:${expires_at}")

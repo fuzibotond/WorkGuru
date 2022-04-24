@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/authorized_nav_graph"
-    app:startDestination="@id/projectListFragment">
+    app:startDestination="@id/dashboardFragment">
 
 
     <fragment
@@ -12,7 +12,7 @@
         android:label="DashboardFragment" />
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.license.workguru_app.profile.presentation.ProfileFragment"
+        android:name="com.license.workguru_app.profile.presentation.components.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
     <fragment
