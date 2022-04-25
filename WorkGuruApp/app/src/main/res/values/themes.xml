@@ -14,6 +14,7 @@
         <!-- Customize your theme here. -->
         <item name="android:actionMenuTextColor">@color/bottom_menu_item_color</item>
         <item name="android:dropDownListViewStyle">@style/SpinnerStyle</item>
+        <item name="alertDialogTheme">@style/AlertDialogTheme</item>
     </style>
     <style name="splashScreenTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/ic_splash_screen</item>
@@ -38,7 +39,19 @@
         <item name="colorControlActivated">@color/teal_500</item>
         <item name="colorControlHighlight">@color/teal_500</item>
         <item name="android:textCursorDrawable">@null</item>
-        <item name="android:textColor">@color/teal_500</item>
+    </style>
+
+    <style name="TextInputLayoutStyleExposed" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="boxStrokeErrorColor">@color/red_500</item>
+        <item name="boxStrokeColor">@color/text_input_box_stroke</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="hintTextColor">@color/grey_400</item>
+        <item name="endIconTint">@color/exposed_menu_color</item>
+        <item name="errorEnabled">true</item>
+        <item name="errorIconDrawable">@drawable/ic_baseline_error_outline_24</item>
+        <item name="errorIconTint">@color/red_500</item>
+        <item name="errorTextAppearance">@style/error_appearance</item>
+        <item name="android:textCursorDrawable">@null</item>
     </style>
     <style name="error_appearance" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/red_500</item>
@@ -52,5 +65,16 @@
     <style name="DotsDarkTheme" parent="@style/Widget.AppCompat.ActionButton.Overflow" >
         <item name="android:tint">@color/white</item>
     </style>
+    <style name="AlertDialogTheme" parent="ThemeOverlay.AppCompat.Dialog.Alert">
+        <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
+        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
+    </style>
 
+    <style name="NegativeButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">@color/teal_700</item>
+    </style>
+
+    <style name="PositiveButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">@color/teal_700</item>
+    </style>
 </resources>

@@ -5,7 +5,7 @@ import com.squareup.moshi.JsonClass
 import com.squareup.moshi.ToJson
 
 @JsonClass(generateAdapter = true)
-class HistoryResponse(
+data class HistoryResponse(
     val data:List<ProjectHistory>,
     val todaysHistory: TodaysHistory,
     val weeklyHistory: WeeklyHistory,
@@ -13,7 +13,7 @@ class HistoryResponse(
 )
 
 @JsonClass(generateAdapter = true)
-class HistoryResponseJson(
+data class HistoryResponseJson(
     val data:List<ProjectHistory> = listOf(),
     val todaysHistory: TodaysHistory?=null,
     val weeklyHistory: WeeklyHistory?=null,
@@ -28,7 +28,6 @@ class CustomObjAdapter {
     @FromJson
     fun fromJson(customObjJson: HistoryResponseJson): HistoryResponse {
         var at1 = customObjJson.data
-        // TODO: find a way to convert customObjJson.at2 of type String to Date here
         var at2 = customObjJson.todaysHistory
         var at3 = customObjJson.weeklyHistory
         var at4 = customObjJson.monthlyHistory

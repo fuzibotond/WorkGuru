@@ -1,244 +1,181 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".profile.presentation.components.ProfileFragment"
     android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:background="@color/white_wrapped"
-    >
-
+    android:layout_width="match_parent">
     <LinearLayout
+
+        android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/profile"
-            android:textSize="24sp"
-            android:textColor="@color/black"
-            android:fontFamily="@font/interlight"
-            android:layout_margin="10dp"
-            />
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_outline_info_24"
-            android:layout_gravity="center"
-            app:tint="@color/black" />
-
-    </LinearLayout>
-
-    <com.google.android.material.divider.MaterialDivider
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:dividerInsetStart="16dp"
-        app:dividerInsetEnd="16dp"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="3"
-       android:layout_margin="10dp">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profile_image"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:src="@drawable/ic_baseline_person_24"
-            android:layout_weight="1"
-            android:layout_margin="20dp"
-           />
-
-        <com.google.android.material.button.MaterialButton
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/photo_change"
-            android:text="@string/change"
-            android:fontFamily="@font/interlight"
-            android:textAllCaps="false"
-            android:backgroundTint="@color/teal_700"
-            android:layout_gravity="center_vertical"
-            android:layout_margin="10dp"
-            android:shadowColor="@color/black"/>
-        <com.google.android.material.button.MaterialButton
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/photo_remove"
-            android:text="@string/remove"
-            android:fontFamily="@font/interlight"
-            android:textAllCaps="false"
-            android:backgroundTint="@color/white"
-            android:textColor="@color/black"
-            android:layout_margin="10dp"
-            android:layout_gravity="center_vertical"
-            android:shadowColor="@color/black"/>
-
-    </LinearLayout>
-    <com.google.android.material.divider.MaterialDivider
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:dividerInsetStart="16dp"
-        app:dividerInsetEnd="16dp"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_margin="10dp">
+        android:background="@color/white_wrapped"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/profile"
+                android:textSize="24sp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/interlight"
+                android:layout_margin="10dp"
+                />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_outline_info_24"
+                android:layout_gravity="center"
+                app:tint="@color/black" />
+
+        </LinearLayout>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:dividerInsetStart="16dp"
+            app:dividerInsetEnd="16dp"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            >
+            android:weightSum="3"
+            android:layout_margin="10dp">
 
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_image"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:src="@drawable/ic_baseline_person_24"
+                android:layout_margin="20dp"
+                />
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/photo_change_btn"
+                android:text="@string/change"
+                android:fontFamily="@font/interlight"
+                android:textAllCaps="false"
+                android:backgroundTint="@color/teal_700"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="10dp"
+                android:shadowColor="@color/black"/>
+            <com.google.android.material.button.MaterialButton
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/photo_remove"
+                android:text="@string/remove"
+                android:fontFamily="@font/interlight"
+                android:textAllCaps="false"
+                android:backgroundTint="@color/white"
+                android:textColor="@color/black"
+                android:layout_margin="10dp"
+                android:layout_gravity="center_vertical"
+                android:shadowColor="@color/black"/>
+
+        </LinearLayout>
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:dividerInsetStart="16dp"
+            app:dividerInsetEnd="16dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="10dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:id="@+id/email_address_txt_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:fontFamily="@font/intermedium"
+                    android:text="@string/email_address"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    />
+                <TextView
+                    android:id="@+id/email_address_txt_profile_addition"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:fontFamily="@font/intermedium"
+                    android:text="@string/this_is_your_username"
+                    android:textColor="@color/grey_600"
+                    android:textSize="14sp"
+
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+                <TextView
+                    android:id="@+id/email_address_and_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:fontFamily="@font/intermedium"
+                    android:text="@string/example_gmail_com"
+                    android:textColor="@color/grey_600"
+                    android:textSize="14sp"
+                    />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_baseline_check_circle_24"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    app:tint="@color/teal_700" />
+            </LinearLayout>
+
+        </LinearLayout>
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:dividerInsetStart="16dp"
+            app:dividerInsetEnd="16dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="10dp">
             <TextView
-                android:id="@+id/email_address_txt_profile"
+                android:id="@+id/full_name_profile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginBottom="5dp"
                 android:fontFamily="@font/intermedium"
-                android:text="@string/email_address"
+                android:text="@string/full_name"
                 android:textColor="@color/black"
                 android:textSize="14sp"
                 />
-            <TextView
-                android:id="@+id/email_address_txt_profile_addition"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:fontFamily="@font/intermedium"
-                android:text="@string/this_is_your_username"
-                android:textColor="@color/grey_600"
-                android:textSize="14sp"
 
-                />
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            >
-            <TextView
-                android:id="@+id/email_address_and_username"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="5dp"
-                android:fontFamily="@font/intermedium"
-                android:text="@string/example_gmail_com"
-                android:textColor="@color/grey_600"
-                android:textSize="14sp"
-                />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_baseline_check_circle_24"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                app:tint="@color/teal_700" />
-        </LinearLayout>
-
-    </LinearLayout>
-    <com.google.android.material.divider.MaterialDivider
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:dividerInsetStart="16dp"
-        app:dividerInsetEnd="16dp"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_margin="10dp">
-        <TextView
-            android:id="@+id/full_name_profile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginBottom="5dp"
-            android:fontFamily="@font/intermedium"
-            android:text="@string/full_name"
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/full_name_input_layout_profile"
-            style="@style/TextInputLayoutStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="5dp"
-            android:textColor="@color/white"
-            app:errorIconDrawable="@drawable/ic_baseline_error_outline_24"
-            app:errorIconTint="@color/red_500"
-            app:helperTextTextColor="@color/red_500"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
-            >
-
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/full_name_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLength="50"
-                android:selectAllOnFocus="true"
-                android:singleLine="true"
-                app:boxStrokeColor="@color/red_500"
-                android:autofillHints="name">
-
-            </com.google.android.material.textfield.TextInputEditText>
-
-        </com.google.android.material.textfield.TextInputLayout>
-    </LinearLayout>
-    <com.google.android.material.divider.MaterialDivider
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:dividerInsetStart="16dp"
-        app:dividerInsetEnd="16dp"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_margin="10dp">
-
-        <TextView
-            android:id="@+id/password_profile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginBottom="5dp"
-            android:fontFamily="@font/intermedium"
-            android:text="@string/password"
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            />
-
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/setNewPassword"
-            android:textColor="@color/black"
-            android:text="@string/password"
-            android:backgroundTint="@color/white"
-            android:layout_marginStart="40dp"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:id="@+id/set_new_password_layout"
-            >
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/password_layout_input_profile"
+                android:id="@+id/full_name_input_layout_profile"
                 style="@style/TextInputLayoutStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -253,7 +190,7 @@
 
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/password_input_profile"
+                    android:id="@+id/full_name_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLength="50"
@@ -261,42 +198,111 @@
                     android:singleLine="true"
                     app:boxStrokeColor="@color/red_500"
                     android:autofillHints="name"
-                    app:endIconMode="password_toggle" />
-                <com.google.android.material.button.MaterialButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/cancel_password_profile_btn"
-                    android:text="@string/cancel"
-                    android:textColor="@color/black"
-                    android:backgroundTint="@color/white"
-                    android:layout_gravity="end"
-                    />
+                    android:textCursorDrawable="@drawable/color_cursor">
+
+                </com.google.android.material.textfield.TextInputEditText>
 
             </com.google.android.material.textfield.TextInputLayout>
-
         </LinearLayout>
-    </LinearLayout>
-    <com.google.android.material.divider.MaterialDivider
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:dividerInsetStart="16dp"
-        app:dividerInsetEnd="16dp"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_margin="10dp">
-        <TextView
-            android:id="@+id/phone_number_profile"
-            android:layout_width="wrap_content"
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginBottom="5dp"
-            android:fontFamily="@font/intermedium"
-            android:text="@string/phone_number"
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            />
+            app:dividerInsetStart="16dp"
+            app:dividerInsetEnd="16dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="10dp">
+
+            <TextView
+                android:id="@+id/password_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="5dp"
+                android:fontFamily="@font/intermedium"
+                android:text="@string/password"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                />
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/setNewPassword"
+                android:textColor="@color/black"
+                android:text="@string/password"
+                android:backgroundTint="@color/white"
+                android:layout_marginStart="40dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/set_new_password_layout"
+                >
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/password_layout_input_profile"
+                    style="@style/TextInputLayoutStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="5dp"
+                    android:textColor="@color/white"
+                    app:errorIconDrawable="@drawable/ic_baseline_error_outline_24"
+                    app:errorIconTint="@color/red_500"
+                    app:helperTextTextColor="@color/red_500"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginEnd="40dp"
+                    >
+
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/password_input_profile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLength="50"
+                        android:selectAllOnFocus="true"
+                        android:singleLine="true"
+                        app:boxStrokeColor="@color/red_500"
+                        android:autofillHints="name"
+                        android:inputType="textPassword"
+                        app:endIconMode="password_toggle"
+                        android:textCursorDrawable="@drawable/color_cursor"/>
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/cancel_password_profile_btn"
+                        android:text="@string/cancel"
+                        android:textColor="@color/black"
+                        android:backgroundTint="@color/white"
+                        android:layout_gravity="end"
+                        />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:dividerInsetStart="16dp"
+            app:dividerInsetEnd="16dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="10dp">
+            <TextView
+                android:id="@+id/phone_number_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="5dp"
+                android:fontFamily="@font/intermedium"
+                android:text="@string/phone_number"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                />
 
 
             <com.google.android.material.textfield.TextInputLayout
@@ -311,9 +317,245 @@
                 app:helperTextTextColor="@color/red_500"
                 android:layout_marginStart="40dp"
                 android:layout_marginEnd="40dp"
+
                 >
                 <com.google.android.material.textfield.TextInputEditText
+
                     android:id="@+id/phone_number_input_profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLength="11"
+                    android:selectAllOnFocus="true"
+                    android:singleLine="true"
+                    app:boxStrokeColor="@color/red_500"
+                    android:autofillHints="Phone number"
+                    android:inputType="phone"
+                    android:textCursorDrawable="@drawable/color_cursor"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:dividerInsetStart="16dp"
+            app:dividerInsetEnd="16dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="10dp">
+            <TextView
+                android:id="@+id/country_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="5dp"
+                android:fontFamily="@font/intermedium"
+                android:text="@string/country_region"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingRight="30dp"
+                android:paddingEnd="30dp"
+                tools:ignore="RtlSymmetry"
+                android:layout_margin="5dp">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_margin="10dp"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/ic_baseline_place_24"
+                    android:layout_gravity="center"
+                    />
+
+
+
+
+                <com.google.android.material.textfield.TextInputLayout
+
+                    style="@style/TextInputLayoutStyleExposed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Country"
+                    android:orientation="horizontal"
+                    >
+
+                    <AutoCompleteTextView
+                        style="@style/TextInputLayoutStyle"
+                        android:id="@+id/country_spinner_profile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textAutoComplete"
+                        />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:dividerInsetStart="16dp"
+            app:dividerInsetEnd="16dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="10dp">
+            <TextView
+                android:id="@+id/state_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="5dp"
+                android:fontFamily="@font/intermedium"
+                android:text="@string/state_province"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingRight="30dp"
+                android:paddingEnd="30dp"
+                tools:ignore="RtlSymmetry"
+                android:layout_margin="5dp">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_margin="10dp"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/ic_baseline_place_24"
+                    android:layout_gravity="center"
+                    />
+
+                <com.google.android.material.textfield.TextInputLayout
+
+                    style="@style/TextInputLayoutStyleExposed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/state_province"
+                    android:orientation="horizontal"
+                    >
+
+                    <AutoCompleteTextView
+                        style="@style/TextInputLayoutStyle"
+                        android:id="@+id/state_spinner_profile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textAutoComplete"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:dividerInsetStart="16dp"
+            app:dividerInsetEnd="16dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="10dp">
+            <TextView
+                android:id="@+id/city_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="5dp"
+                android:fontFamily="@font/intermedium"
+                android:text="@string/city"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingRight="30dp"
+                android:paddingEnd="30dp"
+                tools:ignore="RtlSymmetry"
+                android:layout_margin="5dp">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_margin="10dp"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/ic_baseline_place_24"
+                    android:layout_gravity="center"
+                    />
+
+                <com.google.android.material.textfield.TextInputLayout
+
+                    style="@style/TextInputLayoutStyleExposed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/city"
+                    android:orientation="horizontal"
+                    >
+
+                    <AutoCompleteTextView
+                        style="@style/TextInputLayoutStyle"
+                        android:id="@+id/city_spinner_profile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textAutoComplete"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:dividerInsetStart="16dp"
+            app:dividerInsetEnd="16dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="10dp">
+            <TextView
+                android:id="@+id/street_address_number_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="5dp"
+                android:fontFamily="@font/intermedium"
+                android:text="@string/street_address"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                />
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/street_address_layout_input_profile"
+                style="@style/TextInputLayoutStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:textColor="@color/white"
+                app:errorIconDrawable="@drawable/ic_baseline_error_outline_24"
+                app:errorIconTint="@color/red_500"
+                app:helperTextTextColor="@color/red_500"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="40dp"
+                >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/street_address_input_profile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLength="50"
@@ -321,315 +563,89 @@
                     android:singleLine="true"
                     app:boxStrokeColor="@color/red_500"
                     android:autofillHints="name"
-                    app:endIconMode="password_toggle" />
+                    android:textCursorDrawable="@drawable/color_cursor"
+                    android:inputType="textPostalAddress"/>
 
             </com.google.android.material.textfield.TextInputLayout>
-    </LinearLayout>
-    <com.google.android.material.divider.MaterialDivider
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:dividerInsetStart="16dp"
-        app:dividerInsetEnd="16dp"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_margin="10dp">
-        <TextView
-            android:id="@+id/country_profile"
-            android:layout_width="wrap_content"
+        </LinearLayout>
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginBottom="5dp"
-            android:fontFamily="@font/intermedium"
-            android:text="@string/country_region"
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            />
+            app:dividerInsetStart="16dp"
+            app:dividerInsetEnd="16dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="10dp">
+            <TextView
+                android:id="@+id/zip_number_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="5dp"
+                android:fontFamily="@font/intermedium"
+                android:text="@string/zip_postal"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                />
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/zip_layout_input_profile"
+                style="@style/TextInputLayoutStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:textColor="@color/white"
+                app:errorIconDrawable="@drawable/ic_baseline_error_outline_24"
+                app:errorIconTint="@color/red_500"
+                app:helperTextTextColor="@color/red_500"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="40dp"
+                >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/zip_input_profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLength="50"
+                    android:selectAllOnFocus="true"
+                    android:singleLine="true"
+                    app:boxStrokeColor="@color/red_500"
+                    android:autofillHints="name"
+                    android:textCursorDrawable="@drawable/color_cursor"
+                    android:inputType="textPostalAddress"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingRight="30dp"
-            android:paddingEnd="30dp"
-            tools:ignore="RtlSymmetry"
-            android:layout_margin="5dp">
+            android:weightSum="2">
 
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_margin="10dp"
-                android:layout_height="match_parent"
-                app:srcCompat="@drawable/ic_baseline_place_24"
-                android:layout_gravity="center"
-                />
-
-
-
-
-            <com.google.android.material.textfield.TextInputLayout
-
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="Country"
-                android:orientation="horizontal"
-                >
-
-                <AutoCompleteTextView
-                    android:id="@+id/country_spinner_profile"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="none"/>
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-
+                android:id="@+id/profile_cancel_btn"
+                android:text="@string/cancel"
+                android:textColor="@color/teal_900"
+                android:outlineAmbientShadowColor="@color/teal_700"
+                android:backgroundTint="@color/white"
+                android:layout_weight="1"
+                android:layout_margin="10dp"/>
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/profile_save_btn"
+                android:text="@string/save"
+                android:textColor="@color/white"
+                android:outlineAmbientShadowColor="@color/teal_700"
+                android:backgroundTint="@color/teal_700"
+                android:layout_weight="1"
+                android:layout_margin="10dp"/>
         </LinearLayout>
 
-    </LinearLayout>
-    <com.google.android.material.divider.MaterialDivider
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:dividerInsetStart="16dp"
-        app:dividerInsetEnd="16dp"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_margin="10dp">
-        <TextView
-            android:id="@+id/state_profile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginBottom="5dp"
-            android:fontFamily="@font/intermedium"
-            android:text="@string/state_province"
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingRight="30dp"
-            android:paddingEnd="30dp"
-            tools:ignore="RtlSymmetry"
-            android:layout_margin="5dp">
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_margin="10dp"
-                android:layout_height="match_parent"
-                app:srcCompat="@drawable/ic_baseline_place_24"
-                android:layout_gravity="center"
-                />
-
-            <com.google.android.material.textfield.TextInputLayout
-
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/state_province"
-                android:orientation="horizontal"
-                >
-
-                <AutoCompleteTextView
-                    android:id="@+id/state_spinner_profile"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="none"/>
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-        </LinearLayout>
 
     </LinearLayout>
-    <com.google.android.material.divider.MaterialDivider
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:dividerInsetStart="16dp"
-        app:dividerInsetEnd="16dp"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_margin="10dp">
-        <TextView
-            android:id="@+id/city_profile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginBottom="5dp"
-            android:fontFamily="@font/intermedium"
-            android:text="@string/city"
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingRight="30dp"
-            android:paddingEnd="30dp"
-            tools:ignore="RtlSymmetry"
-            android:layout_margin="5dp">
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_margin="10dp"
-                android:layout_height="match_parent"
-                app:srcCompat="@drawable/ic_baseline_place_24"
-                android:layout_gravity="center"
-                />
-
-            <com.google.android.material.textfield.TextInputLayout
-
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/city"
-                android:orientation="horizontal"
-                >
-
-                <AutoCompleteTextView
-                    android:id="@+id/city_spinner_profile"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="none"/>
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-        </LinearLayout>
-
-    </LinearLayout>
-    <com.google.android.material.divider.MaterialDivider
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:dividerInsetStart="16dp"
-        app:dividerInsetEnd="16dp"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_margin="10dp">
-        <TextView
-            android:id="@+id/street_address_number_profile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginBottom="5dp"
-            android:fontFamily="@font/intermedium"
-            android:text="@string/street_address"
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            />
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/street_address_layout_input_profile"
-            style="@style/TextInputLayoutStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="5dp"
-            android:textColor="@color/white"
-            app:errorIconDrawable="@drawable/ic_baseline_error_outline_24"
-            app:errorIconTint="@color/red_500"
-            app:helperTextTextColor="@color/red_500"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
-            >
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/street_address_input_profile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLength="50"
-                android:selectAllOnFocus="true"
-                android:singleLine="true"
-                app:boxStrokeColor="@color/red_500"
-                android:autofillHints="name"
-                app:endIconMode="password_toggle" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-    </LinearLayout>
-    <com.google.android.material.divider.MaterialDivider
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:dividerInsetStart="16dp"
-        app:dividerInsetEnd="16dp"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_margin="10dp">
-        <TextView
-            android:id="@+id/zip_number_profile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginBottom="5dp"
-            android:fontFamily="@font/intermedium"
-            android:text="@string/zip_postal"
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            />
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/zip_layout_input_profile"
-            style="@style/TextInputLayoutStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="5dp"
-            android:textColor="@color/white"
-            app:errorIconDrawable="@drawable/ic_baseline_error_outline_24"
-            app:errorIconTint="@color/red_500"
-            app:helperTextTextColor="@color/red_500"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
-            >
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/zip_input_profile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLength="50"
-                android:selectAllOnFocus="true"
-                android:singleLine="true"
-                app:boxStrokeColor="@color/red_500"
-                android:autofillHints="name"
-                app:endIconMode="password_toggle" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2">
-
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/profile_cancel_btn"
-            android:text="@string/cancel"
-            android:textColor="@color/teal_900"
-            android:outlineAmbientShadowColor="@color/teal_700"
-            android:backgroundTint="@color/white"
-            android:layout_weight="1"
-            android:layout_margin="10dp"/>
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/profile_save_btn"
-            android:text="@string/save"
-            android:textColor="@color/white"
-            android:outlineAmbientShadowColor="@color/teal_700"
-            android:backgroundTint="@color/teal_700"
-            android:layout_weight="1"
-            android:layout_margin="10dp"/>
-    </LinearLayout>
-
-
-</LinearLayout>
+</ScrollView>
