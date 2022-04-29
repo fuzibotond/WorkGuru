@@ -73,7 +73,8 @@
                             android:layout_height="15dp"
                             android:src="@drawable/ic_baseline_arrow_upward_24"
                             android:backgroundTint="@color/teal_100"
-                            app:tint="@color/teal_900" />
+                            app:tint="@color/teal_900"
+                           />
                         <TextView
                             android:textColor="@color/teal_900"
                             android:layout_width="wrap_content"

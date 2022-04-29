@@ -9,7 +9,7 @@ import retrofit2.http.*
 interface ProfileApi {
 
     @GET(Constants.GET_USER_HISTORY)
-    suspend fun listUserHistory(@Header("Authorization") token:String): List<HistoryResponse>
+    suspend fun listUserHistory(@Header("Authorization") token:String): List<Any>
 
     @GET(Constants.GET_COUNTRIES)
     suspend fun listCountries(@Header("Authorization") token:String): CountriesResponse

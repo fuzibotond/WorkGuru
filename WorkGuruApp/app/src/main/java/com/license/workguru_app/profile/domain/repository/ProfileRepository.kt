@@ -5,7 +5,7 @@ import com.license.workguru_app.profile.data.remote.DTO.*
 import com.license.workguru_app.timetracking.data.remote.DTO.CategoryResponse
 
 class ProfileRepository {
-    suspend fun listUserHistory(access_token:String): List<HistoryResponse> {
+    suspend fun listUserHistory(access_token:String): List<Any> {
         return RetrofitInstance.apiProfile.listUserHistory(access_token)
     }
 

@@ -19,12 +19,19 @@ import com.anychart.AnyChart
 import com.anychart.enums.Align
 import android.annotation.SuppressLint
 import android.content.res.Configuration
+import android.util.Log
+import android.widget.Toast
+import androidx.fragment.app.activityViewModels
+import com.license.workguru_app.di.SharedViewModel
+import com.license.workguru_app.profile.domain.use_case.display_user_insights.UserHistoryViewModel
 
 
 class ChartFragment : Fragment() {
     private var _binding: FragmentChartBinding? = null
     private val binding get() = _binding!!
-
+    val sharedViewModel: SharedViewModel by activityViewModels()
+    var names = mutableListOf<String>()
+    var numbers = mutableListOf<Int>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,22 +41,35 @@ class ChartFragment : Fragment() {
         // Kotlin DSL example
 
         _binding = FragmentChartBinding.inflate(inflater, container, false)
-        setupPieChart()
+        binding.chartProgressBar.visibility = View.VISIBLE
+        setObservers()
+
+
         return binding.root
     }
+
+    private fun setObservers() {
+        sharedViewModel.chartData.observe(viewLifecycleOwner){
+            sharedViewModel.chartData.value?.forEach {
+                names.add(it.name)
+                numbers.add(it.project_id)
+            }
+            binding.chartProgressBar.visibility = View.GONE
+            setupPieChart()
+        }
+    }
+
 
     @SuppressLint("UseCompatLoadingForColorStateLists")
     private fun setupPieChart() {
 
-        val name = arrayOf("VietNam","ThaiLand","Laos","Singapore")
-        val gdp = arrayOf(1000,100,500,200)
 
         val pie = AnyChart.pie()
 
         val data = ArrayList<DataEntry>()
 
-        for(i in name.indices)
-            data.add(ValueDataEntry(name[i],gdp[i]))
+        for(i in names.indices)
+            data.add(ValueDataEntry(names[i],numbers[i]))
 
         pie.data(data)
 
