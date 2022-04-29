@@ -5,7 +5,7 @@ object Constants {
     const val BASE_URL = "https://workguru.webgurus.biz/"
     const val CLIENT_ID = "2"
     const val CLIENT_SECRET = "sc7YwoRAmTsvnNlK8HmjQC4cd2Cb8ddRqIhPIfng"
-
+    const val VUE_APP_USER_AVATAR_URL="https://workguru.webgurus.biz/storage/user-avatar/"
     //authentication
     const val CLIENT_ID_GOOGLE = "866931911552-4tg50kd3edrpbdk97rtvfakjl37vum9t.apps.googleusercontent.com"
     const val CLIENT_ID_GOOGLE1 = "866931911552-lkun1n9crdjs2t29f5m2hvumoad9stvf.apps.googleusercontent.com"

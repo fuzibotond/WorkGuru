@@ -2,7 +2,7 @@ package com.license.workguru_app.profile.domain.repository
 
 import com.license.workguru_app.di.RetrofitInstance
 import com.license.workguru_app.profile.data.remote.DTO.*
-import com.license.workguru_app.timetracking.data.remote.DTO.CategoryResponse
+import okhttp3.MultipartBody
 
 class ProfileRepository {
     suspend fun listUserHistory(access_token:String): List<Any> {
@@ -30,7 +30,7 @@ class ProfileRepository {
         city:String?,
         street_address:String?,
         country: String?,
-        avatar: String,
+        avatar: MultipartBody.Part,
         _method:String,
         state:String
     ): MessageResponse{
@@ -44,5 +44,17 @@ class ProfileRepository {
             state
         )
     }
+
+//    suspend fun changeProfileData(
+//        access_token:String,
+//        city:String?,
+//        street_address:String?,
+//        country: String?,
+//        avatar: String,
+//        _method:String,
+//        state:String
+//    ): MessageResponse{
+//        return RetrofitInstance.apiProfile.changeProfileData(access_token, ProfileRequest(city!!, street_address!!, country!!, avatar, _method, state))
+//    }
 
 }

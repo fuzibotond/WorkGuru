@@ -1,9 +1,8 @@
 package com.license.workguru_app.profile.data.remote
 
-import com.license.workguru_app.di.RetrofitInstance
 import com.license.workguru_app.profile.data.remote.DTO.*
-import com.license.workguru_app.timetracking.data.remote.DTO.CategoryResponse
 import com.license.workguru_app.utils.Constants
+import okhttp3.MultipartBody
 import retrofit2.http.*
 
 interface ProfileApi {
@@ -23,16 +22,33 @@ interface ProfileApi {
     @GET(Constants.GET_USER_PROFILE)
     suspend fun getUserProfile(@Header("Authorization") token:String): ProfileResponse
 
-    @FormUrlEncoded
+//    @FormUrlEncoded
+//    @PUT(Constants.CHANGE_USER_PROFILE)
+//    suspend fun changeProfileData(
+//        @Header("Authorization") token:String,
+//        @Field("city") city:String?,
+//        @Field("street_address") street_address:String?,
+//        @Field("country") country: String?,
+//        @Field("avatar") avatar: String,
+//        @Field("_method") _method:String,
+//        @Field("state") state:String
+//    ): MessageResponse
+    @Multipart
     @POST(Constants.CHANGE_USER_PROFILE)
     suspend fun changeProfileData(
-        @Header("Authorization") token:String,
-        @Field("city") city:String?,
-        @Field("street_address") street_address:String?,
-        @Field("country") country: String?,
-        @Field("avatar") avatar: String,
-        @Field("_method") _method:String,
-        @Field("state") state:String
+    @Header("Authorization") token:String,
+    @Part("city") city:String?,
+    @Part("street_address") street_address:String?,
+    @Part("country") country: String?,
+    @Part avatar: MultipartBody.Part,
+    @Part("_method") _method:String,
+    @Part("state") state:String
     ): MessageResponse
+
+//    @PUT(Constants.CHANGE_USER_PROFILE)
+//    suspend fun changeProfileData(
+//        @Header("Authorization") token:String,
+//        @Body request: ProfileRequest
+//    ): MessageResponse
 
 }

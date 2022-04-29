@@ -1,7 +1,9 @@
 package com.license.workguru_app.profile.presentation.components
 
 import android.app.Activity
+import android.content.ContentResolver
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -17,6 +19,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import com.license.workguru_app.R
 import android.os.Build
+import android.provider.MediaStore
+import android.util.Base64
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.net.toUri
@@ -37,7 +41,10 @@ import com.license.workguru_app.profile.domain.use_case.display_states.ListState
 import com.license.workguru_app.profile.domain.use_case.display_user_profile.UserProfileViewModel
 import com.license.workguru_app.profile.domain.use_case.display_user_profile.UserProfileViewModelFactory
 import com.license.workguru_app.profile.presentation.adapetrs.StateAdapter
+import com.license.workguru_app.utils.Constants
+import kotlinx.android.synthetic.main.activity_authorized.*
 import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
 
 
 class ProfileFragment : Fragment() {
@@ -50,6 +57,8 @@ class ProfileFragment : Fragment() {
     val cities:MutableLiveData<List<String>> = MutableLiveData()
 
     val uploadedImage:MutableLiveData<Uri> = MutableLiveData()
+    val filePath:MutableLiveData<String> = MutableLiveData("")
+    val bitmap:MutableLiveData<Bitmap> = MutableLiveData()
 
     lateinit var listCitiesViewModel: ListCitiesViewModel
     lateinit var listStatesViewModel: ListStatesViewModel
@@ -90,7 +99,7 @@ class ProfileFragment : Fragment() {
                 binding.phoneNumberInputProfile.setText(user.phone_number)
             }
             if (user.avatar != null) {
-                val imgUri = user.avatar.toUri().buildUpon().scheme("https").build()
+                val imgUri = Uri.parse(Constants.VUE_APP_USER_AVATAR_URL+user.avatar)
                 Glide.with(this)
                     .load(imgUri)
                     .centerCrop()
@@ -121,7 +130,7 @@ class ProfileFragment : Fragment() {
             if (user.zip != null) {
             binding.zipInputProfile.setText(user.zip)
             }
-
+            uploadedImage.value = Uri.parse(Constants.VUE_APP_USER_AVATAR_URL + user.avatar)
             //TODO: "active_timer": null,"id": 54,"role": "admin" - never used
         }
     }
@@ -201,21 +210,25 @@ class ProfileFragment : Fragment() {
                 builder.setTitle("Save")
                 builder.setMessage("Are you sure you want save changes?")
                 builder.setPositiveButton(android.R.string.yes) { dialog, which ->
-                    var path:Uri? = null
-                    uploadedImage.observe(viewLifecycleOwner){
-                        path = uploadedImage.value
+                    val path:String
+                    if (filePath.value != ""){
+                        path = filePath.value.toString()
+                    }else{
+                        path = uploadedImage.value.toString()
                     }
                     lifecycleScope.launch {
-                            
+
                             changeProfileDataViewModel.changeData(
                                 binding.citySpinnerProfile.text.toString(),
                                 binding.streetAddressInputProfile.text.toString(),
                                 binding.countrySpinnerProfile.text.toString(),
-                                "",
-                                "POST",
+                                path,
+                                "PUT",
                                 binding.stateSpinnerProfile.text.toString()
                                 )
                         }
+
+//                    uploadImage()
 
                 }
                 builder.setNegativeButton("Cancel") { dialog, which ->
@@ -247,6 +260,16 @@ class ProfileFragment : Fragment() {
 
 
     }
+    private fun uploadImage(){
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        bitmap.value?.compress(Bitmap.CompressFormat.JPEG, 75, byteArrayOutputStream)
+        val imageInByte = byteArrayOutputStream.toByteArray()
+
+        val encodeImage = Base64.encodeToString(imageInByte, Base64.DEFAULT)
+
+        Toast.makeText(requireActivity(), encodeImage, Toast.LENGTH_SHORT).show()
+
+    }
 
     private fun removeUploadedPhoto() {
         binding.profileImage.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_person_24))
@@ -260,10 +283,10 @@ class ProfileFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE){
-            if (data != null) {
-                uploadedImage.value = data.data
-            }
+            uploadedImage.value = data!!.data
             binding.profileImage.setImageURI(data?.data) // handle chosen image
+            filePath.value = data.data.toString()
+            bitmap.value = MediaStore.Images.Media.getBitmap(requireActivity().contentResolver,data?.data )
         }
     }
     private fun handleThatBackPress(){
