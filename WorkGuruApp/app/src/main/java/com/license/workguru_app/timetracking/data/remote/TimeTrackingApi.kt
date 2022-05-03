@@ -22,4 +22,10 @@ interface TimeTrackingApi {
 
     @PUT(Constants.STOP_TIMER)
     suspend fun stopTimer(@Header("Authorization") token:String, @Body request: StartStopTimerRequest): Response<Unit>
+
+    @POST(Constants.CREATE_PROJECT)
+    suspend fun newProject(@Header("Authorization") token:String,@Body request: ProjecttRequest): NewProjectResponse
+
+    @POST(Constants.CREATE_CATEGORY)
+    suspend fun newCategory(@Header("Authorization") token:String,@Body request: CategoryRequest): NewCategoryResponse
 }

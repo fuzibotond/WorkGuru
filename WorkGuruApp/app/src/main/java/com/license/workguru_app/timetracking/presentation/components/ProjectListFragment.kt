@@ -50,6 +50,7 @@ class ProjectListFragment : Fragment(), ProjectAdapter.OnItemLongClickListener,P
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentProjectListBinding.inflate(inflater, container, false)
+
         getData()
         setupFilter()
         fillData()
@@ -105,10 +106,14 @@ class ProjectListFragment : Fragment(), ProjectAdapter.OnItemLongClickListener,P
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
+
         val factory = ListProjectsViewModelFactory(this.requireContext(), TimeTrackingRepository())
         listProjectsViewModel = ViewModelProvider(this, factory).get(ListProjectsViewModel::class.java)
         getData()
     }
+
 
     private fun getData() {
        lifecycleScope.launch {

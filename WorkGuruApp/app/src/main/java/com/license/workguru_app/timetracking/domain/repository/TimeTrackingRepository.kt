@@ -25,4 +25,12 @@ class TimeTrackingRepository {
     suspend fun stopTimer(access_token:String, request: StartStopTimerRequest): Response<Unit> {
         return RetrofitInstance.apiTimeTracking.stopTimer(access_token, request)
     }
+
+    suspend fun newProject(access_token:String, request: ProjecttRequest): NewProjectResponse {
+        return RetrofitInstance.apiTimeTracking.newProject(access_token, request)
+    }
+
+    suspend fun newCategory(access_token:String, request: CategoryRequest): NewCategoryResponse {
+        return RetrofitInstance.apiTimeTracking.newCategory(access_token, request)
+    }
 }

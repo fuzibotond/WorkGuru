@@ -53,9 +53,6 @@ class ProfileFragment : Fragment() {
     val REQUEST_CODE = 100
 
     val countries:MutableLiveData<List<String>> = MutableLiveData()
-    val statesWithId:MutableLiveData<List<States>> = MutableLiveData()
-    val cities:MutableLiveData<List<String>> = MutableLiveData()
-
     val uploadedImage:MutableLiveData<Uri> = MutableLiveData()
     val filePath:MutableLiveData<String> = MutableLiveData("")
     val bitmap:MutableLiveData<Bitmap> = MutableLiveData()
@@ -73,6 +70,8 @@ class ProfileFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
+        binding.passwordLayoutInputProfile.visibility = View.GONE
+        binding.cancelPasswordProfileBtn.visibility = View.GONE
         settingListeners()
         initializeData()
         handleThatBackPress()
@@ -134,14 +133,6 @@ class ProfileFragment : Fragment() {
             //TODO: "active_timer": null,"id": 54,"role": "admin" - never used
         }
     }
-    @BindingAdapter("imageUrl")
-    fun bindImage(imgView: ImageView, imgUrl: String?) {
-        imgUrl?.let {
-            val imgUri =
-                imgUrl.toUri().buildUpon().scheme("https").build()
-            imgView.setImageURI(imgUri)
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -195,7 +186,6 @@ class ProfileFragment : Fragment() {
 
     }
 
-
     @RequiresApi(Build.VERSION_CODES.O)
     private fun settingListeners() {
         binding.photoChangeBtn.setOnClickListener {
@@ -228,8 +218,6 @@ class ProfileFragment : Fragment() {
                                 )
                         }
 
-//                    uploadImage()
-
                 }
                 builder.setNegativeButton("Cancel") { dialog, which ->
                     dialog.dismiss()
@@ -257,17 +245,11 @@ class ProfileFragment : Fragment() {
                 }
             }
         }
-
-
-    }
-    private fun uploadImage(){
-        val byteArrayOutputStream = ByteArrayOutputStream()
-        bitmap.value?.compress(Bitmap.CompressFormat.JPEG, 75, byteArrayOutputStream)
-        val imageInByte = byteArrayOutputStream.toByteArray()
-
-        val encodeImage = Base64.encodeToString(imageInByte, Base64.DEFAULT)
-
-        Toast.makeText(requireActivity(), encodeImage, Toast.LENGTH_SHORT).show()
+        binding.setNewPassword.setOnClickListener {
+            val openURL = Intent(android.content.Intent.ACTION_VIEW)
+            openURL.data = Uri.parse("http://workguru-hr.herokuapp.com/reset-password")
+            startActivity(openURL)
+        }
 
     }
 
@@ -280,6 +262,7 @@ class ProfileFragment : Fragment() {
         intent.type = "image/*"
         startActivityForResult(intent, REQUEST_CODE)
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE){
@@ -289,6 +272,7 @@ class ProfileFragment : Fragment() {
             bitmap.value = MediaStore.Images.Media.getBitmap(requireActivity().contentResolver,data?.data )
         }
     }
+
     private fun handleThatBackPress(){
         val callback: OnBackPressedCallback = object: OnBackPressedCallback(true){
             override fun handleOnBackPressed() {

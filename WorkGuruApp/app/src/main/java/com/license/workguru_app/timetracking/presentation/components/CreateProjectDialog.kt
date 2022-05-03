@@ -36,30 +36,30 @@ import kotlin.collections.ArrayList
 import android.widget.CalendarView
 
 import android.widget.CalendarView.OnDateChangeListener
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.license.workguru_app.databinding.CreateTimerDialogLayoutBinding
-import com.license.workguru_app.timetracking.data.remote.DTO.StartStopTimerRequest
+import com.license.workguru_app.databinding.CreateProjectDialogBinding
 import com.license.workguru_app.timetracking.domain.model.Project
+import com.license.workguru_app.timetracking.domain.use_case.create_new_project.NewProjectViewModel
+import com.license.workguru_app.timetracking.domain.use_case.create_new_project.NewProjectViewModelFactory
 import com.license.workguru_app.timetracking.domain.use_case.list_projects.ListProjectsViewModel
 import com.license.workguru_app.timetracking.domain.use_case.list_projects.ListProjectsViewModelFactory
-import com.license.workguru_app.timetracking.domain.use_case.start_pause_stop_timer.StartPauseStopViewModel
-import com.license.workguru_app.timetracking.domain.use_case.start_pause_stop_timer.StartPauseStopViewModelFactory
 import kotlinx.android.synthetic.main.activity_authorized.*
 
 
-class CreateTimerDialog(
+class CreateProjectDialog(
 ): DialogFragment() {
-    private var _binding: CreateTimerDialogLayoutBinding? = null
+    private var _binding: CreateProjectDialogBinding? = null
     private val binding get() = _binding!!
+    lateinit var listCategoriesViewModel: ListCategoriesViewModel
+    lateinit var newProjectViewModel: NewProjectViewModel
     lateinit var listProjectsViewModel: ListProjectsViewModel
-    val choosenProject:MutableLiveData<Project> = MutableLiveData()
+    var choosenCategory:MutableLiveData<Category> = MutableLiveData()
     val sharedViewModel: SharedViewModel by activityViewModels()
-    lateinit var startPauseStopViewModel: StartPauseStopViewModel
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        getDialog()!!.getWindow()?.setBackgroundDrawableResource(R.drawable.terms_and_conditions_icon_foreground);
-        _binding = CreateTimerDialogLayoutBinding.inflate(inflater, container, false)
+        _binding = CreateProjectDialogBinding.inflate(inflater, container, false)
+        binding.newProjectProgressBar.visibility = View.GONE
         handleThatBackPress()
         initialize()
         return binding.root
@@ -67,58 +67,56 @@ class CreateTimerDialog(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val factory = ListProjectsViewModelFactory(requireActivity(), TimeTrackingRepository())
-        listProjectsViewModel = ViewModelProvider(this, factory).get(ListProjectsViewModel::class.java)
+        val factory = ListCategoriesViewModelFactory(requireActivity(), TimeTrackingRepository())
+        listCategoriesViewModel = ViewModelProvider(this, factory).get(ListCategoriesViewModel::class.java)
+
+        val factoryProject = NewProjectViewModelFactory(requireActivity(), TimeTrackingRepository())
+        newProjectViewModel = ViewModelProvider(this, factoryProject).get(NewProjectViewModel::class.java)
+
+        val factoryList = ListProjectsViewModelFactory(this.requireContext(), TimeTrackingRepository())
+        listProjectsViewModel = ViewModelProvider(this, factoryList).get(ListProjectsViewModel::class.java)
+
         lifecycleScope.launch {
-            listProjectsViewModel.listProjects(true, "0")
+            listCategoriesViewModel.listCategories()
+        }
+        lifecycleScope.launch {
+            listProjectsViewModel.listProjects(false, "0")
         }
 
-        val timerFactory = StartPauseStopViewModelFactory(requireActivity(), TimeTrackingRepository())
-        startPauseStopViewModel = ViewModelProvider(this,timerFactory ).get(StartPauseStopViewModel::class.java)
 
     }
 
+    @SuppressLint("ResourceAsColor")
     private fun initialize() {
+        listCategoriesViewModel.dataList.observe(viewLifecycleOwner){
+            val categories = listCategoriesViewModel.dataList.value
+            choseCategory(categories as ArrayList<Category>)
+        }
+        binding.createNewCategoryBtn.setOnClickListener {
+            val manager = (requireActivity() as AppCompatActivity).supportFragmentManager
+            CreateCategoryDialog().show(manager, "CustomManager")
+        }
+        binding.saveNewProjectBtn.setOnClickListener {
+            binding.newProjectProgressBar.visibility = View.VISIBLE
+            if (!avoidDuplicates( listProjectsViewModel.dataList.value as ArrayList<Project>)){
+                lifecycleScope.launch {
+                    if(newProjectViewModel.createNewProject(binding.newCategorySpinner.text.toString(), binding.newProjectNameTextInput.text.toString())){
+                        Toast.makeText(requireActivity(), "A new project just created successfully!", Toast.LENGTH_SHORT).show()
+                        binding.newProjectProgressBar.visibility = View.GONE
+
+                    }
+                }
+            }
+            else{
+                Toast.makeText(requireActivity(), "This project is already exist!", Toast.LENGTH_SHORT).show()
+                binding.newProjectProgressBar.visibility = View.GONE
+            }
+        }
         binding.createTimerCancelBtn.setOnClickListener {
             dialog?.dismiss()
         }
 
-        listProjectsViewModel.dataList.observe(viewLifecycleOwner){
-            val projects = listProjectsViewModel.dataList.value
-            choseCategory(projects as ArrayList<Project>)
-        }
-
-        binding.startTrackingBtn.setOnClickListener {
-            if (sharedViewModel.isTimerStarted.value == false){
-                lifecycleScope.launch {
-                    if (choosenProject.value != null){
-                        val projectId = choosenProject.value?.id.toString()
-                        val description = binding.descriptionTextInput.text.toString()
-                        if(startPauseStopViewModel.startTimer(false, project_id = projectId, description = description)){
-                            sharedViewModel.saveTimerState(true)
-                        }
-                    }
-
-                }
-            }
-            else{
-                Toast.makeText(context, "A timer is started on project ${sharedViewModel.currentProject.value!!.project_name} at ${sharedViewModel.currentProject.value!!.started_at}!", Toast.LENGTH_SHORT).show()
-            }
-        }
-        startPauseStopViewModel.startedTimer.observe(viewLifecycleOwner){
-            startPauseStopViewModel.startedTimer.value?.let { it1 ->
-                sharedViewModel.saveCurrentTimer(
-                    it1
-                )
-            }
-        }
-        binding.createNewProjectBtn.setOnClickListener {
-            val manager = (this as AppCompatActivity).supportFragmentManager
-            CreateProjectDialog().show(manager, "CustomManager")
-        }
     }
-
-
 
     override fun onStart() {
         super.onStart()
@@ -134,34 +132,34 @@ class CreateTimerDialog(
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
-    private fun choseCategory(categoryList:ArrayList<Project>) {
+    private fun choseCategory(categoryList:ArrayList<Category>) {
 
         val itemList = mutableListOf<String>()
         categoryList.forEach {
-            itemList.add(it.name+"(${it.category_name})")
+            itemList.add(it.category_name)
         }
 
         val adapter = ArrayAdapter(requireContext(), R.layout.custom_list_item, itemList as List<String>)
-        binding.projectSpinner.setAdapter(adapter)
+        binding.newCategorySpinner.setAdapter(adapter)
 
-        binding.projectSpinner.setOnItemClickListener { adapterView, view, i, l ->
+        binding.newCategorySpinner.setOnItemClickListener { adapterView, view, i, l ->
 
             val selectedItem = adapterView.adapter.getItem(i)
             categoryList.forEach {
-                if (it.name+"(${it.category_name})" == selectedItem){
-                    choosenProject.value = it
+                if (it.category_name == selectedItem){
+                    choosenCategory.value = it
                 }
             }
-
         }
-
     }
+    private fun avoidDuplicates(projectList:ArrayList<Project>):Boolean {
+        val projectName = binding.newProjectNameTextInput.text
+        projectList.forEach {
+            if(it.name.equals(projectName) ){
 
-
-    fun convertLongToTime(time: Long?): String {
-        val date = Date(time!!)
-        val format = SimpleDateFormat("yyyy.MM.dd HH:mm")
-        return format.format(date)
+                return true
+            }
+        }
+        return false
     }
-
 }

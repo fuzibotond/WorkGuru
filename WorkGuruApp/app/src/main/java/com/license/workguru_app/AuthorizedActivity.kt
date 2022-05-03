@@ -41,6 +41,7 @@ import android.provider.MediaStore
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.CountDownTimer
+import android.view.View
 import androidx.appcompat.widget.AppCompatImageView
 import com.anychart.standalones.ColorRange
 import com.bumptech.glide.Glide
@@ -53,8 +54,10 @@ import com.license.workguru_app.timetracking.data.source.services.TimerService
 import com.license.workguru_app.timetracking.domain.repository.TimeTrackingRepository
 import com.license.workguru_app.timetracking.domain.use_case.start_pause_stop_timer.StartPauseStopViewModel
 import com.license.workguru_app.timetracking.domain.use_case.start_pause_stop_timer.StartPauseStopViewModelFactory
+import com.license.workguru_app.timetracking.presentation.components.CreateProjectDialog
 import com.license.workguru_app.timetracking.presentation.components.CreateTimerDialog
 import com.license.workguru_app.timetracking.presentation.components.FilterDialog
+import com.license.workguru_app.utils.Constants
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.activity_authorized.*
@@ -83,6 +86,7 @@ class AuthorizedActivity : AppCompatActivity() {
 
     val email:MutableLiveData<String> = MutableLiveData()
     val name:MutableLiveData<String> = MutableLiveData()
+    val photo:MutableLiveData<String> = MutableLiveData()
 
     private lateinit var serviceIntent: Intent
     private var time = 0.0
@@ -91,6 +95,8 @@ class AuthorizedActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_authorized)
+
+        btn_add_new_project.visibility = View.GONE
 
         val factory = LogoutViewModelFactory(this, AuthRepository())
         logoutViewModel = ViewModelProvider(this, factory).get(LogoutViewModel::class.java)
@@ -132,6 +138,7 @@ class AuthorizedActivity : AppCompatActivity() {
             }else{
                 timer_launcher_float_button.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_pause_24))
             }
+            photo.value = userInfo?.avatar
         }
 
     }
@@ -247,11 +254,24 @@ class AuthorizedActivity : AppCompatActivity() {
 
             menuItem.isChecked = true
             when(menuItem.itemId){
-                R.id.dashboard -> findNavController(R.id.auth_nav_host_fragment).navigate(R.id.dashboardFragment)
-                R.id.profile -> findNavController(R.id.auth_nav_host_fragment).navigate(R.id.profileFragment)
-                R.id.projects -> findNavController(R.id.auth_nav_host_fragment).navigate(R.id.projectListFragment)
-                R.id.colleagues -> findNavController(R.id.auth_nav_host_fragment).navigate(R.id.colleaguesFragment)
+                R.id.dashboard ->{
+                    btn_add_new_project.visibility = View.GONE
+                    findNavController(R.id.auth_nav_host_fragment).navigate(R.id.dashboardFragment)
+                }
+                R.id.profile -> {
+                    btn_add_new_project.visibility = View.GONE
+                    findNavController(R.id.auth_nav_host_fragment).navigate(R.id.profileFragment)
+                }
+                R.id.projects ->{
+                    btn_add_new_project.visibility = View.VISIBLE
+                    findNavController(R.id.auth_nav_host_fragment).navigate(R.id.projectListFragment)
+                }
+                R.id.colleagues -> {
+                    btn_add_new_project.visibility = View.GONE
+                    findNavController(R.id.auth_nav_host_fragment).navigate(R.id.colleaguesFragment)
+                }
                 R.id.sign_out->{
+                    btn_add_new_project.visibility = View.GONE
                     lifecycleScope.launch {
                         val sharedPreferences: SharedPreferences = this@AuthorizedActivity.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
                         val savedToken = sharedPreferences.getString("ACCESS_TOKEN", null)
@@ -283,7 +303,7 @@ class AuthorizedActivity : AppCompatActivity() {
             val header = navigationView.getHeaderView(0)
             val userEmail: TextView = header.findViewById(R.id.sub_name)
             val userName: TextView = header.findViewById(R.id.name)
-            val userPhoto: CircleImageView = header.findViewById(R.id.avatar)
+            val userPhoto: ImageView = header.findViewById(R.id.avatar)
             val acct = GoogleSignIn.getLastSignedInAccount(this)
             if (acct != null) {
                 val personName = acct.displayName
@@ -301,9 +321,15 @@ class AuthorizedActivity : AppCompatActivity() {
 
             }else{
                 email.observe(this){
-                userEmail.setText(email.value!!)
-                userName.setText(name.value!!)
-
+                    userEmail.setText(email.value!!)
+                    userName.setText(name.value!!)
+                }
+                photo.observe(this){
+                    val imgUri = Uri.parse(Constants.VUE_APP_USER_AVATAR_URL+photo.value)
+                    Glide.with(this)
+                        .load(imgUri)
+                        .circleCrop()
+                        .into(userPhoto);
                 }
             }
         }
@@ -311,6 +337,10 @@ class AuthorizedActivity : AppCompatActivity() {
     }
 
     private fun setListeners(){
+        btn_add_new_project.setOnClickListener {
+            val manager = (this as AppCompatActivity).supportFragmentManager
+            CreateProjectDialog().show(manager, "CustomManager")
+        }
         timer_launcher_float_button.setOnClickListener{
             if (time == 0.0 ){
                 val manager = (this as AppCompatActivity).supportFragmentManager
@@ -353,7 +383,7 @@ class AuthorizedActivity : AppCompatActivity() {
             sharedViewModel.saveTimerState(false)
         }
         time = 0.0
-        current_timer.text = getTimeStringFromDouble(time) 
+        current_timer.text = getTimeStringFromDouble(time)
 
     }
 

@@ -19,7 +19,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:padding="16dp">
 
                 <!-- Title, secondary and supporting text -->
@@ -27,7 +27,7 @@
                     android:layout_gravity="left"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/start_tracking"
+                    android:text="@string/new_category"
                     android:textAppearance="?attr/textAppearanceHeadline6"
                     android:fontFamily="@font/inter"
                     android:textSize="34sp"
@@ -35,7 +35,13 @@
 
                     />
 
+                <ProgressBar
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/category_progress_bar" />
+
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -47,64 +53,7 @@
                     android:layout_gravity="left"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/please_select_a_project_to_start_tracking"
-                    android:textAppearance="?attr/textAppearanceHeadline6"
-                    android:fontFamily="@font/interlight"
-                    android:textSize="18sp"
-                    />
-
-                <com.google.android.material.textfield.TextInputLayout
-
-                    style="@style/TextInputLayoutStyleExposed"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/select_a_project"
-                    android:orientation="horizontal"
-                    >
-
-                    <AutoCompleteTextView
-                        style="@style/TextInputLayoutStyle"
-                        android:id="@+id/project_spinner"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textAutoComplete"
-                        />
-
-                </com.google.android.material.textfield.TextInputLayout>
-                <TextView
-                    android:layout_gravity="left"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Didn't find what you're looking for? You might need to create a project first"
-                    android:textAppearance="?attr/textAppearanceHeadline6"
-                    android:fontFamily="@font/interlight"
-                    android:textSize="12sp"
-                    />
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/create_new_project_btn"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:backgroundTint="@color/teal_500"
-                    android:text="@string/create_new_project"
-                    android:fontFamily="@font/inter"
-                    android:drawableLeft="@drawable/ic_baseline_add_circle_24"
-                    android:drawableTint="@color/white"
-                    />
-
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <!-- Title, secondary and supporting text -->
-                <TextView
-                    android:layout_gravity="left"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Task descriptions"
+                    android:text="@string/please_type_some_category_name"
                     android:textAppearance="?attr/textAppearanceHeadline6"
                     android:fontFamily="@font/interlight"
                     />
@@ -123,7 +72,7 @@
 
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/description_text_input"
+                        android:id="@+id/category_name_text_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:maxLength="80"
@@ -145,15 +94,15 @@
                 android:layout_margin="8dp"
                 android:orientation="vertical">
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/start_tracking_btn"
+                    android:id="@+id/save_category_btn"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:backgroundTint="@color/teal_500"
-                    android:text="@string/start_tracking"
+                    android:text="@string/save"
                     android:fontFamily="@font/inter"
                     />
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/create_timer_cancel_btn"
+                    android:id="@+id/create_category_cancel_btn"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:backgroundTint="@color/teal_500"
@@ -165,4 +114,3 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </ScrollView>
-

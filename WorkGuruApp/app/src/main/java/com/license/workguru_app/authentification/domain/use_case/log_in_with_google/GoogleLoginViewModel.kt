@@ -34,6 +34,7 @@ class GoogleLoginViewModel(val context: Context, val repository: AuthRepository)
                 val personId = acct.id
                 val personPhoto: Uri? = acct.photoUrl
                 saveUserData(context, access_token = result.access_token, expires_at = result.expires_at, email = personEmail!!, name = personGivenName!!)
+                Log.d("GOOGLE", acct.idToken.toString())
             }else{
                 saveUserData(context, access_token = result.access_token, expires_at = result.expires_at, "Add name", "Add email")
 
