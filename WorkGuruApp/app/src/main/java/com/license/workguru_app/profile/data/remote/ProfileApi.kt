@@ -51,4 +51,7 @@ interface ProfileApi {
 //        @Body request: ProfileRequest
 //    ): MessageResponse
 
+    @GET(Constants.GET_COLLEAGUES)
+    suspend fun listColleagues(@Header("Authorization") token:String, @Query("page") page:Int): ColleagueResponse
+
 }

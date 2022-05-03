@@ -2,21 +2,18 @@ package com.license.workguru_app.profile.domain.use_case.display_user_insights
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.JsonReader
 import android.util.Log
 import android.widget.Toast
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.license.workguru_app.di.SharedViewModel
 import com.license.workguru_app.profile.domain.repository.ProfileRepository
 import com.google.gson.Gson
-import com.google.gson.internal.LinkedTreeMap
-import com.squareup.moshi.Moshi
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.license.workguru_app.profile.data.remote.DTO.*
-import java.io.StringReader
+import org.json.JSONArray
+import org.json.JSONObject
+import org.json.JSONTokener
 
 class UserHistoryViewModel(val context: Context, val repository: ProfileRepository) : ViewModel() {
     val dataList:MutableLiveData<List<ProjectHistory>> = MutableLiveData()
@@ -33,12 +30,18 @@ class UserHistoryViewModel(val context: Context, val repository: ProfileReposito
             val gson = GsonBuilder()
                 .setLenient()
                 .create()
-            val items = mutableListOf<ProjectHistory>()
+
             if (!result.isEmpty()){
+                val items = mutableListOf<ProjectHistory>()
                 for (it in result[0] as ArrayList<*>){
-                    val item = gson.fromJson(it.toString(), ProjectHistory::class.java)
-                    val projectHistory = ProjectHistory(item.name, item.project_id, item.result)
-                    items.add(projectHistory)
+                    if (!items.contains(it)){
+                        items.add(fromStringToProjectHistory(it.toString()))
+                    }
+
+
+//                    val item:ProjectHistory = gson.fromJson(it.toString(), ProjectHistory::class.java)
+//                    val projectHistory = ProjectHistory(item.name, item.project_id, item.result)
+//                    items.add(projectHistory)
                 }
 
                 dataList.value = items
@@ -103,6 +106,15 @@ class UserHistoryViewModel(val context: Context, val repository: ProfileReposito
         val sharedPreferences: SharedPreferences = context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
         val savedToken = sharedPreferences.getString("ACCESS_TOKEN", null)
         return savedToken
+    }
+    private fun fromStringToProjectHistory(value:String):ProjectHistory{
+        val n = value.length
+        val temp  = value.takeLast(n-1).dropLast(1)
+        val items = temp.split(',')
+        val project_id = items[0].takeLastWhile { it!='=' }.takeWhile { it!='.' }.toInt()
+        val result = items[1].takeLastWhile { it!='=' }
+        val name = items[2].takeLastWhile { it!='=' }
+        return ProjectHistory(project_id, result, name)
     }
 }
 

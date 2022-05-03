@@ -9,6 +9,8 @@ import com.license.workguru_app.profile.data.remote.DTO.ProjectHistory
 import com.license.workguru_app.profile.data.remote.DTO.TodaysHistory
 import com.license.workguru_app.profile.data.remote.DTO.WeeklyHistory
 import com.license.workguru_app.timetracking.data.remote.DTO.Category
+import com.license.workguru_app.timetracking.data.remote.DTO.StartStopTimerRequest
+import com.license.workguru_app.timetracking.data.remote.DTO.StartTimerResponse
 import java.util.*
 
 
@@ -24,6 +26,9 @@ class SharedViewModel : ViewModel() {
     val todaysHistory = MutableLiveData<TodaysHistory>()
     val weeklyHistory = MutableLiveData<WeeklyHistory>()
     val monthlyHistory = MutableLiveData<MonthlyHistory>()
+    val isTimerPaused = MutableLiveData(false)
+    val isTimerStarted = MutableLiveData(false)
+    val currentProject = MutableLiveData<StartTimerResponse>()
 
     fun acceptTermsAndConditions(isAccepted:Boolean){
         isTermsAndConditionsAccepted.value = isAccepted
@@ -50,5 +55,14 @@ class SharedViewModel : ViewModel() {
     }
     fun saveMonthlyData(data:MonthlyHistory){
         monthlyHistory.value = data
+    }
+    fun saveTimerPauseState(state:Boolean){
+        isTimerPaused.value = state
+    }
+    fun saveTimerState(state:Boolean){
+        isTimerStarted.value = state
+    }
+    fun saveCurrentTimer(current:StartTimerResponse){
+        currentProject.value = current
     }
 }

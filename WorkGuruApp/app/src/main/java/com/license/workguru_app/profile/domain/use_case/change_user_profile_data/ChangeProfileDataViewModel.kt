@@ -33,7 +33,7 @@ class ChangeProfileDataViewModel(val context: Context, val repository: ProfileRe
             )
             path.mkdir()
             val file = File(path, avatar)
-            
+
             val requestBody = RequestBody.create(MediaType.parse("image/*"), file)
             val part = MultipartBody.Part.createFormData("avatar", file.name, requestBody)
             val result = repository.changeProfileData("Bearer " + access_token,

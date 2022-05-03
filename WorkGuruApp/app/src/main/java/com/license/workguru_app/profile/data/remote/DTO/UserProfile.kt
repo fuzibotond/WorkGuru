@@ -1,7 +1,7 @@
 package com.license.workguru_app.profile.data.remote.DTO
 
 data class UserProfile(
-    val active_timer: Int?,
+    val active_timer: ActiveTimer?,
     val avatar: String?,
     val city: String?,
     val country: String?,

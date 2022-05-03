@@ -56,5 +56,7 @@ class ProfileRepository {
 //    ): MessageResponse{
 //        return RetrofitInstance.apiProfile.changeProfileData(access_token, ProfileRequest(city!!, street_address!!, country!!, avatar, _method, state))
 //    }
-
+    suspend fun listColleagues(access_token:String, page:Int): ColleagueResponse{
+        return RetrofitInstance.apiProfile.listColleagues(access_token,page )
+    }
 }

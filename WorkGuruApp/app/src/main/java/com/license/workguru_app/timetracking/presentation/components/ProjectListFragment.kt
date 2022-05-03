@@ -22,6 +22,7 @@ import com.license.workguru_app.R
 import com.license.workguru_app.di.SharedViewModel
 import com.license.workguru_app.databinding.FragmentProjectListBinding
 import com.license.workguru_app.timetracking.data.remote.DTO.Data
+import com.license.workguru_app.timetracking.domain.model.Project
 import com.license.workguru_app.timetracking.domain.repository.TimeTrackingRepository
 import com.license.workguru_app.timetracking.domain.use_case.list_projects.ListProjectsViewModel
 import com.license.workguru_app.timetracking.domain.use_case.list_projects.ListProjectsViewModelFactory
@@ -62,9 +63,10 @@ class ProjectListFragment : Fragment(), ProjectAdapter.OnItemLongClickListener,P
             FilterDialog().show(manager, "CustomManager")
         }
 
+
     }
 
-    private fun setupOrder(itemList:ArrayList<Data>) {
+    private fun setupOrder(itemList:ArrayList<Project>) {
         binding.projectOrder?.adapter = activity?.let { ArrayAdapter(it.applicationContext, R.layout.ordering_item_layout,
             listOf("Order by name", "Order by start date", "Order by category") ) } as SpinnerAdapter
 
@@ -117,9 +119,9 @@ class ProjectListFragment : Fragment(), ProjectAdapter.OnItemLongClickListener,P
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("NotifyDataSetChanged")
     private fun fillData() {
-        val itemList:MutableList<Data> = mutableListOf()
+        val itemList:MutableList<Project> = mutableListOf()
 
-        adapter = ProjectAdapter((itemList as ArrayList<Data>),this.requireContext(),this, this, sharedViewModel)
+        adapter = ProjectAdapter((itemList as ArrayList<Project>),this.requireContext(),this, this, sharedViewModel)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(this.context)
 

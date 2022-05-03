@@ -35,6 +35,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service android:name="com.license.workguru_app.timetracking.data.source.services.TimerService"/>
     </application>
 
 </manifest>

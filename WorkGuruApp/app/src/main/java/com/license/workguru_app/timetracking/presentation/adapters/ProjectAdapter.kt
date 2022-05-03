@@ -15,7 +15,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.license.workguru_app.R
 import com.license.workguru_app.di.SharedViewModel
-import com.license.workguru_app.timetracking.data.remote.DTO.Data
+import com.license.workguru_app.timetracking.domain.model.Project
 import com.license.workguru_app.timetracking.presentation.components.ProjectListFragment
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
@@ -24,7 +24,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class ProjectAdapter(
-    private var list: ArrayList<Data>,
+    private var list: ArrayList<Project>,
     private val context: Context,
     private val listener: ProjectListFragment,
     private val listener2: OnItemLongClickListener,
@@ -90,7 +90,7 @@ class ProjectAdapter(
         holder.projectNameTextView.text = currentItem.name
         holder.categoryNameTextView.text = currentItem.category_name
         holder.startDateTextView.text = formatDate(currentItem.start_date)
-        holder.trackedTimeTextView.text = currentItem.tracked.toString()
+        holder.trackedTimeTextView.text = convertLongToMinutes(currentItem.tracked)
         holder.numberOfMembersTextView.text =currentItem.members.toString()
         holder.taskAmountTextView.text = currentItem.tasks.toString()
 
@@ -113,7 +113,7 @@ class ProjectAdapter(
     override fun getItemCount() = list.size
 
     // Update the list
-    fun setData(newlist: ArrayList<Data>){
+    fun setData(newlist: ArrayList<Project>){
         list = newlist
     }
     @RequiresApi(Build.VERSION_CODES.O)
@@ -136,6 +136,39 @@ class ProjectAdapter(
         val df = SimpleDateFormat("yyyy.MM.dd HH:mm")
         return df.parse(date).time
     }
+    private fun convertLongToMinutes(doubleValue: Int):String{
 
+        val value = doubleValue
+
+        val hours: Int = value / 3600
+        val minutes: Int = value % 3600 / 60
+        if (value == 0){
+            return "00:00"
+        }
+
+        else if (minutes.toInt() % 60 == 0){
+            if (minutes<10){
+                return "00:0"+ minutes
+            }else{
+                return "00:"+minutes
+            }
+        }else{
+            if (hours<10){
+                if (minutes<10){
+                    return "0"+hours+":0"+minutes
+                }else{
+                    return "0"+hours+":"+minutes
+                }
+
+            }else{
+                if (minutes<10){
+                    return ""+hours+":0"+minutes
+                }else{
+                    return ""+hours+":"+minutes
+                }
+            }
+        }
+
+    }
 
 }
