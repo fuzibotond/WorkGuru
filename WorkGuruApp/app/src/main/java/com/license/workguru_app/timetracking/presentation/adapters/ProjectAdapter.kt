@@ -26,19 +26,9 @@ import kotlin.collections.ArrayList
 class ProjectAdapter(
     private var list: ArrayList<Project>,
     private val context: Context,
-    private val listener: ProjectListFragment,
-    private val listener2: OnItemLongClickListener,
     private val sharedViewModel: SharedViewModel
 ) :
     RecyclerView.Adapter<ProjectAdapter.DataViewHolder>() {
-
-    interface OnItemClickListener{
-        fun onItemClick(position: Int)
-    }
-
-    interface OnItemLongClickListener{
-        fun onItemLongClick(position: Int)
-    }
 
     // 1. user defined ViewHolder type - Embedded class!
     inner class DataViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
@@ -60,13 +50,13 @@ class ProjectAdapter(
         }
         override fun onClick(p0: View?) {
             val currentPosition = this.adapterPosition
-            listener.onItemClick(currentPosition)
+            isExpanded.value = !isExpanded.value!!
 
         }
 
         override fun onLongClick(p0: View?): Boolean {
             val currentPosition = this.adapterPosition
-            listener2.onItemLongClick(currentPosition)
+            isExpanded.value = !isExpanded.value!!
             return true
         }
 
@@ -118,13 +108,11 @@ class ProjectAdapter(
     }
     @RequiresApi(Build.VERSION_CODES.O)
     fun formatDate(string:String):String {
-//        Log.d("Time", "Exp original: ${string?.substring(0,19)}")
         val localDateTime: LocalDateTime = LocalDateTime.parse(string.substring(0,19));
 
         val date = convertLongToTime(localDateTime.atZone(ZoneOffset.UTC)?.toInstant()?.toEpochMilli())
         val nowdate = convertLongToTime(System.currentTimeMillis())
 
-//        Log.d("Time", "Exp: ${date} and now: ${nowdate}")
         return date
     }
     fun convertLongToTime(time: Long?): String {

@@ -62,6 +62,7 @@ import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.activity_authorized.*
 import kotlinx.android.synthetic.main.project_item_layout.*
+import kotlinx.coroutines.delay
 import java.io.File
 import java.lang.Exception
 import java.util.*
@@ -207,6 +208,9 @@ class AuthorizedActivity : AppCompatActivity() {
 
                 override fun onQueryTextChange(newText: String?): Boolean {
                     if (newText != null) {
+                        lifecycleScope.launch {
+                            delay(500)
+                        }
                         sharedViewModel.searchWithKeyword(newText)
                     }
                     return true

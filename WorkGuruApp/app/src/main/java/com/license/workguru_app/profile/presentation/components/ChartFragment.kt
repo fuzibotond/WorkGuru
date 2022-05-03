@@ -22,6 +22,7 @@ import android.content.res.Configuration
 import android.util.Log
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
+import com.anychart.enums.Position
 import com.license.workguru_app.di.SharedViewModel
 import com.license.workguru_app.profile.domain.use_case.display_user_insights.UserHistoryViewModel
 
@@ -89,8 +90,8 @@ class ChartFragment : Fragment() {
                 pie.legend()
                     .position("bottom")
                     .align(Align.CENTER)
-                    .itemsLayout(LegendLayout.VERTICAL_EXPANDABLE)
-                    .iconSize(10)
+                    .itemsLayout(LegendLayout.VERTICAL)
+                    .iconSize(15)
                 pie.credits(false)
 
             }
@@ -106,7 +107,7 @@ class ChartFragment : Fragment() {
                 pie.legend()
                     .position("bottom")
                     .align(Align.CENTER)
-                    .itemsLayout(LegendLayout.VERTICAL_EXPANDABLE)
+                    .itemsLayout(LegendLayout.HORIZONTAL_EXPANDABLE)
                     .iconSize(10)
                 pie.credits(false)
             }

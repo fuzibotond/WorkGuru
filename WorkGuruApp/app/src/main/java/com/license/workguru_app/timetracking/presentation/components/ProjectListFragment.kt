@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.license.workguru_app.R
 import com.license.workguru_app.di.SharedViewModel
 import com.license.workguru_app.databinding.FragmentProjectListBinding
-import com.license.workguru_app.timetracking.data.remote.DTO.Data
 import com.license.workguru_app.timetracking.domain.model.Project
 import com.license.workguru_app.timetracking.domain.repository.TimeTrackingRepository
 import com.license.workguru_app.timetracking.domain.use_case.list_projects.ListProjectsViewModel
@@ -36,7 +35,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class ProjectListFragment : Fragment(), ProjectAdapter.OnItemLongClickListener,ProjectAdapter.OnItemClickListener{
+class ProjectListFragment : Fragment(){
     private var _binding: FragmentProjectListBinding? = null
     private val binding get() = _binding!!
     lateinit var adapter:ProjectAdapter
@@ -107,8 +106,6 @@ class ProjectListFragment : Fragment(), ProjectAdapter.OnItemLongClickListener,P
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
-
         val factory = ListProjectsViewModelFactory(this.requireContext(), TimeTrackingRepository())
         listProjectsViewModel = ViewModelProvider(this, factory).get(ListProjectsViewModel::class.java)
         getData()
@@ -126,7 +123,7 @@ class ProjectListFragment : Fragment(), ProjectAdapter.OnItemLongClickListener,P
     private fun fillData() {
         val itemList:MutableList<Project> = mutableListOf()
 
-        adapter = ProjectAdapter((itemList as ArrayList<Project>),this.requireContext(),this, this, sharedViewModel)
+        adapter = ProjectAdapter((itemList as ArrayList<Project>),this.requireContext(), sharedViewModel)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(this.context)
 
@@ -165,12 +162,7 @@ class ProjectListFragment : Fragment(), ProjectAdapter.OnItemLongClickListener,P
 
     }
 
-    override fun onItemLongClick(position: Int) {
-        TODO("Not yet implemented")
-    }
-    override fun onItemClick(position: Int) {
-        TODO("Not yet implemented")
-    }
+
     fun convertLongToTime(time: Long?): String {
         val date = Date(time!!)
         val format = SimpleDateFormat("yyyy.MM.dd HH:mm")
