@@ -16,8 +16,9 @@ class ListProjectsViewModel(val context: Context, val repository: TimeTrackingRe
 
         val access_token = getToken()
         try {
-
+            dataList.value = null
             val result = repository.listProjects("Bearer " + access_token, automatic, project_id)
+            Log.d("LISTING", result.toString())
             dataList.value = result.data
             return true
         } catch (e: Exception) {

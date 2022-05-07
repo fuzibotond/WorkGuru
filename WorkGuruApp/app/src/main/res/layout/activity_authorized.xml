@@ -116,12 +116,10 @@
                                 style="?android:attr/borderlessButtonStyle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:layout_centerInParent="true"
                                 android:fontFamily="@font/inter"
                                 android:text="00:00:00"
                                 android:textColor="#FFFFFF"
-                                android:textSize="18sp" />
+                                android:textSize="16sp" />
 
                         </RelativeLayout>
                     </com.google.android.material.bottomappbar.BottomAppBar>
@@ -139,6 +137,7 @@
                 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <com.google.android.material.navigation.NavigationView
+
             android:id="@+id/menu_navigation_view"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

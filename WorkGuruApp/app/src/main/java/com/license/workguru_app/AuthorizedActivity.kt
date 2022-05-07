@@ -3,13 +3,12 @@ package com.license.workguru_app
 import android.annotation.SuppressLint
 import android.content.*
 import android.content.res.ColorStateList
+import android.content.res.Configuration
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.AlarmClock
 import android.util.Log
-import android.view.Gravity
-import android.view.Menu
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -41,8 +40,11 @@ import android.provider.MediaStore
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.CountDownTimer
-import android.view.View
+import android.view.*
+import android.widget.EditText
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.core.view.children
+import androidx.core.view.get
 import com.anychart.standalones.ColorRange
 import com.bumptech.glide.Glide
 import com.license.workguru_app.profile.domain.repository.ProfileRepository
@@ -65,11 +67,12 @@ import kotlinx.android.synthetic.main.project_item_layout.*
 import kotlinx.coroutines.delay
 import java.io.File
 import java.lang.Exception
+import java.security.AccessController.getContext
 import java.util.*
 import kotlin.math.roundToInt
 
 
-class AuthorizedActivity : AppCompatActivity() {
+class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     private lateinit var navigationView: NavigationView
     lateinit var topAppBar: MaterialToolbar
     lateinit var topAppBarLayout: AppBarLayout
@@ -186,40 +189,13 @@ class AuthorizedActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfig)
         navigationView.setupWithNavController(navController)
         bottomAppBar.setupWithNavController(navController)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
         supportActionBar?.setDisplayShowTitleEnabled(false)
+        bottomAppBar.setNavigationIcon(null)
+        disableSearching(true)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.bottom_app_bar,menu)
-        val searchItem = menu?.findItem(R.id.search_action)
-        if(searchItem != null){
-            val searchView = searchItem.actionView as SearchView
-            searchView.queryHint = "Type for searching..."
-            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    if (query != null) {
-                        sharedViewModel.searchWithKeyword(query)
-                    }
-                    //show submitted text for testing purposes.
-                    Toast.makeText(applicationContext, "Looking for $query", Toast.LENGTH_SHORT).show()
-                    return true
-                }
 
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    if (newText != null) {
-                        lifecycleScope.launch {
-                            delay(500)
-                        }
-                        sharedViewModel.searchWithKeyword(newText)
-                    }
-                    return true
-                }
-
-            })
-        }
-        return super.onCreateOptionsMenu(menu)
-    }
 
     @SuppressLint("UseCompatLoadingForColorStateLists", "WrongConstant")
     private fun initMenu(){
@@ -250,9 +226,30 @@ class AuthorizedActivity : AppCompatActivity() {
                     // Handle more item (inside overflow menu) press
                     true
                 }
+                R.id.search_action -> {
+
+                    val searchView = menuItem?.actionView as SearchView
+                    searchView.queryHint = "Type something..."
+
+                    searchView.setOnQueryTextListener(this)
+                    if(!isUsingNightModeResources()){
+                        val editText = searchView.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
+                        editText.setTextColor(getResources().getColor(R.color.white));
+                        editText.setHintTextColor(getResources().getColor(R.color.white));
+                    }
+                    searchView.setOnQueryTextFocusChangeListener { view, b ->
+                        if (!b){
+                            sharedViewModel.searchWithKeyword("")
+                        }
+                    }
+
+
+                    true
+                }
                 else -> false
             }
         }
+
 
         navigationView.setNavigationItemSelectedListener { menuItem ->
 
@@ -260,21 +257,27 @@ class AuthorizedActivity : AppCompatActivity() {
             when(menuItem.itemId){
                 R.id.dashboard ->{
                     btn_add_new_project.visibility = View.GONE
+                    disableSearching(true)
                     findNavController(R.id.auth_nav_host_fragment).navigate(R.id.dashboardFragment)
+
                 }
                 R.id.profile -> {
+                    disableSearching(true)
                     btn_add_new_project.visibility = View.GONE
                     findNavController(R.id.auth_nav_host_fragment).navigate(R.id.profileFragment)
                 }
                 R.id.projects ->{
+                    disableSearching(false)
                     btn_add_new_project.visibility = View.VISIBLE
                     findNavController(R.id.auth_nav_host_fragment).navigate(R.id.projectListFragment)
                 }
                 R.id.colleagues -> {
+                    disableSearching(false)
                     btn_add_new_project.visibility = View.GONE
                     findNavController(R.id.auth_nav_host_fragment).navigate(R.id.colleaguesFragment)
                 }
                 R.id.sign_out->{
+                    disableSearching(true)
                     btn_add_new_project.visibility = View.GONE
                     lifecycleScope.launch {
                         val sharedPreferences: SharedPreferences = this@AuthorizedActivity.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
@@ -340,6 +343,21 @@ class AuthorizedActivity : AppCompatActivity() {
 
     }
 
+    private fun isUsingNightModeResources(): Boolean {
+        return when (resources.configuration.uiMode and
+                Configuration.UI_MODE_NIGHT_MASK) {
+            Configuration.UI_MODE_NIGHT_YES -> true
+            Configuration.UI_MODE_NIGHT_NO -> false
+            Configuration.UI_MODE_NIGHT_UNDEFINED -> false
+            else -> false
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.bottom_app_bar,menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
     private fun setListeners(){
         btn_add_new_project.setOnClickListener {
             val manager = (this as AppCompatActivity).supportFragmentManager
@@ -373,6 +391,7 @@ class AuthorizedActivity : AppCompatActivity() {
                 )
             }
         }
+
 
 
     }
@@ -459,5 +478,27 @@ class AuthorizedActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        if (query != null) {
+            sharedViewModel.searchWithKeyword(query)
+        }
+        return true
+    }
+
+    override fun onQueryTextChange(newText: String?): Boolean {
+        lifecycleScope.launch {
+            delay(1000)
+        }
+        if (newText != null && newText.length>0) {
+            sharedViewModel.searchWithKeyword(newText)
+        }
+        return true
+    }
+
+    fun disableSearching(disable:Boolean){
+        val item: MenuItem = topAppBar.menu.findItem(com.license.workguru_app.R.id.search_action)
+        item.setVisible(!disable)
     }
 }

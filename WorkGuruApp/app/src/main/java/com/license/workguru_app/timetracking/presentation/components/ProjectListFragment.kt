@@ -12,11 +12,13 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.SpinnerAdapter
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.license.workguru_app.R
 import com.license.workguru_app.di.SharedViewModel
@@ -41,6 +43,8 @@ class ProjectListFragment : Fragment(){
     lateinit var adapter:ProjectAdapter
     private lateinit var listProjectsViewModel: ListProjectsViewModel
     val sharedViewModel: SharedViewModel by activityViewModels()
+    val itemList:MutableList<Project> = mutableListOf()
+    val searchResultList:MutableList<Project> = mutableListOf()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
@@ -49,12 +53,40 @@ class ProjectListFragment : Fragment(){
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentProjectListBinding.inflate(inflater, container, false)
-
-        getData()
+        setSearchingListeners()
+        setOrderingListener()
         setupFilter()
         fillData()
         return binding.root
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        sharedViewModel.searchWithKeyword("")
+        getData()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun setSearchingListeners() {
+        sharedViewModel.searchingKeyword.observe(viewLifecycleOwner){
+            Toast.makeText(requireActivity(), "Changed ${sharedViewModel.searchingKeyword.value}", Toast.LENGTH_SHORT).show()
+            searchResultList.clear()
+            if (sharedViewModel.searchingKeyword.value!=""){
+                itemList.forEach {
+                    if (it.name.contains(sharedViewModel.searchingKeyword.value!!, ignoreCase = true)){
+                        searchResultList.add(it)
+                    }
+                }
+                adapter.setData(searchResultList as ArrayList<Project>)
+                adapter.notifyDataSetChanged()
+            }
+            else{
+                adapter.setData(itemList as ArrayList<Project>)
+                adapter.notifyDataSetChanged()
+            }
+
+        }
     }
 
     private fun setupFilter() {
@@ -62,10 +94,14 @@ class ProjectListFragment : Fragment(){
             val manager = (context as AppCompatActivity).supportFragmentManager
             FilterDialog().show(manager, "CustomManager")
         }
-
-
+        sharedViewModel.choosenCategory.observe(viewLifecycleOwner){
+            lifecycleScope.launch {
+                listProjectsViewModel.listProjects(false, sharedViewModel.choosenCategory.value!!.id.toString())
+            }
+        }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun setupOrder(itemList:ArrayList<Project>) {
         binding.projectOrder?.adapter = activity?.let { ArrayAdapter(it.applicationContext, R.layout.ordering_item_layout,
             listOf("Order by name", "Order by start date", "Order by category") ) } as SpinnerAdapter
@@ -101,14 +137,15 @@ class ProjectListFragment : Fragment(){
 
             }
         }
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val factory = ListProjectsViewModelFactory(this.requireContext(), TimeTrackingRepository())
         listProjectsViewModel = ViewModelProvider(this, factory).get(ListProjectsViewModel::class.java)
         getData()
+
     }
 
 
@@ -121,12 +158,17 @@ class ProjectListFragment : Fragment(){
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("NotifyDataSetChanged")
     private fun fillData() {
-        val itemList:MutableList<Project> = mutableListOf()
-
         adapter = ProjectAdapter((itemList as ArrayList<Project>),this.requireContext(), sharedViewModel)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(this.context)
 
+        setupOrder(itemList)
+
+
+
+    }
+    @SuppressLint("NotifyDataSetChanged")
+    private fun setOrderingListener(){
         listProjectsViewModel.dataList.observe(viewLifecycleOwner){
             itemList.clear()
             val data = listProjectsViewModel.dataList.value
@@ -141,27 +183,18 @@ class ProjectListFragment : Fragment(){
                             it.category_name.equals(
                                 sharedViewModel.choosenCategory.value!!.category_name) )
                             itemList.add(it)
-                        }
+                    }
                 }else{
                     data.forEach {
                         itemList.add(it)
                     }
                 }
-                
+
                 adapter.notifyDataSetChanged()
                 binding.progressBar.visibility = View.GONE
             }
         }
-        setupOrder(itemList)
-        sharedViewModel.choosenCategory.observe(viewLifecycleOwner){
-            lifecycleScope.launch {
-                listProjectsViewModel.listProjects(false, sharedViewModel.choosenCategory.value!!.id.toString())
-            }
-        }
-
-
     }
-
 
     fun convertLongToTime(time: Long?): String {
         val date = Date(time!!)

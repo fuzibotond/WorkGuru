@@ -7,9 +7,6 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.license.workguru_app.databinding.FragmentProfileBinding
 import android.widget.*
@@ -22,6 +19,7 @@ import android.os.Build
 import android.provider.MediaStore
 import android.util.Base64
 import android.util.Log
+import android.view.*
 import androidx.annotation.RequiresApi
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
@@ -81,6 +79,14 @@ class ProfileFragment : Fragment() {
 
     private fun verifyInputData():Boolean {
         return true
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.app_bar_menu, menu);
+        val item: MenuItem = menu.findItem(R.id.search_action)
+        item.setVisible(false)
+        super.onCreateOptionsMenu(menu, inflater)
+
     }
 
     private fun initializeData() {
@@ -157,7 +163,7 @@ class ProfileFragment : Fragment() {
         val changeProfileDataViewModelFactory = ChangeProfileDataViewModelFactory(requireActivity(), ProfileRepository())
         changeProfileDataViewModel = ViewModelProvider(this, changeProfileDataViewModelFactory).get(ChangeProfileDataViewModel::class.java)
 
-
+        setHasOptionsMenu(true)
     }
 
     private fun setAdapters() {
