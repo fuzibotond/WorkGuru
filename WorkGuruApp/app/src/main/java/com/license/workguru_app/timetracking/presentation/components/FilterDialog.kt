@@ -36,6 +36,8 @@ import kotlin.collections.ArrayList
 import android.widget.CalendarView
 
 import android.widget.CalendarView.OnDateChangeListener
+import com.license.workguru_app.timetracking.domain.use_case.list_projects.ListProjectsViewModel
+import com.license.workguru_app.timetracking.domain.use_case.list_projects.ListProjectsViewModelFactory
 import kotlinx.android.synthetic.main.activity_authorized.*
 
 
@@ -44,6 +46,8 @@ class FilterDialog(
     private var _binding: FilterDialogBinding? = null
     private val binding get() = _binding!!
     lateinit var listCategoriesViewModel: ListCategoriesViewModel
+    lateinit var listProjectsViewModel:ListProjectsViewModel
+
     var choosenCategory:Category = Category("", 0)
     var numOfWantedMembers:Int = 0
     var startDate:MutableLiveData<Long> = MutableLiveData()
@@ -62,6 +66,9 @@ class FilterDialog(
         super.onCreate(savedInstanceState)
         val factory = ListCategoriesViewModelFactory(requireActivity(), TimeTrackingRepository())
         listCategoriesViewModel = ViewModelProvider(this, factory).get(ListCategoriesViewModel::class.java)
+
+        val factoryProjects = ListProjectsViewModelFactory(requireActivity(), TimeTrackingRepository())
+        listProjectsViewModel = ViewModelProvider(this, factoryProjects).get(ListProjectsViewModel::class.java)
         lifecycleScope.launch {
             listCategoriesViewModel.listCategories()
         }
@@ -73,7 +80,7 @@ class FilterDialog(
 
         binding.startedAfterCalendarView.setOnDateChangeListener(OnDateChangeListener { view, year, month, dayOfMonth ->
             calendar.set(year,month,dayOfMonth)
-            Toast.makeText(requireActivity(), ""+calendar.time, Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireActivity(), ""+calendar.timeInMillis, Toast.LENGTH_SHORT).show()
         })
         numOfWantedMembers = chooseNumberOfMembers()
         listCategoriesViewModel.dataList.observe(viewLifecycleOwner){
@@ -83,15 +90,18 @@ class FilterDialog(
         binding.filterBtn.setOnClickListener {
 
             sharedViewModel.saveFilterResult(choosenCategory, numOfWantedMembers, calendar.timeInMillis)
-            dialog?.dismiss()
+            lifecycleScope.launch {
+                if(listProjectsViewModel.listProjects(false, choosenCategory.id.toString())){
+                    dialog?.dismiss()
+                }
+            }
+
         }
         binding.termsAndCondCancelBtn.setOnClickListener {
             dialog?.dismiss()
         }
 
     }
-
-
 
     override fun onStart() {
         super.onStart()

@@ -29,6 +29,8 @@ class SharedViewModel : ViewModel() {
     val isTimerPaused = MutableLiveData(false)
     val isTimerStarted = MutableLiveData(false)
     val currentProject = MutableLiveData<StartTimerResponse>()
+    val pomodoroIsON = MutableLiveData<Boolean>(false)
+    val pomodoroNotification = MutableLiveData<Boolean>(false)
 
     fun acceptTermsAndConditions(isAccepted:Boolean){
         isTermsAndConditionsAccepted.value = isAccepted
@@ -65,4 +67,13 @@ class SharedViewModel : ViewModel() {
     fun saveCurrentTimer(current:StartTimerResponse){
         currentProject.value = current
     }
+    fun savePomodoroState(isOn:Boolean){
+        pomodoroIsON.value = isOn
+    }
+    fun savePomodoroNotification(isOn: Boolean){
+        pomodoroNotification.value = isOn
+    }
+
+
+
 }

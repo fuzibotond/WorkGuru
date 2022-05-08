@@ -1,19 +1,13 @@
 package com.license.workguru_app.timetracking.presentation.components
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.os.Build
+
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.SpinnerAdapter
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
@@ -22,30 +16,18 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.license.workguru_app.R
 import com.license.workguru_app.di.SharedViewModel
-import com.license.workguru_app.databinding.FilterDialogBinding
-import com.license.workguru_app.timetracking.data.remote.DTO.Category
 import com.license.workguru_app.timetracking.domain.repository.TimeTrackingRepository
-import com.license.workguru_app.timetracking.domain.use_case.list_categories.ListCategoriesViewModel
-import com.license.workguru_app.timetracking.domain.use_case.list_categories.ListCategoriesViewModelFactory
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.ZoneOffset
 import java.util.*
 import kotlin.collections.ArrayList
-import android.widget.CalendarView
-
-import android.widget.CalendarView.OnDateChangeListener
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.license.workguru_app.databinding.CreateTimerDialogLayoutBinding
-import com.license.workguru_app.timetracking.data.remote.DTO.StartStopTimerRequest
 import com.license.workguru_app.timetracking.domain.model.Project
 import com.license.workguru_app.timetracking.domain.use_case.list_projects.ListProjectsViewModel
 import com.license.workguru_app.timetracking.domain.use_case.list_projects.ListProjectsViewModelFactory
 import com.license.workguru_app.timetracking.domain.use_case.start_pause_stop_timer.StartPauseStopViewModel
 import com.license.workguru_app.timetracking.domain.use_case.start_pause_stop_timer.StartPauseStopViewModelFactory
-import kotlinx.android.synthetic.main.activity_authorized.*
 
 
 class CreateTimerDialog(
@@ -70,7 +52,10 @@ class CreateTimerDialog(
         val factory = ListProjectsViewModelFactory(requireActivity(), TimeTrackingRepository())
         listProjectsViewModel = ViewModelProvider(this, factory).get(ListProjectsViewModel::class.java)
         lifecycleScope.launch {
-            listProjectsViewModel.listProjects(true, "0")
+            if(listProjectsViewModel.listProjects(false, "1")){
+                val projects = listProjectsViewModel.dataList.value
+                choseCategory(projects as ArrayList<Project>)
+            }
         }
 
         val timerFactory = StartPauseStopViewModelFactory(requireActivity(), TimeTrackingRepository())
@@ -83,10 +68,7 @@ class CreateTimerDialog(
             dialog?.dismiss()
         }
 
-        listProjectsViewModel.dataList.observe(viewLifecycleOwner){
-            val projects = listProjectsViewModel.dataList.value
-            choseCategory(projects as ArrayList<Project>)
-        }
+
 
         binding.startTrackingBtn.setOnClickListener {
             if (sharedViewModel.isTimerStarted.value == false){

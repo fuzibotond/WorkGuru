@@ -1,6 +1,8 @@
 package com.license.workguru_app
 
 import android.annotation.SuppressLint
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.*
 import android.content.res.ColorStateList
 import android.content.res.Configuration
@@ -47,6 +49,9 @@ import androidx.core.view.children
 import androidx.core.view.get
 import com.anychart.standalones.ColorRange
 import com.bumptech.glide.Glide
+import com.license.workguru_app.pomodoro.data.source.receivers.TimerExpiredReceiver
+import com.license.workguru_app.pomodoro.data.source.utils.PrefUtil
+import com.license.workguru_app.pomodoro.presentation.PomodoroSettingsDialog
 import com.license.workguru_app.profile.domain.repository.ProfileRepository
 import com.license.workguru_app.profile.domain.use_case.display_user_insights.userHistoryViewModelFactory
 import com.license.workguru_app.profile.domain.use_case.display_user_profile.UserProfileViewModel
@@ -60,6 +65,7 @@ import com.license.workguru_app.timetracking.presentation.components.CreateProje
 import com.license.workguru_app.timetracking.presentation.components.CreateTimerDialog
 import com.license.workguru_app.timetracking.presentation.components.FilterDialog
 import com.license.workguru_app.utils.Constants
+import com.license.workguru_app.utils.NotificationUtil
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.activity_authorized.*
@@ -92,9 +98,42 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     val name:MutableLiveData<String> = MutableLiveData()
     val photo:MutableLiveData<String> = MutableLiveData()
 
+    val numberOfSessions:MutableLiveData<Int> = MutableLiveData()
+    val durationOfSessions:MutableLiveData<Int> = MutableLiveData()
+
     private lateinit var serviceIntent: Intent
     private var time = 0.0
 
+    enum class TimerState{
+        Stopped, Paused,Running
+    }
+
+    private var timerLengthSeconds: Long = 0
+    val timerState:MutableLiveData<TimerState> = MutableLiveData()
+    private var secondsRemaining: Long = 0
+
+    companion object {
+        fun setAlarm(context: Context, nowSeconds: Long, secondsRemaining: Long): Long{
+            val wakeUpTime = (nowSeconds + secondsRemaining) * 1000
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val intent = Intent(context, TimerExpiredReceiver::class.java)
+            val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0)
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, wakeUpTime, pendingIntent)
+            PrefUtil.setAlarmSetTime(nowSeconds, context)
+            return wakeUpTime
+        }
+
+        fun removeAlarm(context: Context){
+            val intent = Intent(context, TimerExpiredReceiver::class.java)
+            val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0)
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            alarmManager.cancel(pendingIntent)
+            PrefUtil.setAlarmSetTime(0, context)
+        }
+
+        val nowSeconds: Long
+            get() = Calendar.getInstance().timeInMillis / 1000
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -120,8 +159,46 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         getCurrentTimer()
         setListeners()
         loadData()
+
+        fab_pause.visibility = View.GONE
+        fab_start.visibility = View.GONE
+        fab_stop.visibility = View.GONE
     }
 
+    override fun onResume() {
+        super.onResume()
+        PrefUtil.setTimerLength(this, durationOfSessions.value!!)
+        lifecycleScope.launch {
+            getUserProfileViewModel.getUserProfileInfo()
+        }
+
+//        removeAlarm(this)
+        NotificationUtil.hideTimerNotification(this)
+
+    }
+    override fun onPause() {
+        super.onPause()
+
+        if (timerState.value == TimerState.Running){
+            val wakeUpTime = setAlarm(this, nowSeconds, secondsRemaining)
+            NotificationUtil.showTimerRunning(this, wakeUpTime)
+        }
+        else if (timerState.value == TimerState.Paused){
+            NotificationUtil.showTimerPaused(this)
+        }
+
+        PrefUtil.setPreviousTimerLengthSeconds(timerLengthSeconds, this)
+        PrefUtil.setSecondsRemaining(secondsRemaining, this)
+        PrefUtil.setTimerState(timerState.value!!, this)
+
+    }
+
+    private fun updateCountdownUI(){
+        val minutesUntilFinished = secondsRemaining / 60
+        val secondsInMinuteUntilFinished = secondsRemaining - minutesUntilFinished * 60
+        val secondsStr = secondsInMinuteUntilFinished.toString()
+        current_pomodoro.text = "$minutesUntilFinished:${if (secondsStr.length == 2) secondsStr else "0" + secondsStr}"
+    }
     private fun getCurrentTimer() {
         getUserProfileViewModel.data.observe(this){
             val userInfo = getUserProfileViewModel.data.value
@@ -152,7 +229,11 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         {
             time = intent.getDoubleExtra(TimerService.TIME_EXTRA, 0.0)
             current_timer.text = getTimeStringFromDouble(time)
-
+            current_pomodoro.text = getTimeStringFromDouble(durationOfSessions.value!!*60 - time)
+            if (durationOfSessions.value!!*60 - time <= 0){
+                NotificationUtil.showTimerExpired(this@AuthorizedActivity)
+                pauseAllTimer()
+            }
         }
     }
 
@@ -171,6 +252,10 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         val sharedPreferences: SharedPreferences = this.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
         email.value = sharedPreferences.getString("USER_EMAIL", null)
         name.value = sharedPreferences.getString("USER_NAME", null)
+        sharedViewModel.savePomodoroNotification(sharedPreferences.getBoolean("SEND_NOTIFICATIONS_BY_POMODORO", false))
+        sharedViewModel.savePomodoroState(sharedPreferences.getBoolean("POMODORO_IS_ON", false))
+        numberOfSessions.value = sharedPreferences.getInt("NUMBER_OF_SESSIONS", 0)
+        durationOfSessions.value = sharedPreferences.getInt("DURATION_OF_SESSION", 0)
     }
 
     @SuppressLint("UseSupportActionBar")
@@ -195,8 +280,6 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         disableSearching(true)
     }
 
-
-
     @SuppressLint("UseCompatLoadingForColorStateLists", "WrongConstant")
     private fun initMenu(){
         bottomAppBar.setOnMenuItemClickListener { menuItem ->
@@ -207,8 +290,8 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
                     true
                 }
                 R.id.pomodoro -> {
-                    Toast.makeText(this, "Pomodoro", Toast.LENGTH_SHORT).show()
-                    // Handle more item (inside overflow menu) press
+                    val manager = (this).supportFragmentManager
+                    PomodoroSettingsDialog().show(manager, "CustomManager")
                     true
                 }
                 else -> false
@@ -358,30 +441,57 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         return super.onCreateOptionsMenu(menu)
     }
 
+    private fun startAllTimer(){
+        val manager = (this as AppCompatActivity).supportFragmentManager
+        CreateTimerDialog().show(manager, "CustomManager")
+    }
+
+    private fun pauseAllTimer(){
+        timerState.value = TimerState.Paused
+        startStopTimer()
+    }
+
+    private fun stopAllTimer(){
+        timerState.value = TimerState.Stopped
+        resetTimer()
+    }
+
+    private fun resumeAllTimer(){
+        timerState.value = TimerState.Running
+        startStopTimer()
+    }
+
     private fun setListeners(){
         btn_add_new_project.setOnClickListener {
-            val manager = (this as AppCompatActivity).supportFragmentManager
-            CreateProjectDialog().show(manager, "CustomManager")
+
         }
         timer_launcher_float_button.setOnClickListener{
             if (time == 0.0 ){
-                val manager = (this as AppCompatActivity).supportFragmentManager
-                CreateTimerDialog().show(manager, "CustomManager")
-            }else if(sharedViewModel.isTimerStarted.value == false){
-                sharedViewModel.saveTimerState(true)
-            }else{
-                sharedViewModel.saveTimerState(false)
-            }
+                //start
+                startAllTimer()
+                Toast.makeText(this, "Start Timer", Toast.LENGTH_SHORT).show()
+            }else if(timerState.value == TimerState.Paused){
+                // resume
+                resumeAllTimer()
+                Toast.makeText(this, "Resume Timer", Toast.LENGTH_SHORT).show()
 
+            }else{
+                // pause
+                pauseAllTimer()
+                Toast.makeText(this, "Pause Timer", Toast.LENGTH_SHORT).show()
+            }
         }
         timer_launcher_float_button.setOnLongClickListener {
-            resetTimer()
-
+            //stop
+            stopAllTimer()
             return@setOnLongClickListener true
         }
 
         sharedViewModel.isTimerStarted.observe(this){
-            startStopTimer()
+            if (sharedViewModel.isTimerStarted.value == true){
+                timerState.value = TimerState.Running
+                startStopTimer()
+            }
         }
 
         startPauseStopViewModel.startedTimer.observe(this){
@@ -391,13 +501,10 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
                 )
             }
         }
-
-
-
     }
 
     private fun resetTimer() {
-        stopTimer()
+        pauseTimer()
         if (sharedViewModel.currentProject.value != null){
             lifecycleScope.launch {
                 startPauseStopViewModel.stopTimer(true, sharedViewModel.currentProject.value!!.project_id)
@@ -411,10 +518,12 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     }
 
     private fun startStopTimer() {
-        if(sharedViewModel.isTimerStarted.value == false)
-            stopTimer()
-        else
+        if(timerState.value== TimerState.Paused){
+            pauseTimer()
+        }
+        else{
             startTimer()
+        }
     }
 
     private fun startTimer() {
@@ -424,17 +533,19 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     }
 
 
-    private fun stopTimer() {
+    private fun pauseTimer() {
         stopService(serviceIntent)
         timer_launcher_float_button.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_play_arrow_24))
     }
 
-    override fun onResume() {
-        super.onResume()
 
-        lifecycleScope.launch {
-            getUserProfileViewModel.getUserProfileInfo()
-        }
+    private fun setNewTimerLength(){
+        val lengthInMinutes = PrefUtil.getTimerLength(this)
+        timerLengthSeconds = (lengthInMinutes * 60L)
+    }
+
+    private fun setPreviousTimerLength(){
+        timerLengthSeconds = PrefUtil.getPreviousTimerLengthSeconds(this)
     }
 
     override fun onSupportNavigateUp(): Boolean {

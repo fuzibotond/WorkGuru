@@ -64,4 +64,5 @@
     <string name="please_select_a_project_to_start_tracking">Please select a project to start tracking</string>
     <string name="select_a_project">Select a project</string>
     <string name="create_new_project">Create new project</string>
+    <string name="turn_on_off_notifications">Turn on/off notifications:</string>
 </resources>

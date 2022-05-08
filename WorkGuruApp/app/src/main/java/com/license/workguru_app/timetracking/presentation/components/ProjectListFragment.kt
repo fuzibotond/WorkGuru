@@ -54,7 +54,7 @@ class ProjectListFragment : Fragment(){
         // Inflate the layout for this fragment
         _binding = FragmentProjectListBinding.inflate(inflater, container, false)
         setSearchingListeners()
-        setOrderingListener()
+        setListener()
         setupFilter()
         fillData()
         return binding.root
@@ -94,11 +94,11 @@ class ProjectListFragment : Fragment(){
             val manager = (context as AppCompatActivity).supportFragmentManager
             FilterDialog().show(manager, "CustomManager")
         }
-        sharedViewModel.choosenCategory.observe(viewLifecycleOwner){
-            lifecycleScope.launch {
-                listProjectsViewModel.listProjects(false, sharedViewModel.choosenCategory.value!!.id.toString())
-            }
-        }
+//        sharedViewModel.choosenCategory.observe(viewLifecycleOwner){
+//            lifecycleScope.launch {
+//                listProjectsViewModel.listProjects(false, sharedViewModel.choosenCategory.value!!.id.toString())
+//            }
+//        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -161,16 +161,13 @@ class ProjectListFragment : Fragment(){
         adapter = ProjectAdapter((itemList as ArrayList<Project>),this.requireContext(), sharedViewModel)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(this.context)
-
         setupOrder(itemList)
-
-
-
     }
     @SuppressLint("NotifyDataSetChanged")
-    private fun setOrderingListener(){
+    private fun setListener(){
         listProjectsViewModel.dataList.observe(viewLifecycleOwner){
             itemList.clear()
+            Toast.makeText(requireActivity(), "CHANEGE", Toast.LENGTH_SHORT).show()
             val data = listProjectsViewModel.dataList.value
 
             if (data != null) {
@@ -179,12 +176,13 @@ class ProjectListFragment : Fragment(){
                     data.forEach {
                         Log.d("TIME", "Selected ${it}")
                         if (it.members<= sharedViewModel.numberOfWantedMembers.value!! &&
-                            it.start_date>=convertLongToTime(sharedViewModel.startedAtDate.value) &&
+                            it.start_date<=convertLongToTime(sharedViewModel.startedAtDate.value) &&
                             it.category_name.equals(
                                 sharedViewModel.choosenCategory.value!!.category_name) )
                             itemList.add(it)
                     }
                 }else{
+                    Log.d("TIME", "Not Selected ${it}")
                     data.forEach {
                         itemList.add(it)
                     }

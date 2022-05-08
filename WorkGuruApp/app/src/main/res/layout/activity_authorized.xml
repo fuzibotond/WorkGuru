@@ -29,9 +29,9 @@
                 android:layout_height="match_parent">
 
                 <androidx.core.widget.NestedScrollView
-                    android:layout_below="@+id/topAppBarLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_below="@+id/topAppBarLayout"
                     android:background="@color/teal_700"
                     android:fillViewport="true"
                     android:overScrollMode="ifContentScrolls"
@@ -120,6 +120,16 @@
                                 android:text="00:00:00"
                                 android:textColor="#FFFFFF"
                                 android:textSize="16sp" />
+                            <TextView
+                                android:id="@+id/current_pomodoro"
+                                android:layout_below="@+id/current_timer"
+                                style="?android:attr/borderlessButtonStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/inter"
+                                android:text="00:00"
+                                android:textColor="#FFFFFF"
+                                android:textSize="16sp" />
 
                         </RelativeLayout>
                     </com.google.android.material.bottomappbar.BottomAppBar>
@@ -133,6 +143,29 @@
                         android:backgroundTint="@color/teal_500"
                         android:id="@+id/timer_launcher_float_button"
                         />
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_stop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="10dp"
+                app:srcCompat="@drawable/ic_baseline_stop_24" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_pause"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center"
+                android:layout_margin="10dp"
+                app:srcCompat="@drawable/ic_baseline_pause_24" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|start"
+                android:layout_margin="10dp"
+                app:srcCompat="@drawable/ic_baseline_play_arrow_24" />
 
                 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
