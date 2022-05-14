@@ -52,7 +52,7 @@ class CreateTimerDialog(
         val factory = ListProjectsViewModelFactory(requireActivity(), TimeTrackingRepository())
         listProjectsViewModel = ViewModelProvider(this, factory).get(ListProjectsViewModel::class.java)
         lifecycleScope.launch {
-            if(listProjectsViewModel.listProjects(false, "1")){
+            if(listProjectsViewModel.listAllProjects(false, "0")){
                 val projects = listProjectsViewModel.dataList.value
                 choseCategory(projects as ArrayList<Project>)
             }
@@ -67,9 +67,6 @@ class CreateTimerDialog(
         binding.createTimerCancelBtn.setOnClickListener {
             dialog?.dismiss()
         }
-
-
-
         binding.startTrackingBtn.setOnClickListener {
             if (sharedViewModel.isTimerStarted.value == false){
                 lifecycleScope.launch {

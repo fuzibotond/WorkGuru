@@ -1,8 +1,6 @@
 package com.license.workguru_app.timetracking.presentation.components
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,7 +11,6 @@ import android.widget.ArrayAdapter
 import android.widget.SpinnerAdapter
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
@@ -29,16 +26,12 @@ import com.license.workguru_app.timetracking.domain.use_case.list_categories.Lis
 import com.license.workguru_app.timetracking.domain.use_case.list_categories.ListCategoriesViewModelFactory
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.ZoneOffset
 import java.util.*
 import kotlin.collections.ArrayList
-import android.widget.CalendarView
 
 import android.widget.CalendarView.OnDateChangeListener
 import com.license.workguru_app.timetracking.domain.use_case.list_projects.ListProjectsViewModel
 import com.license.workguru_app.timetracking.domain.use_case.list_projects.ListProjectsViewModelFactory
-import kotlinx.android.synthetic.main.activity_authorized.*
 
 
 class FilterDialog(
@@ -48,8 +41,8 @@ class FilterDialog(
     lateinit var listCategoriesViewModel: ListCategoriesViewModel
     lateinit var listProjectsViewModel:ListProjectsViewModel
 
-    var choosenCategory:Category = Category("", 0)
-    var numOfWantedMembers:Int = 0
+    var choosenCategory:Category? = null
+    var numOfWantedMembers:Int = 1
     var startDate:MutableLiveData<Long> = MutableLiveData()
     val sharedViewModel: SharedViewModel by activityViewModels()
 
@@ -80,7 +73,6 @@ class FilterDialog(
 
         binding.startedAfterCalendarView.setOnDateChangeListener(OnDateChangeListener { view, year, month, dayOfMonth ->
             calendar.set(year,month,dayOfMonth)
-            Toast.makeText(requireActivity(), ""+calendar.timeInMillis, Toast.LENGTH_SHORT).show()
         })
         numOfWantedMembers = chooseNumberOfMembers()
         listCategoriesViewModel.dataList.observe(viewLifecycleOwner){
@@ -88,12 +80,12 @@ class FilterDialog(
         }
 
         binding.filterBtn.setOnClickListener {
-
-            sharedViewModel.saveFilterResult(choosenCategory, numOfWantedMembers, calendar.timeInMillis)
+            if (choosenCategory == null){
+                choosenCategory = listCategoriesViewModel.dataList.value?.first()
+            }
             lifecycleScope.launch {
-                if(listProjectsViewModel.listProjects(false, choosenCategory.id.toString())){
-                    dialog?.dismiss()
-                }
+                sharedViewModel.saveFilterResult(choosenCategory!!, numOfWantedMembers, calendar.timeInMillis, true)
+                dialog?.dismiss()
             }
 
         }
@@ -141,7 +133,6 @@ class FilterDialog(
             ) {
 
                 val type = parent?.getItemAtPosition(position).toString()
-                Toast.makeText(context, "${type}", Toast.LENGTH_SHORT).show()
                 categoryList.forEach {
                     if (it.category_name == type){
                         choosenCategory = it
@@ -174,7 +165,6 @@ class FilterDialog(
             ) {
 
                 val type = parent?.getItemAtPosition(position).toString()
-                Toast.makeText(context, "${type}", Toast.LENGTH_SHORT).show()
                 numMembers = type.toInt()
 
             }

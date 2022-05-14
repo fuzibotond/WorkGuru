@@ -6,6 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white_wrapped"
     tools:context=".timetracking.presentation.components.ProjectListFragment"
+    android:orientation="vertical"
     >
     <LinearLayout
         android:id="@+id/project_title_and_progressbar"
@@ -102,25 +103,41 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/project_filter_and_order">
+        android:layout_below="@+id/project_filter_and_order"
+        >
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
             >
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_view"
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/project_list_swipe_refresh_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="0dp"
-                tools:ignore="NotSibling"
-                tools:itemCount="10"
-                tools:listitem="@layout/project_item_layout"
-                />
+                android:paddingBottom="60dp"
+                >
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="0dp"
+                    tools:ignore="NotSibling"
+                    tools:itemCount="10"
+                    tools:listitem="@layout/project_item_layout"
+                    />
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
         </LinearLayout>
 
+        <ProgressBar
+            android:id="@+id/loading_progressbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"/>
     </RelativeLayout>
+
 
 
 </RelativeLayout>

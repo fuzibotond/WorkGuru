@@ -17,6 +17,7 @@ import com.license.workguru_app.R
 import com.license.workguru_app.di.SharedViewModel
 import com.license.workguru_app.timetracking.domain.model.Project
 import com.license.workguru_app.timetracking.presentation.components.ProjectListFragment
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -79,7 +80,7 @@ class ProjectAdapter(
         holder.hiddenLayout.visibility = View.GONE
         holder.projectNameTextView.text = currentItem.name
         holder.categoryNameTextView.text = currentItem.category_name
-        holder.startDateTextView.text = formatDate(currentItem.start_date)
+        holder.startDateTextView.text =  formatDate(currentItem.start_date)
         holder.trackedTimeTextView.text = convertLongToMinutes(currentItem.tracked)
         holder.numberOfMembersTextView.text =currentItem.members.toString()
         holder.taskAmountTextView.text = currentItem.tasks.toString()
@@ -108,12 +109,17 @@ class ProjectAdapter(
     }
     @RequiresApi(Build.VERSION_CODES.O)
     fun formatDate(string:String):String {
-        val localDateTime: LocalDateTime = LocalDateTime.parse(string.substring(0,19));
 
-        val date = convertLongToTime(localDateTime.atZone(ZoneOffset.UTC)?.toInstant()?.toEpochMilli())
-        val nowdate = convertLongToTime(System.currentTimeMillis())
+        val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+        try {
+            val date = format.parse(string.take(19))
+            return date.toString()
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
 
-        return date
+        return ""
+
     }
     fun convertLongToTime(time: Long?): String {
         val date = time?.let { Date(it) }
@@ -158,5 +164,6 @@ class ProjectAdapter(
         }
 
     }
+
 
 }

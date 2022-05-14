@@ -9,9 +9,7 @@ import com.license.workguru_app.profile.data.remote.DTO.ProjectHistory
 import com.license.workguru_app.profile.data.remote.DTO.TodaysHistory
 import com.license.workguru_app.profile.data.remote.DTO.WeeklyHistory
 import com.license.workguru_app.timetracking.data.remote.DTO.Category
-import com.license.workguru_app.timetracking.data.remote.DTO.StartStopTimerRequest
 import com.license.workguru_app.timetracking.data.remote.DTO.StartTimerResponse
-import java.util.*
 
 
 class SharedViewModel : ViewModel() {
@@ -22,6 +20,7 @@ class SharedViewModel : ViewModel() {
     val choosenCategory = MutableLiveData<Category>()
     val numberOfWantedMembers = MutableLiveData<Int>()
     val startedAtDate = MutableLiveData<Long>()
+    val isFiltered = MutableLiveData(false)
     val chartData = MutableLiveData<List<ProjectHistory>>()
     val todaysHistory = MutableLiveData<TodaysHistory>()
     val weeklyHistory = MutableLiveData<WeeklyHistory>()
@@ -41,10 +40,11 @@ class SharedViewModel : ViewModel() {
     fun searchWithKeyword(text: String) {
         searchingKeyword.value = text
     }
-    fun saveFilterResult(category: Category, numMember:Int, startDate:Long) {
+    fun saveFilterResult(category: Category?, numMember:Int, startDate:Long, isFilteredByAll:Boolean) {
         choosenCategory.value = category
         numberOfWantedMembers.value = numMember
         startedAtDate.value = startDate
+        isFiltered.value = isFilteredByAll
     }
     fun saveChartData(data:List<ProjectHistory>){
         chartData.value = data

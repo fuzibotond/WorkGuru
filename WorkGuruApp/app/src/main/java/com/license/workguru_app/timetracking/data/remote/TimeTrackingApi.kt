@@ -8,8 +8,16 @@ import retrofit2.http.*
 
 interface TimeTrackingApi {
     @GET(Constants.GET_PROJECT_URL)
-//    suspend fun listProjects(@Header("Authorization") token:String, @Body request: ProjectRequest): ProjectResponse
-    suspend fun listProjects(@Header("Authorization") token:String, @Header("automatic")automatic:Boolean, @Header("product_id") project_id:String): ProjectResponse
+    suspend fun listProjects(@Header("Authorization") token:String, @Query("category_id") category_id:String): ProjectResponse
+
+    @GET(Constants.GET_PROJECT_URL)
+    suspend fun listProjectsByPage(@Header("Authorization") token:String, @Query("page") page:Int): ProjectResponse
+
+    @GET(Constants.GET_PROJECT_URL)
+    suspend fun listAllProjectWithoutPagination(@Header("Authorization") token:String, @Query("pagination") pagination:Boolean): AllProjectResponse
+
+    @GET(Constants.GET_PROJECT_URL)
+    suspend fun listAllProjects(@Header("Authorization") token:String,@Header("automatic") automatic:Boolean, @Header("category_id") project_id:String): ProjectResponse
 
     @GET(Constants.GET_CATEGORIES_URL)
     suspend fun listCategories(@Header("Authorization") token:String): CategoryResponse

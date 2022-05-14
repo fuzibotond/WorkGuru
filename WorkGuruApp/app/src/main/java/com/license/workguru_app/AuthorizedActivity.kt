@@ -167,11 +167,11 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
     override fun onResume() {
         super.onResume()
-        PrefUtil.setTimerLength(this, durationOfSessions.value!!)
+
         lifecycleScope.launch {
             getUserProfileViewModel.getUserProfileInfo()
         }
-
+        PrefUtil.setTimerLength(this, durationOfSessions.value!!)
 //        removeAlarm(this)
         NotificationUtil.hideTimerNotification(this)
 
@@ -189,7 +189,7 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
         PrefUtil.setPreviousTimerLengthSeconds(timerLengthSeconds, this)
         PrefUtil.setSecondsRemaining(secondsRemaining, this)
-        PrefUtil.setTimerState(timerState.value!!, this)
+        timerState.value?.let { PrefUtil.setTimerState(it, this) }
 
     }
 
@@ -532,12 +532,10 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         timer_launcher_float_button.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_pause_24))
     }
 
-
     private fun pauseTimer() {
         stopService(serviceIntent)
         timer_launcher_float_button.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_play_arrow_24))
     }
-
 
     private fun setNewTimerLength(){
         val lengthInMinutes = PrefUtil.getTimerLength(this)
@@ -592,6 +590,8 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
+
+        //TODO: need to request for all of the projects without pagination, searching, and passing the result to sharedviewmodel
         if (query != null) {
             sharedViewModel.searchWithKeyword(query)
         }

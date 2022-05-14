@@ -80,7 +80,7 @@ class CreateProjectDialog(
             listCategoriesViewModel.listCategories()
         }
         lifecycleScope.launch {
-            listProjectsViewModel.listProjects(false, "0")
+            listProjectsViewModel.listAllProjects(false, "0")
         }
 
 
