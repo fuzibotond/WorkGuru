@@ -1,8 +1,8 @@
 package com.license.workguru_app
 
 import android.annotation.SuppressLint
-import android.app.AlarmManager
-import android.app.PendingIntent
+import android.annotation.TargetApi
+import android.app.*
 import android.content.*
 import android.content.res.ColorStateList
 import android.content.res.Configuration
@@ -37,23 +37,16 @@ import com.license.workguru_app.authentification.domain.use_case.log_out.LogoutV
 import com.license.workguru_app.authentification.domain.use_case.log_out.LogoutViewModelFactory
 import com.license.workguru_app.di.SharedViewModel
 import kotlinx.coroutines.launch
-import android.provider.MediaStore
-
-import android.graphics.Bitmap
 import android.graphics.Color
-import android.os.CountDownTimer
+import android.os.Build
 import android.view.*
 import android.widget.EditText
-import androidx.appcompat.widget.AppCompatImageView
-import androidx.core.view.children
-import androidx.core.view.get
-import com.anychart.standalones.ColorRange
+import androidx.annotation.RequiresApi
 import com.bumptech.glide.Glide
 import com.license.workguru_app.pomodoro.data.source.receivers.TimerExpiredReceiver
 import com.license.workguru_app.pomodoro.data.source.utils.PrefUtil
 import com.license.workguru_app.pomodoro.presentation.PomodoroSettingsDialog
 import com.license.workguru_app.profile.domain.repository.ProfileRepository
-import com.license.workguru_app.profile.domain.use_case.display_user_insights.userHistoryViewModelFactory
 import com.license.workguru_app.profile.domain.use_case.display_user_profile.UserProfileViewModel
 import com.license.workguru_app.profile.domain.use_case.display_user_profile.UserProfileViewModelFactory
 import com.license.workguru_app.timetracking.data.remote.DTO.StartTimerResponse
@@ -65,15 +58,20 @@ import com.license.workguru_app.timetracking.presentation.components.CreateProje
 import com.license.workguru_app.timetracking.presentation.components.CreateTimerDialog
 import com.license.workguru_app.timetracking.presentation.components.FilterDialog
 import com.license.workguru_app.utils.Constants
-import com.license.workguru_app.utils.NotificationUtil
+import com.license.workguru_app.utils.NotificationUtil.Companion.hideTimerNotification
+import com.license.workguru_app.utils.NotificationUtil.Companion.showTimerExpired
+import com.license.workguru_app.utils.NotificationUtil.Companion.showTimerPaused
+import com.license.workguru_app.utils.NotificationUtil.Companion.showTimerRunning
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.activity_authorized.*
+import kotlinx.android.synthetic.main.pomodoro_settings_dialog.*
 import kotlinx.android.synthetic.main.project_item_layout.*
 import kotlinx.coroutines.delay
 import java.io.File
 import java.lang.Exception
 import java.security.AccessController.getContext
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -82,7 +80,6 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     private lateinit var navigationView: NavigationView
     lateinit var topAppBar: MaterialToolbar
     lateinit var topAppBarLayout: AppBarLayout
-    lateinit var profileMennu: ActionMenuItemView
     lateinit var bottomAppBar: BottomAppBar
 
     private lateinit var appBarConfig: AppBarConfiguration
@@ -98,6 +95,10 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     val name:MutableLiveData<String> = MutableLiveData()
     val photo:MutableLiveData<String> = MutableLiveData()
 
+    val running:MutableLiveData<Boolean> = MutableLiveData()
+    val stop:MutableLiveData<Boolean> = MutableLiveData()
+    val paused:MutableLiveData<Boolean> = MutableLiveData()
+
     val numberOfSessions:MutableLiveData<Int> = MutableLiveData()
     val durationOfSessions:MutableLiveData<Int> = MutableLiveData()
 
@@ -105,7 +106,7 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     private var time = 0.0
 
     enum class TimerState{
-        Stopped, Paused,Running
+        Stopped, Paused, Running
     }
 
     private var timerLengthSeconds: Long = 0
@@ -133,8 +134,15 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
         val nowSeconds: Long
             get() = Calendar.getInstance().timeInMillis / 1000
+
+        val running:MutableLiveData<Boolean> = MutableLiveData()
+        val stop:MutableLiveData<Boolean> = MutableLiveData()
+        val paused:MutableLiveData<Boolean> = MutableLiveData()
     }
 
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_authorized)
@@ -173,7 +181,8 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         }
         PrefUtil.setTimerLength(this, durationOfSessions.value!!)
 //        removeAlarm(this)
-        NotificationUtil.hideTimerNotification(this)
+        hideTimerNotification(this)
+//        NotificationUtil.hideTimerNotification(this)
 
     }
     override fun onPause() {
@@ -181,10 +190,12 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
         if (timerState.value == TimerState.Running){
             val wakeUpTime = setAlarm(this, nowSeconds, secondsRemaining)
-            NotificationUtil.showTimerRunning(this, wakeUpTime)
+            showTimerRunning(this, wakeUpTime)
+//            NotificationUtil.showTimerRunning(this, wakeUpTime)
         }
         else if (timerState.value == TimerState.Paused){
-            NotificationUtil.showTimerPaused(this)
+//            NotificationUtil.showTimerPaused(this)
+            showTimerPaused(this)
         }
 
         PrefUtil.setPreviousTimerLengthSeconds(timerLengthSeconds, this)
@@ -230,12 +241,19 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
             time = intent.getDoubleExtra(TimerService.TIME_EXTRA, 0.0)
             current_timer.text = getTimeStringFromDouble(time)
             current_pomodoro.text = getTimeStringFromDouble(durationOfSessions.value!!*60 - time)
-            if (durationOfSessions.value!!*60 - time <= 0){
-                NotificationUtil.showTimerExpired(this@AuthorizedActivity)
-                pauseAllTimer()
+            if (sharedViewModel.pomodoroIsON.value == true){
+                 if (durationOfSessions.value!!*60 - time <= 0){
+                     if(sharedViewModel.pomodoroNotification.value == true){
+                         showTimerExpired(this@AuthorizedActivity)
+                     }
+                    pauseAllTimer()
+                }
             }
+
         }
     }
+
+
 
     private fun getTimeStringFromDouble(time: Double): String {
         val resultInt = time.roundToInt()
@@ -263,20 +281,14 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         navigationView = findViewById(R.id.menu_navigation_view)
         topAppBarLayout = findViewById(R.id.topAppBarLayout)
         topAppBar = findViewById(R.id.topAppBar)
-        profileMennu = findViewById(R.id.profile)
         bottomAppBar = findViewById(R.id.bottomAppBar)
         drawerLayout = findViewById(R.id.drawerLayout)
         appBarConfig = AppBarConfiguration.Builder(R.id.auth_nav_host_fragment)
             .setDrawerLayout(drawerLayout)
             .build()
-        setSupportActionBar(bottomAppBar)
         navController = findNavController(R.id.auth_nav_host_fragment)
-        setupActionBarWithNavController(navController, appBarConfig)
         navigationView.setupWithNavController(navController)
-        bottomAppBar.setupWithNavController(navController)
-        supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        bottomAppBar.setNavigationIcon(null)
+
         disableSearching(true)
     }
 
@@ -340,7 +352,7 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
             when(menuItem.itemId){
                 R.id.dashboard ->{
                     btn_add_new_project.visibility = View.GONE
-                    disableSearching(true)
+//                    disableSearching(true)
                     findNavController(R.id.auth_nav_host_fragment).navigate(R.id.dashboardFragment)
 
                 }
@@ -436,11 +448,6 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.bottom_app_bar,menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
     private fun startAllTimer(){
         val manager = (this as AppCompatActivity).supportFragmentManager
         CreateTimerDialog().show(manager, "CustomManager")
@@ -461,9 +468,26 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         startStopTimer()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun setListeners(){
-        btn_add_new_project.setOnClickListener {
+        this.stop.observe(this){
+            Log.d("STOP", "Stop")
+        }
 
+        sharedViewModel.pomodoroIsON.observe(this){
+            if (sharedViewModel.pomodoroIsON.value == true){
+                bottomAppBar.menu.getItem(0).setIcon(resources.getDrawable(R.drawable.ic_baseline_alarm_on_24))
+                bottomAppBar.menu.getItem(0).setIconTintList(ColorStateList.valueOf(Color.CYAN))
+
+            }else{
+                bottomAppBar.menu.getItem(0).setIcon(resources.getDrawable(R.drawable.ic_baseline_alarm_24))
+                bottomAppBar.menu.getItem(0).setIconTintList(ColorStateList.valueOf(resources.getColor(R.color.teal_100)))
+
+            }
+        }
+        btn_add_new_project.setOnClickListener {
+            val manager = (this as AppCompatActivity).supportFragmentManager
+            CreateProjectDialog().show(manager, "CustomManager")
         }
         timer_launcher_float_button.setOnClickListener{
             if (time == 0.0 ){
@@ -518,7 +542,7 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     }
 
     private fun startStopTimer() {
-        if(timerState.value== TimerState.Paused){
+        if(timerState.value == TimerState.Paused){
             pauseTimer()
         }
         else{
@@ -612,4 +636,6 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         val item: MenuItem = topAppBar.menu.findItem(com.license.workguru_app.R.id.search_action)
         item.setVisible(!disable)
     }
+
+
 }

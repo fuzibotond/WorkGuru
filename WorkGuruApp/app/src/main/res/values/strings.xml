@@ -65,4 +65,5 @@
     <string name="select_a_project">Select a project</string>
     <string name="create_new_project">Create new project</string>
     <string name="turn_on_off_notifications">Turn on/off notifications:</string>
+    <string name="programming_skills">Programming skills</string>
 </resources>

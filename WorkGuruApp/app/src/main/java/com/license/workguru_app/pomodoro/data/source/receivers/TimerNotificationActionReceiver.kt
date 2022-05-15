@@ -4,23 +4,27 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.fragment.app.activityViewModels
 import com.license.workguru_app.AuthorizedActivity
 import com.license.workguru_app.di.SharedViewModel
 import com.license.workguru_app.pomodoro.data.source.utils.PrefUtil
+import com.license.workguru_app.timetracking.data.source.services.TimerService
 import com.license.workguru_app.utils.Constants
 import com.license.workguru_app.utils.NotificationUtil
 
+
 class TimerNotificationActionReceiver : BroadcastReceiver() {
-
+    private lateinit var serviceIntent: Intent
     override fun onReceive(context: Context, intent: Intent) {
-
+        serviceIntent = Intent(context, TimerService::class.java)
         when (intent.action){
             Constants.ACTION_STOP -> {
                 AuthorizedActivity.removeAlarm(context)
+                AuthorizedActivity.stop.value = true
                 PrefUtil.setTimerState(AuthorizedActivity.TimerState.Stopped, context)
-//                NotificationUtil.hideTimerNotification(context)
+                NotificationUtil.hideTimerNotification(context)
             }
             Constants.ACTION_PAUSE -> {
                 var secondsRemaining = PrefUtil.getSecondsRemaining(context)

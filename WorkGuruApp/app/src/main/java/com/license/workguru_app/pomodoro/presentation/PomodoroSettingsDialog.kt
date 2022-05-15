@@ -37,6 +37,8 @@ class PomodoroSettingsDialog(
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         getDialog()!!.getWindow()?.setBackgroundDrawableResource(R.drawable.terms_and_conditions_icon_foreground);
         _binding = PomodoroSettingsDialogBinding.inflate(inflater, container, false)
+        binding.notificationSwitcher.isChecked = sharedViewModel.pomodoroNotification.value!!
+        binding.pomodoroOnOffSwitcher.isChecked = sharedViewModel.pomodoroIsON.value!!
         handleThatBackPress()
         setListeners()
         return binding.root
@@ -82,6 +84,7 @@ class PomodoroSettingsDialog(
 
 
     override fun onStart() {
+
         super.onStart()
         val width = (resources.displayMetrics.widthPixels * 0.85).toInt()
         val height = (resources.displayMetrics.heightPixels * 0.40).toInt()

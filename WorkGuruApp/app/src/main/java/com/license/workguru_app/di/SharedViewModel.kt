@@ -30,6 +30,10 @@ class SharedViewModel : ViewModel() {
     val currentProject = MutableLiveData<StartTimerResponse>()
     val pomodoroIsON = MutableLiveData<Boolean>(false)
     val pomodoroNotification = MutableLiveData<Boolean>(false)
+    val isColleaguesFilterActive = MutableLiveData<Boolean>(false)
+    val skillToFilter = MutableLiveData<String>()
+    val statusToFilter = MutableLiveData<String>()
+    val minNumberOfWorkHour = MutableLiveData<Int>()
 
     fun acceptTermsAndConditions(isAccepted:Boolean){
         isTermsAndConditionsAccepted.value = isAccepted
@@ -41,10 +45,16 @@ class SharedViewModel : ViewModel() {
         searchingKeyword.value = text
     }
     fun saveFilterResult(category: Category?, numMember:Int, startDate:Long, isFilteredByAll:Boolean) {
-        choosenCategory.value = category
+        choosenCategory.value = category!!
         numberOfWantedMembers.value = numMember
         startedAtDate.value = startDate
         isFiltered.value = isFilteredByAll
+    }
+    fun saveColleagueFilterCriteria(skill: String?, minWorkHour:Int, status:String, isFilterActive:Boolean) {
+        skillToFilter.value = skill!!
+        statusToFilter.value = status
+        minNumberOfWorkHour.value = minWorkHour
+        isColleaguesFilterActive.value = isFilterActive
     }
     fun saveChartData(data:List<ProjectHistory>){
         chartData.value = data
