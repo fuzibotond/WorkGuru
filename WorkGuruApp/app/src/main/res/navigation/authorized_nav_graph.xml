@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/authorized_nav_graph"
-    app:startDestination="@id/colleaguesFragment">
+    app:startDestination="@id/inviteUserFragment">
 
 
     <fragment
@@ -25,4 +25,8 @@
         android:name="com.license.workguru_app.profile.presentation.components.ColleaguesFragment"
         android:label="fragment_collegues"
         tools:layout="@layout/fragment_collegues" />
+    <fragment
+        android:id="@+id/inviteUserFragment"
+        android:name="com.license.workguru_app.admin.presentation.components.InviteUserFragment"
+        android:label="InviteUserFragment" />
 </navigation>

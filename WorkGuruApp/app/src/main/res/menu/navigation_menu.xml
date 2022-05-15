@@ -29,6 +29,11 @@
             android:title="@string/help_requests"
             android:checked="true" />
         <item
+            android:id="@+id/invite_user"
+            android:icon="@drawable/ic_baseline_contact_mail_24"
+            android:title="@string/invite_user"
+            android:checked="true" />
+        <item
             android:id="@+id/settings"
             android:icon="@drawable/ic_baseline_settings_24"
             android:title="@string/settings"

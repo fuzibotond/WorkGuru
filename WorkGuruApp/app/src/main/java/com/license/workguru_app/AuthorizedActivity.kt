@@ -371,6 +371,16 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
                     btn_add_new_project.visibility = View.GONE
                     findNavController(R.id.auth_nav_host_fragment).navigate(R.id.colleaguesFragment)
                 }
+                R.id.invite_user ->{
+                    if (getUserProfileViewModel.data.value?.role == "admin"){
+                        disableSearching(true)
+                        btn_add_new_project.visibility = View.GONE
+                        findNavController(R.id.auth_nav_host_fragment).navigate(R.id.inviteUserFragment)
+                    }else{
+                        Toast.makeText(this, "As a user you can't send invitation to others!", Toast.LENGTH_SHORT).show()
+                    }
+                   
+                }
                 R.id.sign_out->{
                     disableSearching(true)
                     btn_add_new_project.visibility = View.GONE

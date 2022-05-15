@@ -38,6 +38,9 @@ object Constants {
     const val CHANGE_USER_PROFILE= "api/users/profile"
     //reports
 
+    //admin
+    const val INVITE_USER_URL = "api/users/invite"
+
     //Timer
     const val ACTION_STOP = "stop"
     const val ACTION_PAUSE = "pause"

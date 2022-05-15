@@ -66,4 +66,8 @@
     <string name="create_new_project">Create new project</string>
     <string name="turn_on_off_notifications">Turn on/off notifications:</string>
     <string name="programming_skills">Programming skills</string>
+    <string name="invite_user">Invite user</string>
+    <string name="invite_a_new_user">Invite a new user</string>
+    <string name="invite_link_helper_text">Enter the email address of the user you wish to invite and we’ll send them an invite link.</string>
+    <string name="send_invite">Send invite</string>
 </resources>
