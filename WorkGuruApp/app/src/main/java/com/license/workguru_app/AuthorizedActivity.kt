@@ -123,8 +123,6 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
             get() = Calendar.getInstance().timeInMillis / 1000
     }
 
-
-
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -193,7 +191,7 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
             time = intent.getDoubleExtra(TimerService.TIME_EXTRA, 0.0)
             current_timer.text = getTimeStringFromDouble(time)
             current_pomodoro.text = getTimeStringFromDouble(passedSession*duration*60 - time)
-
+            actual_timer.setText(getTimeStringFromDouble(time))
 //            Log.d("TIMER", "${passedSession} ${time}")
             if (sharedViewModel.pomodoroIsON.value == true && passedSession-1 != sharedViewModel.numOfPomodoroSession.value!!){
                 if (((passedSession * duration * 60) - time) <= 0.0){
@@ -209,6 +207,7 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
             }
         }
     }
+
     private fun saveUserData(context: Context, numberOfSessions:Int, durationOfSession:Int, pomodoroIsOn:Boolean, sendNotifications:Boolean ){
         val sharedPreferences: SharedPreferences = context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
@@ -259,6 +258,9 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         navigationView.setupWithNavController(navController)
 
         disableSearching(true)
+
+
+
     }
 
     @SuppressLint("UseCompatLoadingForColorStateLists", "WrongConstant")
@@ -281,6 +283,10 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
         topAppBar.getChildAt(0).setOnClickListener {
             drawerLayout.openDrawer(Gravity.START)
+
+            active_timer_project_name.setText(sharedViewModel.currentProject.value?.project_name)
+            active_timer_task_name.setText(sharedViewModel.currentProject.value?.timer_description)
+            active_timer_skill_language.setText("Kotlin")
         }
 
         topAppBar.setOnMenuItemClickListener { menuItem ->
@@ -435,7 +441,10 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
                     val timer = getUserProfileViewModel.data.value?.active_timer
                     time = getUserProfileViewModel.data.value?.active_timer?.elapsed_seconds?.toDouble()!!
                     current_timer.text = getTimeStringFromDouble(time)
-
+                    actual_timer.text = getTimeStringFromDouble(time)
+                    active_timer_project_name.setText(timer?.project_name)
+                    active_timer_task_name.setText(timer?.task)
+                    active_timer_skill_language.setText("Kotlin")
                     when (state){
                         "paused" -> {
                             timerState.value = TimerState.Paused
@@ -458,8 +467,16 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
                 else{
                     time = 0.0
                     current_timer.text = getTimeStringFromDouble(time)
+                    actual_timer.text = getTimeStringFromDouble(time)
                 }
                 photo.value = getUserProfileViewModel.data.value?.avatar
+                //Actual timer
+                val activeTimer = getUserProfileViewModel.data.value?.active_timer
+                if(activeTimer == null){
+                    active_timer_project_name.setText("No timer")
+                    active_timer_task_name.setText("")
+                    active_timer_skill_language.setText("")
+                }
             }
         }
         loadData()
@@ -575,6 +592,7 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
                     stopService(serviceIntent)
                     time = 0.0
                     current_timer.text = getTimeStringFromDouble(time)
+                    actual_timer.text = getTimeStringFromDouble(time)
                     PrefUtil.saveIntDataOnDifferentPref(this@AuthorizedActivity,"sharedPrefs",1,"POMODORO_SESSION_PASSED" )
                 }
             }

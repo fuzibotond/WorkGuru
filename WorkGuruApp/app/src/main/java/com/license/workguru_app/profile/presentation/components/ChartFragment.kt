@@ -80,7 +80,12 @@ class ChartFragment : Fragment() {
                 Configuration.UI_MODE_NIGHT_MASK
         when (nightModeFlags) {
             Configuration.UI_MODE_NIGHT_YES -> {
-                pie.title("Tracked - Last 30 Days dark")
+                pie.tooltip().background("#000")
+
+                pie.title("Tracked - Last 30 Days no dark")
+                pie.title().fontFamily("Inter")
+                pie.title().fontColor("#000")
+                pie.title().fontSize(18)
                 pie.background("@color/what_wrapped")
                 pie.tooltip().fontColor("grey")
                 pie.tooltip().title().fontColor("grey")
@@ -94,7 +99,7 @@ class ChartFragment : Fragment() {
                     .align(Align.CENTER)
                     .itemsLayout(LegendLayout.VERTICAL)
                     .iconSize(15)
-                pie.credits(false)
+                pie.credits(false) 
 
             }
             Configuration.UI_MODE_NIGHT_NO -> {
@@ -102,6 +107,7 @@ class ChartFragment : Fragment() {
                 pie.title("Tracked - Last 30 Days no dark")
                 pie.title().fontFamily("Inter")
                 pie.title().fontColor("#000")
+                pie.title().fontSize(18)
                 pie.labels().position("outside")
                 pie.legend().title("Legend")
                 pie.legend().enabled(true)
@@ -117,6 +123,7 @@ class ChartFragment : Fragment() {
                 pie.title("Tracked - Last 30 Days undefined")
                 pie.title().fontFamily("Inter")
                 pie.title().fontColor("#000")
+                pie.title().fontSize(18)
                 pie.labels().position("outside")
                 pie.legend().title("Legend")
                 pie.legend().enabled(true)

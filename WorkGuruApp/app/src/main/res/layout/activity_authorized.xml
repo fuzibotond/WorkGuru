@@ -180,7 +180,93 @@
             android:background="@color/teal_900"
             app:itemTextColor="@color/drawer_item"
             app:itemIconTint="@color/drawer_item"
-            />
+            >
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:paddingBottom="10dp"
+                    android:orientation="vertical"
+                    android:layout_margin="20dp"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Actual Timer"
+                        android:fontFamily="@font/inter"
+                        android:textSize="20sp"
+                        android:textColor="@color/white"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Timer on "
+                            android:fontFamily="@font/inter"
+                            android:textColor="@color/white"/>
+                        <TextView
+                            android:id="@+id/active_timer_project_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Project name"
+                            android:fontFamily="@font/inter"
+                            android:textColor="@color/teal_100"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Task on "
+                            android:fontFamily="@font/inter"
+                            android:textColor="@color/white"/>
+                        <TextView
+                            android:id="@+id/active_timer_task_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Task name"
+                            android:fontFamily="@font/inter"
+                            android:textColor="@color/teal_100"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Skill on "
+                            android:fontFamily="@font/inter"
+                            android:textColor="@color/white"/>
+                        <TextView
+                            android:id="@+id/active_timer_skill_language"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Kotlin"
+                            android:fontFamily="@font/inter"
+                            android:textColor="@color/teal_100"/>
+                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/actual_timer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="00:00:00"
+                        android:fontFamily="@font/inter"
+                        android:textColor="@color/white"
+                        android:textSize="16dp"/>
+
+                </LinearLayout>
+            </RelativeLayout>
+
+        </com.google.android.material.navigation.NavigationView>
 
     </androidx.drawerlayout.widget.DrawerLayout>
 
