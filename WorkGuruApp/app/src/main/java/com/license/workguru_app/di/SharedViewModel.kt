@@ -30,6 +30,8 @@ class SharedViewModel : ViewModel() {
     val currentProject = MutableLiveData<StartTimerResponse>()
     val pomodoroIsON = MutableLiveData<Boolean>(false)
     val pomodoroNotification = MutableLiveData<Boolean>(false)
+    val numOfPomodoroSession = MutableLiveData<Int>()
+    val numOfSessionDuration = MutableLiveData<Int>()
     val isColleaguesFilterActive = MutableLiveData<Boolean>(false)
     val skillToFilter = MutableLiveData<String>()
     val statusToFilter = MutableLiveData<String>()
@@ -74,7 +76,7 @@ class SharedViewModel : ViewModel() {
     fun saveTimerState(state:Boolean){
         isTimerStarted.value = state
     }
-    fun saveCurrentTimer(current:StartTimerResponse){
+    fun saveCurrentTimer(current: StartTimerResponse?){
         currentProject.value = current
     }
     fun savePomodoroState(isOn:Boolean){
@@ -83,7 +85,12 @@ class SharedViewModel : ViewModel() {
     fun savePomodoroNotification(isOn: Boolean){
         pomodoroNotification.value = isOn
     }
-
+    fun saveNumberOfSession(sessions:Int){
+        numOfPomodoroSession.value = sessions
+    }
+    fun saveDurationOfAPomodoroSession(durationInMinutes:Int){
+        numOfSessionDuration.value = durationInMinutes
+    }
 
 
 }

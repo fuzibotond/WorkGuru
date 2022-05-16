@@ -1,7 +1,9 @@
 package com.license.workguru_app.pomodoro.data.source.utils
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import android.util.Log
 import com.license.workguru_app.AuthorizedActivity
 
 
@@ -71,6 +73,36 @@ class PrefUtil {
             val editor = PreferenceManager.getDefaultSharedPreferences(context).edit()
             editor.putLong(ALARM_SET_TIME_ID, time)
             editor.apply()
+        }
+
+        fun saveStringDataOnDifferentPref(context: Context,sharedPrefName:String, content:String,  naming:String ){
+            val sharedPreferences: SharedPreferences = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+
+            editor.apply{
+                putString(naming, content)
+            }.apply()
+            Log.d("PREF", "Saved string data! --> ${content}")
+        }
+
+        fun saveIntDataOnDifferentPref(
+            context: Context,
+            sharedPrefName:String, content: Int?, naming:String ){
+            val sharedPreferences: SharedPreferences = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+
+            editor.apply{
+                if (content != null) {
+                    putInt(naming, content)
+                }
+            }.apply()
+            Log.d("PREF", "Saved string data! --> ${content}")
+        }
+         fun getIntDataFromPref(
+            context: Context,
+            sharedPrefName:String,  naming:String ):Int{
+            val sharedPreferences: SharedPreferences = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE)
+            return sharedPreferences.getInt(naming, 0)
         }
     }
 }

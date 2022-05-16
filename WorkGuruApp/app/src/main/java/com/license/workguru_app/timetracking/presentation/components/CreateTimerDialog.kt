@@ -74,6 +74,7 @@ class CreateTimerDialog(
                         val projectId = choosenProject.value?.id.toString()
                         val description = binding.descriptionTextInput.text.toString()
                         if(startPauseStopViewModel.startTimer(false, project_id = projectId, description = description)){
+                            sharedViewModel.saveCurrentTimer(startPauseStopViewModel.startedTimer.value!!)
                             sharedViewModel.saveTimerState(true)
                         }
                     }

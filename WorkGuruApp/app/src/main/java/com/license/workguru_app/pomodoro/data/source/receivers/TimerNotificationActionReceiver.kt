@@ -22,7 +22,6 @@ class TimerNotificationActionReceiver : BroadcastReceiver() {
         when (intent.action){
             Constants.ACTION_STOP -> {
                 AuthorizedActivity.removeAlarm(context)
-                AuthorizedActivity.stop.value = true
                 PrefUtil.setTimerState(AuthorizedActivity.TimerState.Stopped, context)
                 NotificationUtil.hideTimerNotification(context)
             }

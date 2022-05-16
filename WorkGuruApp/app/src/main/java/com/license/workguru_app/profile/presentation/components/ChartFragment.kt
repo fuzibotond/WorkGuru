@@ -51,6 +51,8 @@ class ChartFragment : Fragment() {
 
     private fun setObservers() {
         sharedViewModel.chartData.observe(viewLifecycleOwner){
+            names.clear()
+            numbers.clear()
             sharedViewModel.chartData.value?.forEach {
                 names.add(it.name)
                 numbers.add(it.project_id)

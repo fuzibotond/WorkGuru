@@ -39,6 +39,8 @@ class PomodoroSettingsDialog(
         _binding = PomodoroSettingsDialogBinding.inflate(inflater, container, false)
         binding.notificationSwitcher.isChecked = sharedViewModel.pomodoroNotification.value!!
         binding.pomodoroOnOffSwitcher.isChecked = sharedViewModel.pomodoroIsON.value!!
+        binding.sessionDurationNumberPicker.value = sharedViewModel.numOfPomodoroSession.value!!
+        binding.sessionDurationNumberPicker.value = sharedViewModel.numOfSessionDuration.value!!
         handleThatBackPress()
         setListeners()
         return binding.root
@@ -48,6 +50,8 @@ class PomodoroSettingsDialog(
         binding.pomodoroSaveBtn.setOnClickListener {
             sharedViewModel.savePomodoroState(binding.pomodoroOnOffSwitcher.isChecked)
             sharedViewModel.savePomodoroNotification(binding.notificationSwitcher.isChecked)
+            sharedViewModel.saveNumberOfSession(binding.numberSessionNumberPicker.value)
+            sharedViewModel.saveDurationOfAPomodoroSession(binding.sessionDurationNumberPicker.value)
             saveUserData(
                 requireActivity(),
                 binding.numberSessionNumberPicker.value,

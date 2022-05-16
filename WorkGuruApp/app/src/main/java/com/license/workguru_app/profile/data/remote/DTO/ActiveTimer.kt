@@ -1,7 +1,7 @@
 package com.license.workguru_app.profile.data.remote.DTO
 
 data class ActiveTimer(
-    val automatic: Boolean?,
+    val automatic: String?,
     val elapsed_seconds: Int,
     val project_id: Int,
     val project_name: String,

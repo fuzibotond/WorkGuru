@@ -1,7 +1,6 @@
 package com.license.workguru_app
 
 import android.annotation.SuppressLint
-import android.annotation.TargetApi
 import android.app.*
 import android.content.*
 import android.content.res.ColorStateList
@@ -15,7 +14,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.appcompat.widget.SearchView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.MutableLiveData
@@ -25,7 +23,6 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.material.appbar.AppBarLayout
@@ -56,22 +53,16 @@ import com.license.workguru_app.timetracking.domain.use_case.start_pause_stop_ti
 import com.license.workguru_app.timetracking.domain.use_case.start_pause_stop_timer.StartPauseStopViewModelFactory
 import com.license.workguru_app.timetracking.presentation.components.CreateProjectDialog
 import com.license.workguru_app.timetracking.presentation.components.CreateTimerDialog
-import com.license.workguru_app.timetracking.presentation.components.FilterDialog
 import com.license.workguru_app.utils.Constants
+import com.license.workguru_app.utils.NotificationUtil
 import com.license.workguru_app.utils.NotificationUtil.Companion.hideTimerNotification
 import com.license.workguru_app.utils.NotificationUtil.Companion.showTimerExpired
 import com.license.workguru_app.utils.NotificationUtil.Companion.showTimerPaused
 import com.license.workguru_app.utils.NotificationUtil.Companion.showTimerRunning
-import com.squareup.picasso.Picasso
-import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.activity_authorized.*
 import kotlinx.android.synthetic.main.pomodoro_settings_dialog.*
 import kotlinx.android.synthetic.main.project_item_layout.*
 import kotlinx.coroutines.delay
-import java.io.File
-import java.lang.Exception
-import java.security.AccessController.getContext
-import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -95,12 +86,8 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     val name:MutableLiveData<String> = MutableLiveData()
     val photo:MutableLiveData<String> = MutableLiveData()
 
-    val running:MutableLiveData<Boolean> = MutableLiveData()
-    val stop:MutableLiveData<Boolean> = MutableLiveData()
-    val paused:MutableLiveData<Boolean> = MutableLiveData()
-
     val numberOfSessions:MutableLiveData<Int> = MutableLiveData()
-    val durationOfSessions:MutableLiveData<Int> = MutableLiveData()
+    val durationOfSessions:MutableLiveData<Int> = MutableLiveData(0)
 
     private lateinit var serviceIntent: Intent
     private var time = 0.0
@@ -110,7 +97,7 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     }
 
     private var timerLengthSeconds: Long = 0
-    val timerState:MutableLiveData<TimerState> = MutableLiveData()
+    val timerState:MutableLiveData<TimerState> = MutableLiveData(TimerState.Stopped)
     private var secondsRemaining: Long = 0
 
     companion object {
@@ -134,10 +121,6 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
         val nowSeconds: Long
             get() = Calendar.getInstance().timeInMillis / 1000
-
-        val running:MutableLiveData<Boolean> = MutableLiveData()
-        val stop:MutableLiveData<Boolean> = MutableLiveData()
-        val paused:MutableLiveData<Boolean> = MutableLiveData()
     }
 
 
@@ -164,26 +147,18 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
         initializeView()
         initMenu()
-        getCurrentTimer()
         setListeners()
         loadData()
 
         fab_pause.visibility = View.GONE
         fab_start.visibility = View.GONE
         fab_stop.visibility = View.GONE
+
     }
 
     override fun onResume() {
         super.onResume()
-
-        lifecycleScope.launch {
-            getUserProfileViewModel.getUserProfileInfo()
-        }
-        PrefUtil.setTimerLength(this, durationOfSessions.value!!)
-//        removeAlarm(this)
-        hideTimerNotification(this)
-//        NotificationUtil.hideTimerNotification(this)
-
+        getCurrentTimer()
     }
     override fun onPause() {
         super.onPause()
@@ -191,10 +166,8 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         if (timerState.value == TimerState.Running){
             val wakeUpTime = setAlarm(this, nowSeconds, secondsRemaining)
             showTimerRunning(this, wakeUpTime)
-//            NotificationUtil.showTimerRunning(this, wakeUpTime)
         }
         else if (timerState.value == TimerState.Paused){
-//            NotificationUtil.showTimerPaused(this)
             showTimerPaused(this)
         }
 
@@ -210,49 +183,44 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         val secondsStr = secondsInMinuteUntilFinished.toString()
         current_pomodoro.text = "$minutesUntilFinished:${if (secondsStr.length == 2) secondsStr else "0" + secondsStr}"
     }
-    private fun getCurrentTimer() {
-        getUserProfileViewModel.data.observe(this){
-            val userInfo = getUserProfileViewModel.data.value
-            if (userInfo?.active_timer != null){
-                current_timer.text = getTimeStringFromDouble(userInfo.active_timer.elapsed_seconds.toDouble() )
-                time = userInfo.active_timer.elapsed_seconds.toDouble()
-                sharedViewModel.saveTimerState(true)
-                sharedViewModel.saveCurrentTimer(StartTimerResponse(
-                    userInfo.active_timer.project_id.toString(),
-                    userInfo.active_timer.project_name,
-                    userInfo.active_timer.started_at,
-                    userInfo.active_timer.task,
-                    userInfo.active_timer.project_id
-                ))
-            }
-            if(time==0.0){
-                timer_launcher_float_button.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_play_arrow_24))
-            }else{
-                timer_launcher_float_button.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_pause_24))
-            }
-            photo.value = userInfo?.avatar
-        }
 
-    }
 
     private val updateTime: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent)
         {
+            val passedSession = PrefUtil.getIntDataFromPref(this@AuthorizedActivity,"sharedPrefs", "POMODORO_SESSION_PASSED")
+            val duration = PrefUtil.getIntDataFromPref(this@AuthorizedActivity,"sharedPrefs", "DURATION_OF_SESSION")
             time = intent.getDoubleExtra(TimerService.TIME_EXTRA, 0.0)
             current_timer.text = getTimeStringFromDouble(time)
-            current_pomodoro.text = getTimeStringFromDouble(durationOfSessions.value!!*60 - time)
-            if (sharedViewModel.pomodoroIsON.value == true){
-                 if (durationOfSessions.value!!*60 - time <= 0){
-                     if(sharedViewModel.pomodoroNotification.value == true){
-                         showTimerExpired(this@AuthorizedActivity)
-                     }
+            current_pomodoro.text = getTimeStringFromDouble(passedSession*duration*60 - time)
+
+//            Log.d("TIMER", "${passedSession} ${time}")
+            if (sharedViewModel.pomodoroIsON.value == true && passedSession-1 != sharedViewModel.numOfPomodoroSession.value!!){
+                if (((passedSession * duration * 60) - time) <= 0.0){
+//                    Log.d("TIMER", "${passedSession * duration * 60} ${time}")
+//                    Toast.makeText(this@AuthorizedActivity, "Pomodoro", Toast.LENGTH_SHORT).show()
+                    if(sharedViewModel.pomodoroNotification.value == true){
+                        showTimerExpired(this@AuthorizedActivity)
+                    }
                     pauseAllTimer()
+                    val temp = passedSession+1
+                    PrefUtil.saveIntDataOnDifferentPref(this@AuthorizedActivity,"sharedPrefs",temp,"POMODORO_SESSION_PASSED" )
                 }
             }
-
         }
     }
+    private fun saveUserData(context: Context, numberOfSessions:Int, durationOfSession:Int, pomodoroIsOn:Boolean, sendNotifications:Boolean ){
+        val sharedPreferences: SharedPreferences = context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
 
+        editor.apply{
+            putInt("NUMBER_OF_SESSIONS", numberOfSessions)
+            putInt("DURATION_OF_SESSION", durationOfSession)
+            putBoolean("POMODORO_IS_ON", pomodoroIsOn)
+            putBoolean("SEND_NOTIFICATIONS_BY_POMODORO", sendNotifications)
+        }.apply()
+        Log.d("POMODORO", "Saved pomodoro states data! Pomodoro is on:${pomodoroIsOn}")
+    }
 
 
     private fun getTimeStringFromDouble(time: Double): String {
@@ -272,8 +240,9 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         name.value = sharedPreferences.getString("USER_NAME", null)
         sharedViewModel.savePomodoroNotification(sharedPreferences.getBoolean("SEND_NOTIFICATIONS_BY_POMODORO", false))
         sharedViewModel.savePomodoroState(sharedPreferences.getBoolean("POMODORO_IS_ON", false))
-        numberOfSessions.value = sharedPreferences.getInt("NUMBER_OF_SESSIONS", 0)
-        durationOfSessions.value = sharedPreferences.getInt("DURATION_OF_SESSION", 0)
+        sharedViewModel.saveNumberOfSession(sharedPreferences.getInt("NUMBER_OF_SESSIONS", 0))
+        sharedViewModel.saveDurationOfAPomodoroSession(sharedPreferences.getInt("DURATION_OF_SESSION", 0))
+
     }
 
     @SuppressLint("UseSupportActionBar")
@@ -458,30 +427,87 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         }
     }
 
+    private fun getCurrentTimer(){
+        lifecycleScope.launch {
+            if (getUserProfileViewModel.getUserProfileInfo()){
+                if (getUserProfileViewModel.data.value?.active_timer != null){
+                    val state = getUserProfileViewModel.data.value?.active_timer?.state
+                    val timer = getUserProfileViewModel.data.value?.active_timer
+                    time = getUserProfileViewModel.data.value?.active_timer?.elapsed_seconds?.toDouble()!!
+                    current_timer.text = getTimeStringFromDouble(time)
+
+                    when (state){
+                        "paused" -> {
+                            timerState.value = TimerState.Paused
+                            sharedViewModel.saveCurrentTimer(StartTimerResponse(timer?.project_id.toString(),
+                                timer?.project_name,timer?.started_at,timer?.task, timer?.project_id))
+                        }
+                        "active" -> {
+                            timerState.value = TimerState.Running
+                            sharedViewModel.saveCurrentTimer(StartTimerResponse(timer?.project_id.toString(),
+                                timer?.project_name,timer?.started_at,timer?.task, timer?.project_id))
+                            serviceIntent.putExtra(TimerService.TIME_EXTRA, time)
+                            startService(serviceIntent)
+                        }
+                        else -> {
+                            timerState.value = TimerState.Stopped
+                            PrefUtil.saveIntDataOnDifferentPref(this@AuthorizedActivity,"sharedPrefs",1,"POMODORO_SESSION_PASSED" )
+                        }
+                    }
+                }
+                else{
+                    time = 0.0
+                    current_timer.text = getTimeStringFromDouble(time)
+                }
+                photo.value = getUserProfileViewModel.data.value?.avatar
+            }
+        }
+        loadData()
+    }
+
     private fun startAllTimer(){
-        val manager = (this as AppCompatActivity).supportFragmentManager
-        CreateTimerDialog().show(manager, "CustomManager")
+        getCurrentTimer()
+        if(timerState.value == TimerState.Stopped){
+            val manager = (this as AppCompatActivity).supportFragmentManager
+            CreateTimerDialog().show(manager, "CustomManager")
+        }
     }
 
     private fun pauseAllTimer(){
-        timerState.value = TimerState.Paused
-        startStopTimer()
+        getCurrentTimer()
+        if (timerState.value == TimerState.Running) {
+            pauseTimer()
+        }
     }
 
     private fun stopAllTimer(){
-        timerState.value = TimerState.Stopped
-        resetTimer()
+        getCurrentTimer()
+        if (timerState.value == TimerState.Running || timerState.value == TimerState.Paused) {
+            resetTimer()
+        }
     }
 
     private fun resumeAllTimer(){
-        timerState.value = TimerState.Running
-        startStopTimer()
+        getCurrentTimer()
+        if (timerState.value == TimerState.Paused){
+            startTimer()
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setListeners(){
-        this.stop.observe(this){
-            Log.d("STOP", "Stop")
+        timerState.observe(this){
+            when(timerState.value){
+                TimerState.Running ->{
+                    timer_launcher_float_button.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_pause_24))
+                }
+                TimerState.Stopped ->{
+                    timer_launcher_float_button.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_play_arrow_24))
+                }
+                TimerState.Paused->{
+                    timer_launcher_float_button.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_play_circle_24))
+                }
+            }
         }
 
         sharedViewModel.pomodoroIsON.observe(this){
@@ -500,7 +526,7 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
             CreateProjectDialog().show(manager, "CustomManager")
         }
         timer_launcher_float_button.setOnClickListener{
-            if (time == 0.0 ){
+            if (time == 0.0 && timerState.value == TimerState.Stopped){
                 //start
                 startAllTimer()
                 Toast.makeText(this, "Start Timer", Toast.LENGTH_SHORT).show()
@@ -509,7 +535,7 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
                 resumeAllTimer()
                 Toast.makeText(this, "Resume Timer", Toast.LENGTH_SHORT).show()
 
-            }else{
+            }else if (timerState.value == TimerState.Running){
                 // pause
                 pauseAllTimer()
                 Toast.makeText(this, "Pause Timer", Toast.LENGTH_SHORT).show()
@@ -524,7 +550,9 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         sharedViewModel.isTimerStarted.observe(this){
             if (sharedViewModel.isTimerStarted.value == true){
                 timerState.value = TimerState.Running
-                startStopTimer()
+                serviceIntent.putExtra(TimerService.TIME_EXTRA, time)
+                startService(serviceIntent)
+                timer_launcher_float_button.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_pause_24))
             }
         }
 
@@ -538,37 +566,50 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     }
 
     private fun resetTimer() {
-        pauseTimer()
         if (sharedViewModel.currentProject.value != null){
             lifecycleScope.launch {
-                startPauseStopViewModel.stopTimer(true, sharedViewModel.currentProject.value!!.project_id)
+                if(startPauseStopViewModel.stopTimer(true, sharedViewModel.currentProject.value!!.project_id)){
+                    timerState.value = TimerState.Stopped
+                    timer_launcher_float_button.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_play_arrow_24))
+                    sharedViewModel.saveTimerState(false)
+                    stopService(serviceIntent)
+                    time = 0.0
+                    current_timer.text = getTimeStringFromDouble(time)
+                    PrefUtil.saveIntDataOnDifferentPref(this@AuthorizedActivity,"sharedPrefs",1,"POMODORO_SESSION_PASSED" )
+                }
             }
-            timer_launcher_float_button.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_play_arrow_24))
-            sharedViewModel.saveTimerState(false)
-        }
-        time = 0.0
-        current_timer.text = getTimeStringFromDouble(time)
 
+        }
     }
 
-    private fun startStopTimer() {
-        if(timerState.value == TimerState.Paused){
-            pauseTimer()
-        }
-        else{
-            startTimer()
-        }
-    }
 
     private fun startTimer() {
-        serviceIntent.putExtra(TimerService.TIME_EXTRA, time)
-        startService(serviceIntent)
-        timer_launcher_float_button.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_pause_24))
+        if (sharedViewModel.currentProject.value != null){
+            lifecycleScope.launch {
+                if(startPauseStopViewModel.startTimer(true, sharedViewModel.currentProject.value!!.project_id,"Continue")){
+                    timerState.value = TimerState.Running
+                    serviceIntent.putExtra(TimerService.TIME_EXTRA, time)
+                    startService(serviceIntent)
+                    timer_launcher_float_button.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_pause_24))
+                }
+            }
+        }
+
     }
 
     private fun pauseTimer() {
-        stopService(serviceIntent)
-        timer_launcher_float_button.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_play_arrow_24))
+        if (sharedViewModel.currentProject.value != null){
+            lifecycleScope.launch {
+                if(startPauseStopViewModel.pauseTimer(false, sharedViewModel.currentProject.value!!.project_id)){
+                    timerState.value = TimerState.Paused
+                    stopService(serviceIntent)
+                    timer_launcher_float_button.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_play_circle_24))
+                    PrefUtil.setTimerState(TimerState.Paused,this@AuthorizedActivity)
+                    NotificationUtil.showTimerPaused(this@AuthorizedActivity)
+                }
+            }
+        }
+
     }
 
     private fun setNewTimerLength(){
