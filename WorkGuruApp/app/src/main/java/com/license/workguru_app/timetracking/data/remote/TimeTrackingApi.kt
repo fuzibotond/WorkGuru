@@ -14,7 +14,7 @@ interface TimeTrackingApi {
     suspend fun listProjectsByPage(@Header("Authorization") token:String, @Query("page") page:Int): ProjectResponse
 
     @GET(Constants.GET_PROJECT_URL)
-    suspend fun listAllProjectWithoutPagination(@Header("Authorization") token:String, @Query("pagination") pagination:Boolean): AllProjectResponse
+    suspend fun listAllProjectWithoutPagination(@Header("Authorization") token:String, @Query("paginate") pagination:Boolean): AllProjectResponse
 
     @GET(Constants.GET_PROJECT_URL)
     suspend fun listAllProjects(@Header("Authorization") token:String,@Header("automatic") automatic:Boolean, @Header("category_id") project_id:String): ProjectResponse

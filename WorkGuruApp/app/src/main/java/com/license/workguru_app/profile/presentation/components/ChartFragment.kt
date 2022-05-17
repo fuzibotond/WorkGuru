@@ -99,7 +99,7 @@ class ChartFragment : Fragment() {
                     .align(Align.CENTER)
                     .itemsLayout(LegendLayout.VERTICAL)
                     .iconSize(15)
-                pie.credits(false) 
+                pie.credits(false)
 
             }
             Configuration.UI_MODE_NIGHT_NO -> {

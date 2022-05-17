@@ -23,6 +23,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 import androidx.appcompat.app.AppCompatActivity
 import com.license.workguru_app.databinding.CreateTimerDialogLayoutBinding
+import com.license.workguru_app.timetracking.data.remote.DTO.ShortProject
 import com.license.workguru_app.timetracking.domain.model.Project
 import com.license.workguru_app.timetracking.domain.use_case.list_projects.ListProjectsViewModel
 import com.license.workguru_app.timetracking.domain.use_case.list_projects.ListProjectsViewModelFactory
@@ -35,7 +36,7 @@ class CreateTimerDialog(
     private var _binding: CreateTimerDialogLayoutBinding? = null
     private val binding get() = _binding!!
     lateinit var listProjectsViewModel: ListProjectsViewModel
-    val choosenProject:MutableLiveData<Project> = MutableLiveData()
+    val choosenProject:MutableLiveData<ShortProject> = MutableLiveData()
     val sharedViewModel: SharedViewModel by activityViewModels()
     lateinit var startPauseStopViewModel: StartPauseStopViewModel
 
@@ -52,9 +53,9 @@ class CreateTimerDialog(
         val factory = ListProjectsViewModelFactory(requireActivity(), TimeTrackingRepository())
         listProjectsViewModel = ViewModelProvider(this, factory).get(ListProjectsViewModel::class.java)
         lifecycleScope.launch {
-            if(listProjectsViewModel.listAllProjects(false, "0")){
-                val projects = listProjectsViewModel.dataList.value
-                choseCategory(projects as ArrayList<Project>)
+            if(listProjectsViewModel.listAllProjectsWithoutPagination(false)){
+                val projects = listProjectsViewModel.fullList.value
+                choseCategory(projects as ArrayList<ShortProject>)
             }
         }
 
@@ -71,7 +72,8 @@ class CreateTimerDialog(
             if (sharedViewModel.isTimerStarted.value == false){
                 lifecycleScope.launch {
                     if (choosenProject.value != null){
-                        val projectId = choosenProject.value?.id.toString()
+
+                        val projectId = choosenProject.value!!.project_id.toString()
                         val description = binding.descriptionTextInput.text.toString()
                         if(startPauseStopViewModel.startTimer(false, project_id = projectId, description = description)){
                             sharedViewModel.saveCurrentTimer(startPauseStopViewModel.startedTimer.value!!)
@@ -114,11 +116,11 @@ class CreateTimerDialog(
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
-    private fun choseCategory(categoryList:ArrayList<Project>) {
+    private fun choseCategory(categoryList:ArrayList<ShortProject>) {
 
         val itemList = mutableListOf<String>()
         categoryList.forEach {
-            itemList.add(it.name+"(${it.category_name})")
+            itemList.add(it.project_name+"(${it.category_name})")
         }
 
         val adapter = ArrayAdapter(requireContext(), R.layout.custom_list_item, itemList as List<String>)
@@ -128,7 +130,7 @@ class CreateTimerDialog(
 
             val selectedItem = adapterView.adapter.getItem(i)
             categoryList.forEach {
-                if (it.name+"(${it.category_name})" == selectedItem){
+                if (it.project_name+"(${it.category_name})" == selectedItem){
                     choosenProject.value = it
                 }
             }
