@@ -1,6 +1,7 @@
 package com.license.workguru_app.authentification.data.remote
 
 import com.license.workguru_app.authentification.data.remote.DTO.*
+import com.license.workguru_app.profile.data.remote.DTO.MessageResponse
 import com.license.workguru_app.utils.Constants
 import okhttp3.RequestBody
 import retrofit2.http.*
@@ -8,6 +9,9 @@ import retrofit2.http.*
 interface AuthentificationApi {
     @POST(Constants.LOGIN_URL)
     suspend fun login(@Body request: LoginRequest): LoginResponse
+
+    @POST(Constants.LOGIN_WITH_FACE)
+    suspend fun loginWithFace(@Body request: LoginWithFaceIdRequest): MessageResponse
 
     @POST(Constants.REGISTER_URL)
     suspend fun register(@Body request: RegisterRequest): RegisterResponse

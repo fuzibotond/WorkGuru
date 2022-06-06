@@ -50,7 +50,7 @@ class FaceRecFragment : Fragment() {
         handleThatBackPress()
 
         waitingDialog = SpotsDialog.Builder().setContext(context)
-            .setMessage("Please wait...")
+            .setMessage(getString(R.string.mPleaseWait))
             .setCancelable(false)
             .build()
 
@@ -119,7 +119,7 @@ class FaceRecFragment : Fragment() {
             count++
         }
         waitingDialog.dismiss()
-        Toast.makeText(context, String.format("Detect %d faces in pictures", count), Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, String.format(getString(R.string.tDetectFaces), count), Toast.LENGTH_SHORT).show()
         if (count>0){
             sharedViewModel.saveImage(image)
             lifecycleScope.launch {

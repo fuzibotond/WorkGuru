@@ -1,9 +1,8 @@
-package com.license.workguru_app.authentification.domain.repository
+package com.license.workguru_app.authentification.data.repository
 
 import com.license.workguru_app.authentification.data.remote.DTO.*
 import com.license.workguru_app.di.RetrofitInstance
-import okhttp3.MediaType
-import okhttp3.RequestBody
+import com.license.workguru_app.profile.data.remote.DTO.MessageResponse
 
 class AuthRepository {
     suspend fun login(request: LoginRequest): LoginResponse {
@@ -27,6 +26,10 @@ class AuthRepository {
 
     suspend fun googleRegister(request: GoogleRequest): GoogleResponse {
         return RetrofitInstance.api.googleRegister(request)
+    }
+
+    suspend fun loginWithFace(request: LoginWithFaceIdRequest): MessageResponse {
+        return RetrofitInstance.api.loginWithFace(request)
     }
 
     suspend fun logout(access_token:String): LogoutResponse {
