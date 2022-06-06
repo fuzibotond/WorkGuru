@@ -2,26 +2,19 @@ package com.license.workguru_app.profile.presentation.components
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.tabs.TabLayoutMediator
 import com.license.workguru_app.databinding.FragmentDashboardBinding
 import com.license.workguru_app.di.SharedViewModel
-import com.license.workguru_app.profile.data.remote.DTO.MonthlyHistory
-import com.license.workguru_app.profile.data.remote.DTO.TodaysHistory
-import com.license.workguru_app.profile.data.remote.DTO.WeeklyHistory
-import com.license.workguru_app.profile.domain.repository.ProfileRepository
+import com.license.workguru_app.profile.data.repository.ProfileRepository
 import com.license.workguru_app.profile.domain.use_case.display_user_insights.UserHistoryViewModel
 import com.license.workguru_app.profile.domain.use_case.display_user_insights.userHistoryViewModelFactory
 import com.license.workguru_app.timetracking.presentation.adapters.TabAdapter
 import kotlinx.coroutines.launch
-import android.annotation.SuppressLint
 import android.view.*
 import com.license.workguru_app.R
-import kotlinx.android.synthetic.main.activity_authorized.*
 
 
 class DashboardFragment : Fragment() {
@@ -42,10 +35,10 @@ class DashboardFragment : Fragment() {
         TabLayoutMediator(binding.ongoingSalesAndOrders,  binding.myFaresViewpager){ tab, position->
             when(position){
                 0->{
-                    tab.text ="Charts"
+                    tab.text = getString(R.string.charts)
                 }
                 1->{
-                    tab.text ="Statements"
+                    tab.text = getString(R.string.statements)
                 }
             }
         }.attach()

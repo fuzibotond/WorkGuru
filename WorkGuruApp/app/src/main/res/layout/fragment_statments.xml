@@ -84,7 +84,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/statement_item_txt_today"
                     android:fontFamily="@font/intermedium"
-                    android:text="Total number of hours today compared to yesterday"
+                    android:text="@string/totalNumberToday"
                     android:textSize="18dp"
                     />
                 <LinearLayout
@@ -177,7 +177,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/statement_item_txt_weekly"
                     android:fontFamily="@font/intermedium"
-                    android:text="Total number of hours this week compared to last week"
+                    android:text="@string/totalNumberWeek"
                     android:textSize="18dp"
                     />
                 <LinearLayout
@@ -270,7 +270,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/statement_item_txt_monthly"
                     android:fontFamily="@font/intermedium"
-                    android:text="Total number of hours this month compared to last month"
+                    android:text="@string/totalNumberMonth"
                     android:textSize="18dp"
                     />
                 <LinearLayout
