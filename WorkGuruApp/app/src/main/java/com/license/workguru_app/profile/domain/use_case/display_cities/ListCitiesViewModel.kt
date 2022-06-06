@@ -6,10 +6,8 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.license.workguru_app.profile.data.remote.DTO.CitiesResponse
 import com.license.workguru_app.profile.data.remote.DTO.City
-import com.license.workguru_app.profile.data.remote.DTO.ProjectHistory
-import com.license.workguru_app.profile.domain.repository.ProfileRepository
+import com.license.workguru_app.profile.data.repository.ProfileRepository
 
 class ListCitiesViewModel(val context: Context, val repository: ProfileRepository) : ViewModel() {
     val cities: MutableLiveData<List<City>> = MutableLiveData()

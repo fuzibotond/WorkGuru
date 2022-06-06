@@ -9,8 +9,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.license.workguru_app.profile.data.remote.DTO.States
-import com.license.workguru_app.profile.data.remote.DTO.StatesResponse
-import com.license.workguru_app.profile.domain.repository.ProfileRepository
+import com.license.workguru_app.profile.data.repository.ProfileRepository
 
 class ListStatesViewModel(val context: Context, val repository: ProfileRepository) : ViewModel() {
 //    val states:MutableLiveData<List<States>> = MutableLiveData()

@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/intermedium"
-        android:text="Log out"
+        android:text="@string/log_out"
         android:textSize="24dp"
         app:layout_constraintTop_toTopOf="parent"
         app:icon="@drawable/ic_baseline_keyboard_arrow_down_24"

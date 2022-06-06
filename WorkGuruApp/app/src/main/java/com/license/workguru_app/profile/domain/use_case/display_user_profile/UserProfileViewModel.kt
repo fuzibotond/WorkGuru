@@ -6,11 +6,8 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.license.workguru_app.profile.data.remote.DTO.ProjectHistory
 import com.license.workguru_app.profile.data.remote.DTO.UserProfile
-import com.license.workguru_app.profile.domain.repository.ProfileRepository
-import com.license.workguru_app.timetracking.data.remote.DTO.Data
-import com.license.workguru_app.timetracking.domain.repository.TimeTrackingRepository
+import com.license.workguru_app.profile.data.repository.ProfileRepository
 
 class UserProfileViewModel(val context: Context, val repository: ProfileRepository) : ViewModel() {
     val data:MutableLiveData<UserProfile> = MutableLiveData()

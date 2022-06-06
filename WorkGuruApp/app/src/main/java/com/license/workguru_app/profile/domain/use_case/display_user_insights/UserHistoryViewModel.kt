@@ -6,14 +6,9 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.license.workguru_app.profile.domain.repository.ProfileRepository
-import com.google.gson.Gson
+import com.license.workguru_app.profile.data.repository.ProfileRepository
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonParser
 import com.license.workguru_app.profile.data.remote.DTO.*
-import org.json.JSONArray
-import org.json.JSONObject
-import org.json.JSONTokener
 
 class UserHistoryViewModel(val context: Context, val repository: ProfileRepository) : ViewModel() {
     val dataList:MutableLiveData<List<ProjectHistory>> = MutableLiveData()

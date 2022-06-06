@@ -1,7 +1,6 @@
 package com.license.workguru_app.profile.presentation.components
 
 import android.app.Activity
-import android.content.ContentResolver
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -17,17 +16,14 @@ import androidx.navigation.fragment.findNavController
 import com.license.workguru_app.R
 import android.os.Build
 import android.provider.MediaStore
-import android.util.Base64
 import android.util.Log
 import android.view.*
 import androidx.annotation.RequiresApi
-import androidx.core.net.toUri
-import androidx.databinding.BindingAdapter
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.license.workguru_app.profile.data.remote.DTO.States
-import com.license.workguru_app.profile.domain.repository.ProfileRepository
+import com.license.workguru_app.profile.data.repository.ProfileRepository
 import com.license.workguru_app.profile.domain.use_case.change_user_profile_data.ChangeProfileDataViewModel
 import com.license.workguru_app.profile.domain.use_case.change_user_profile_data.ChangeProfileDataViewModelFactory
 import com.license.workguru_app.profile.domain.use_case.display_cities.ListCitiesViewModel
@@ -40,9 +36,7 @@ import com.license.workguru_app.profile.domain.use_case.display_user_profile.Use
 import com.license.workguru_app.profile.domain.use_case.display_user_profile.UserProfileViewModelFactory
 import com.license.workguru_app.profile.presentation.adapetrs.StateAdapter
 import com.license.workguru_app.utils.Constants
-import kotlinx.android.synthetic.main.activity_authorized.*
 import kotlinx.coroutines.launch
-import java.io.ByteArrayOutputStream
 
 
 class ProfileFragment : Fragment() {
@@ -54,6 +48,9 @@ class ProfileFragment : Fragment() {
     val uploadedImage:MutableLiveData<Uri> = MutableLiveData()
     val filePath:MutableLiveData<String> = MutableLiveData("")
     val bitmap:MutableLiveData<Bitmap> = MutableLiveData()
+    private var mImageFileLocation = ""
+    private var isRemoved = false
+
 
     lateinit var listCitiesViewModel: ListCitiesViewModel
     lateinit var listStatesViewModel: ListStatesViewModel
@@ -203,15 +200,15 @@ class ProfileFragment : Fragment() {
         binding.profileSaveBtn.setOnClickListener { 
             if (verifyInputData()){
                 val builder = AlertDialog.Builder(requireActivity())
-                builder.setTitle("Save")
-                builder.setMessage("Are you sure you want save changes?")
+                builder.setTitle(getString(R.string.save))
+                builder.setMessage(getString(R.string.mAreYouSureSave))
                 builder.setPositiveButton(android.R.string.yes) { dialog, which ->
-                    val path:String
-                    if (filePath.value != ""){
-                        path = filePath.value.toString()
-                    }else{
-                        path = uploadedImage.value.toString()
-                    }
+                    var path = uploadedImage.value
+//                    if (filePath.value != ""){
+//                        val file = File(filePath.value)
+//                        path = file.name
+//                    }
+
                     lifecycleScope.launch {
 
                             changeProfileDataViewModel.changeData(
@@ -220,19 +217,22 @@ class ProfileFragment : Fragment() {
                                 binding.countrySpinnerProfile.text.toString(),
                                 path,
                                 "PUT",
-                                binding.stateSpinnerProfile.text.toString()
+                                binding.stateSpinnerProfile.text.toString(),
+                                isRemoving,
+                                binding.phoneNumberInputProfile.text.toString(),
+                                binding.zipInputProfile.text.toString()
                                 )
                         }
 
                 }
-                builder.setNegativeButton("Cancel") { dialog, which ->
+                builder.setNegativeButton(getString(R.string.cancel)) { dialog, which ->
                     dialog.dismiss()
                 }
                 builder.show()
 
 
             }else{
-                Toast.makeText(requireActivity(), "Please correct the specific data!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireActivity(), getString(R.string.tPleaseCorrectData), Toast.LENGTH_SHORT).show()
             }
         }
         binding.countrySpinnerProfile.setOnItemClickListener { adapterView, view, i, l ->
@@ -261,6 +261,7 @@ class ProfileFragment : Fragment() {
 
     private fun removeUploadedPhoto() {
         binding.profileImage.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_person_24))
+        isRemoved = true
     }
 
     private fun openGalleryForImage() {
@@ -274,21 +275,22 @@ class ProfileFragment : Fragment() {
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE){
             uploadedImage.value = data!!.data
             binding.profileImage.setImageURI(data?.data) // handle chosen image
-            filePath.value = data.data.toString()
+            filePath.value = data.data?.path
             bitmap.value = MediaStore.Images.Media.getBitmap(requireActivity().contentResolver,data?.data )
         }
     }
+
 
     private fun handleThatBackPress(){
         val callback: OnBackPressedCallback = object: OnBackPressedCallback(true){
             override fun handleOnBackPressed() {
                 val builder = AlertDialog.Builder(requireActivity())
                 builder.setTitle("Exit")
-                builder.setMessage("Are you sure you want to leave without saving?")
+                builder.setMessage(getString(R.string.mAreYouSureLeave))
                 builder.setPositiveButton(android.R.string.yes) { dialog, which ->
                     findNavController().navigate(R.id.dashboardFragment)
                 }
-                builder.setNegativeButton("Cancel") { dialog, which ->
+                builder.setNegativeButton(getString(R.string.cancel)) { dialog, which ->
                     dialog.dismiss()
                 }
                 builder.show()
