@@ -65,7 +65,7 @@
                     android:layout_gravity="left"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Category"
+                    android:text="@string/category"
                     android:textAppearance="?attr/textAppearanceHeadline6"
                     android:fontFamily="@font/intermedium"
                     />
@@ -88,7 +88,7 @@
                     android:layout_gravity="left"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Numbers of member"
+                    android:text="@string/numbers_of_member"
                     android:textAppearance="?attr/textAppearanceHeadline6"
                     android:fontFamily="@font/intermedium"
                     />
@@ -111,7 +111,7 @@
                     android:layout_gravity="left"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Started after"
+                    android:text="@string/started_after"
                     android:textAppearance="?attr/textAppearanceHeadline6"
                     android:fontFamily="@font/intermedium"
                     />

@@ -3,6 +3,7 @@ package com.license.workguru_app.di
 
 import com.license.workguru_app.admin.data.remote.AdminApi
 import com.license.workguru_app.authentification.data.remote.AuthentificationApi
+import com.license.workguru_app.help_request.data.remote.HelpRequestApi
 import com.license.workguru_app.profile.data.remote.ProfileApi
 import com.license.workguru_app.timetracking.data.remote.TimeTrackingApi
 import com.license.workguru_app.utils.Constants.BASE_URL
@@ -35,6 +36,9 @@ object RetrofitInstance {
     }
     val apiAdmin: AdminApi by lazy{
         retrofit.create(AdminApi :: class.java)
+    }
+    val helpRequest: HelpRequestApi by lazy{
+        retrofit.create(HelpRequestApi :: class.java)
     }
 }
 

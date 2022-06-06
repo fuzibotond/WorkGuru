@@ -21,8 +21,6 @@
             android:layout_alignParentTop="true"
             >
 
-
-
                     <!-- Note: A RecyclerView can also be used -->
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -120,12 +118,13 @@
                                 android:text="00:00:00"
                                 android:textColor="#FFFFFF"
                                 android:textSize="16sp" />
+
                             <TextView
                                 android:id="@+id/current_pomodoro"
-                                android:layout_below="@+id/current_timer"
                                 style="?android:attr/borderlessButtonStyle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_below="@+id/current_timer"
                                 android:fontFamily="@font/inter"
                                 android:text="00:00"
                                 android:textColor="#FFFFFF"
@@ -196,7 +195,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Actual Timer"
+                        android:text="@string/actualTimer"
                         android:fontFamily="@font/inter"
                         android:textSize="20sp"
                         android:textColor="@color/white"/>
@@ -207,14 +206,14 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Timer on "
+                            android:text="@string/timer_on"
                             android:fontFamily="@font/inter"
                             android:textColor="@color/white"/>
                         <TextView
                             android:id="@+id/active_timer_project_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Project name"
+                            android:text="@string/project_name"
                             android:fontFamily="@font/inter"
                             android:textColor="@color/teal_100"/>
                     </LinearLayout>
@@ -225,14 +224,14 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Task on "
+                            android:text="@string/task_on"
                             android:fontFamily="@font/inter"
                             android:textColor="@color/white"/>
                         <TextView
                             android:id="@+id/active_timer_task_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Task name"
+                            android:text="@string/task_name"
                             android:fontFamily="@font/inter"
                             android:textColor="@color/teal_100"/>
                     </LinearLayout>
@@ -243,7 +242,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Skill on "
+                            android:text="@string/skill_on"
                             android:fontFamily="@font/inter"
                             android:textColor="@color/white"/>
                         <TextView
@@ -261,7 +260,7 @@
                         android:text="00:00:00"
                         android:fontFamily="@font/inter"
                         android:textColor="@color/white"
-                        android:textSize="16dp"/>
+                        android:textSize="16sp"/>
 
                 </LinearLayout>
             </RelativeLayout>

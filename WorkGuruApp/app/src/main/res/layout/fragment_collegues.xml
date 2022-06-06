@@ -116,7 +116,7 @@
                 android:id="@+id/colleague_list_swipe_refresh_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingBottom="60dp"
+                android:paddingBottom="20dp"
                 >
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view_for_colleagues"

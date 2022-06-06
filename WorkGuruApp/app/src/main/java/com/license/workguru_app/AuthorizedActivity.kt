@@ -2,13 +2,13 @@ package com.license.workguru_app
 
 import android.annotation.SuppressLint
 import android.app.*
+import android.app.ProgressDialog.show
 import android.content.*
 import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.AlarmClock
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
@@ -29,12 +29,14 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.navigation.NavigationView
-import com.license.workguru_app.authentification.domain.repository.AuthRepository
+import com.license.workguru_app.authentification.data.repository.AuthRepository
 import com.license.workguru_app.authentification.domain.use_case.log_out.LogoutViewModel
 import com.license.workguru_app.authentification.domain.use_case.log_out.LogoutViewModelFactory
 import com.license.workguru_app.di.SharedViewModel
 import kotlinx.coroutines.launch
 import android.graphics.Color
+import android.graphics.Color.GREEN
+import android.graphics.PorterDuff
 import android.os.Build
 import android.view.*
 import android.widget.EditText
@@ -43,19 +45,21 @@ import com.bumptech.glide.Glide
 import com.license.workguru_app.pomodoro.data.source.receivers.TimerExpiredReceiver
 import com.license.workguru_app.pomodoro.data.source.utils.PrefUtil
 import com.license.workguru_app.pomodoro.presentation.PomodoroSettingsDialog
-import com.license.workguru_app.profile.domain.repository.ProfileRepository
+import com.license.workguru_app.profile.data.remote.DTO.ActiveTimer
+import com.license.workguru_app.profile.data.repository.ProfileRepository
 import com.license.workguru_app.profile.domain.use_case.display_user_profile.UserProfileViewModel
 import com.license.workguru_app.profile.domain.use_case.display_user_profile.UserProfileViewModelFactory
+import com.license.workguru_app.profile.presentation.components.ChangeStatusDialog
+import com.license.workguru_app.profile.presentation.components.FilterColleaguesDialog
 import com.license.workguru_app.timetracking.data.remote.DTO.StartTimerResponse
 import com.license.workguru_app.timetracking.data.source.services.TimerService
-import com.license.workguru_app.timetracking.domain.repository.TimeTrackingRepository
+import com.license.workguru_app.timetracking.data.repository.TimeTrackingRepository
 import com.license.workguru_app.timetracking.domain.use_case.start_pause_stop_timer.StartPauseStopViewModel
 import com.license.workguru_app.timetracking.domain.use_case.start_pause_stop_timer.StartPauseStopViewModelFactory
 import com.license.workguru_app.timetracking.presentation.components.CreateProjectDialog
 import com.license.workguru_app.timetracking.presentation.components.CreateTimerDialog
 import com.license.workguru_app.utils.Constants
 import com.license.workguru_app.utils.NotificationUtil
-import com.license.workguru_app.utils.NotificationUtil.Companion.hideTimerNotification
 import com.license.workguru_app.utils.NotificationUtil.Companion.showTimerExpired
 import com.license.workguru_app.utils.NotificationUtil.Companion.showTimerPaused
 import com.license.workguru_app.utils.NotificationUtil.Companion.showTimerRunning
@@ -64,6 +68,7 @@ import kotlinx.android.synthetic.main.pomodoro_settings_dialog.*
 import kotlinx.android.synthetic.main.project_item_layout.*
 import kotlinx.coroutines.delay
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
 
 
@@ -85,6 +90,8 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     val email:MutableLiveData<String> = MutableLiveData()
     val name:MutableLiveData<String> = MutableLiveData()
     val photo:MutableLiveData<String> = MutableLiveData()
+
+    var activeTimer: ActiveTimer? = null
 
     val numberOfSessions:MutableLiveData<Int> = MutableLiveData()
     val durationOfSessions:MutableLiveData<Int> = MutableLiveData(0)
@@ -123,6 +130,7 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
             get() = Calendar.getInstance().timeInMillis / 1000
     }
 
+    @SuppressLint("NewApi")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -152,8 +160,11 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         fab_start.visibility = View.GONE
         fab_stop.visibility = View.GONE
 
+        current_pomodoro.visibility = View.GONE
+
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onResume() {
         super.onResume()
         getCurrentTimer()
@@ -208,17 +219,12 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         }
     }
 
-    private fun saveUserData(context: Context, numberOfSessions:Int, durationOfSession:Int, pomodoroIsOn:Boolean, sendNotifications:Boolean ){
+    private fun saveUserData(context: Context, user_id:Int ){
         val sharedPreferences: SharedPreferences = context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
-
         editor.apply{
-            putInt("NUMBER_OF_SESSIONS", numberOfSessions)
-            putInt("DURATION_OF_SESSION", durationOfSession)
-            putBoolean("POMODORO_IS_ON", pomodoroIsOn)
-            putBoolean("SEND_NOTIFICATIONS_BY_POMODORO", sendNotifications)
+            putInt("USER_ID", user_id)
         }.apply()
-        Log.d("POMODORO", "Saved pomodoro states data! Pomodoro is on:${pomodoroIsOn}")
     }
 
 
@@ -268,7 +274,7 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         bottomAppBar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.settings -> {
-                    Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show()
                     // Handle more item (inside overflow menu) press
                     true
                 }
@@ -299,7 +305,7 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
                 R.id.search_action -> {
 
                     val searchView = menuItem?.actionView as SearchView
-                    searchView.queryHint = "Type something..."
+                    searchView.queryHint = getString(R.string.tTypSomething)
 
                     searchView.setOnQueryTextListener(this)
                     if(!isUsingNightModeResources()){
@@ -346,15 +352,30 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
                     btn_add_new_project.visibility = View.GONE
                     findNavController(R.id.auth_nav_host_fragment).navigate(R.id.colleaguesFragment)
                 }
+                R.id.help_requests -> {
+                    disableSearching(false)
+                    btn_add_new_project.visibility = View.GONE
+                    findNavController(R.id.auth_nav_host_fragment).navigate(R.id.messageFragment)
+                }
                 R.id.invite_user ->{
                     if (getUserProfileViewModel.data.value?.role == "admin"){
                         disableSearching(true)
                         btn_add_new_project.visibility = View.GONE
                         findNavController(R.id.auth_nav_host_fragment).navigate(R.id.inviteUserFragment)
                     }else{
-                        Toast.makeText(this, "As a user you can't send invitation to others!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, getString(R.string.tRoleException), Toast.LENGTH_SHORT).show()
                     }
                    
+                }
+                R.id.waiting_users_list ->{
+                    if (getUserProfileViewModel.data.value?.role == "admin"){
+                        disableSearching(true)
+                        btn_add_new_project.visibility = View.GONE
+                        findNavController(R.id.auth_nav_host_fragment).navigate(R.id.waitingUserListFragment)
+                    }else{
+                        Toast.makeText(this, getString(R.string.tRoleException), Toast.LENGTH_SHORT).show()
+                    }
+
                 }
                 R.id.sign_out->{
                     disableSearching(true)
@@ -366,8 +387,8 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
                         if (savedToken != null) {
                             if(logoutViewModel.logout(savedToken)){
                                 val intent = Intent(this@AuthorizedActivity, MainActivity::class.java).apply {
-                                    putExtra(AlarmClock.EXTRA_MESSAGE, "You are logged out!")
-                                    Toast.makeText( this@AuthorizedActivity, "Logged out", Toast.LENGTH_SHORT).show()
+//                                    putExtra(AlarmClock.EXTRA_MESSAGE, "You are logged out!")
+                                    Toast.makeText( this@AuthorizedActivity, getString(R.string.tloggedOut), Toast.LENGTH_SHORT).show()
                                     clearDate()
                                 }
                                 finish()
@@ -375,7 +396,7 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
                             }
                         }
                         else{
-                            Toast.makeText( this@AuthorizedActivity, "Not Logged in ", Toast.LENGTH_SHORT).show()
+                            Toast.makeText( this@AuthorizedActivity, getString(R.string.notLoggedInException), Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
@@ -433,12 +454,15 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         }
     }
 
+    @SuppressLint("ResourceAsColor")
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun getCurrentTimer(){
         lifecycleScope.launch {
             if (getUserProfileViewModel.getUserProfileInfo()){
                 if (getUserProfileViewModel.data.value?.active_timer != null){
                     val state = getUserProfileViewModel.data.value?.active_timer?.state
                     val timer = getUserProfileViewModel.data.value?.active_timer
+                    activeTimer = timer
                     time = getUserProfileViewModel.data.value?.active_timer?.elapsed_seconds?.toDouble()!!
                     current_timer.text = getTimeStringFromDouble(time)
                     actual_timer.text = getTimeStringFromDouble(time)
@@ -469,11 +493,21 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
                     current_timer.text = getTimeStringFromDouble(time)
                     actual_timer.text = getTimeStringFromDouble(time)
                 }
+
+                val profileMenu = topAppBar.menu.getItem(1)
+                profileMenu.setOnMenuItemClickListener {
+                    val manager = this@AuthorizedActivity.supportFragmentManager
+                    ChangeStatusDialog().show(manager, "CustomManager")
+                    return@setOnMenuItemClickListener true
+                }
+                sharedViewModel.saveProfileRole(getUserProfileViewModel.data.value!!.role!!)
+                saveUserData(this@AuthorizedActivity, getUserProfileViewModel.data.value!!.id)
+                Log.d("HELP_REQUEST", getUserProfileViewModel.data.value!!.id.toString())
                 photo.value = getUserProfileViewModel.data.value?.avatar
                 //Actual timer
                 val activeTimer = getUserProfileViewModel.data.value?.active_timer
                 if(activeTimer == null){
-                    active_timer_project_name.setText("No timer")
+                    active_timer_project_name.setText(getString(R.string.no_timer))
                     active_timer_task_name.setText("")
                     active_timer_skill_language.setText("")
                 }
@@ -482,6 +516,7 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         loadData()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun startAllTimer(){
         getCurrentTimer()
         if(timerState.value == TimerState.Stopped){
@@ -490,6 +525,7 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun pauseAllTimer(){
         getCurrentTimer()
         if (timerState.value == TimerState.Running) {
@@ -497,6 +533,7 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun stopAllTimer(){
         getCurrentTimer()
         if (timerState.value == TimerState.Running || timerState.value == TimerState.Paused) {
@@ -504,6 +541,7 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun resumeAllTimer(){
         getCurrentTimer()
         if (timerState.value == TimerState.Paused){
@@ -511,6 +549,7 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         }
     }
 
+    @SuppressLint("ResourceAsColor")
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setListeners(){
         timerState.observe(this){
@@ -546,16 +585,16 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
             if (time == 0.0 && timerState.value == TimerState.Stopped){
                 //start
                 startAllTimer()
-                Toast.makeText(this, "Start Timer", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(this, "Start Timer", Toast.LENGTH_SHORT).show()
             }else if(timerState.value == TimerState.Paused){
                 // resume
                 resumeAllTimer()
-                Toast.makeText(this, "Resume Timer", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(this, "Resume Timer", Toast.LENGTH_SHORT).show()
 
             }else if (timerState.value == TimerState.Running){
                 // pause
                 pauseAllTimer()
-                Toast.makeText(this, "Pause Timer", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(this, "Pause Timer", Toast.LENGTH_SHORT).show()
             }
         }
         timer_launcher_float_button.setOnLongClickListener {
@@ -578,6 +617,22 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
                 sharedViewModel.saveCurrentTimer(
                     it1
                 )
+            }
+        }
+
+        sharedViewModel.profileStatus.observe(this){
+            val profileMenu = topAppBar.menu.getItem(1)
+            if(sharedViewModel.profileStatus.value?.name == "Available" ||
+                sharedViewModel.profileStatus.value?.name == "Elérhető"){
+                profileMenu.icon.setTintList(ColorStateList.valueOf(Color.rgb(38, 166, 154)))
+            }
+            if(sharedViewModel.profileStatus.value?.name == "Busy" ||
+                sharedViewModel.profileStatus.value?.name == "Foglalt"){
+                profileMenu.icon.setTintList(ColorStateList.valueOf(Color.rgb(189, 189, 189)))
+            }
+            if(sharedViewModel.profileStatus.value?.name == "Offline" ||
+                sharedViewModel.profileStatus.value?.name == "Házon kívül"){
+                profileMenu.icon.setTintList(ColorStateList.valueOf(Color.rgb(183, 28, 28)))
             }
         }
     }
@@ -604,7 +659,15 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     private fun startTimer() {
         if (sharedViewModel.currentProject.value != null){
             lifecycleScope.launch {
-                if(startPauseStopViewModel.startTimer(true, sharedViewModel.currentProject.value!!.project_id,"Continue")){
+                val skills = mutableListOf<String>()
+                sharedViewModel.actualSkills.value?.forEach {
+                    skills.add(it.id.toString())
+                }
+                if(startPauseStopViewModel.startTimer(
+                        true, sharedViewModel.currentProject.value!!.project_id,
+                        sharedViewModel.currentProject.value!!.timer_description!!,
+                        skills as ArrayList<String>
+                    )){
                     timerState.value = TimerState.Running
                     serviceIntent.putExtra(TimerService.TIME_EXTRA, time)
                     startService(serviceIntent)
@@ -618,7 +681,7 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     private fun pauseTimer() {
         if (sharedViewModel.currentProject.value != null){
             lifecycleScope.launch {
-                if(startPauseStopViewModel.pauseTimer(false, sharedViewModel.currentProject.value!!.project_id)){
+                if(startPauseStopViewModel.pauseTimer(false, sharedViewModel.currentProject.value!!.project_id,"")){
                     timerState.value = TimerState.Paused
                     stopService(serviceIntent)
                     timer_launcher_float_button.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_play_circle_24))

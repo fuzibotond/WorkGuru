@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/authorized_nav_graph"
-    app:startDestination="@id/inviteUserFragment">
+    app:startDestination="@id/colleaguesFragment">
 
 
     <fragment
@@ -29,4 +29,29 @@
         android:id="@+id/inviteUserFragment"
         android:name="com.license.workguru_app.admin.presentation.components.InviteUserFragment"
         android:label="InviteUserFragment" />
+    <fragment
+        android:id="@+id/messageListFragment"
+        android:name="com.license.workguru_app.help_request.presentation.components.MessageListFragment"
+        android:label="fragment_message_list"
+        tools:layout="@layout/fragment_message_list" />
+    <fragment
+        android:id="@+id/messageFragment"
+        android:name="com.license.workguru_app.help_request.presentation.components.MessageFragment"
+        android:label="message_fragment"
+        tools:layout="@layout/message_fragment" />
+    <fragment
+        android:id="@+id/waitingUserListFragment"
+        android:name="com.license.workguru_app.admin.presentation.components.WaitingUserListFragment"
+        android:label="waiting_user_list_fragment"
+        tools:layout="@layout/waiting_user_list_fragment" />
+    <fragment
+        android:id="@+id/chartFragment"
+        android:name="com.license.workguru_app.profile.presentation.components.ChartFragment"
+        android:label="fragment_chart"
+        tools:layout="@layout/fragment_chart" />
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.license.workguru_app.help_request.presentation.components.ChatFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat" />
 </navigation>

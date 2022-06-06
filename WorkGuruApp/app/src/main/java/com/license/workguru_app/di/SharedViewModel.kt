@@ -4,6 +4,7 @@ package com.license.workguru_app.di
 import android.graphics.Bitmap
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.license.workguru_app.help_request.data.remote.DTO.Skill
 import com.license.workguru_app.profile.data.remote.DTO.MonthlyHistory
 import com.license.workguru_app.profile.data.remote.DTO.ProjectHistory
 import com.license.workguru_app.profile.data.remote.DTO.TodaysHistory
@@ -36,6 +37,11 @@ class SharedViewModel : ViewModel() {
     val skillToFilter = MutableLiveData<String>()
     val statusToFilter = MutableLiveData<String>()
     val minNumberOfWorkHour = MutableLiveData<Int>()
+    val actualSkills: MutableLiveData<ArrayList<Skill>> = MutableLiveData<ArrayList<Skill>>()
+    val profileStatus: MutableLiveData<Skill> = MutableLiveData<Skill>()
+    val profileRole: MutableLiveData<String> = MutableLiveData<String>()
+    val messageColleagueUserId : MutableLiveData<Int> = MutableLiveData<Int>()
+    val messageColleagueUserName : MutableLiveData<String> = MutableLiveData<String>()
 
     fun acceptTermsAndConditions(isAccepted:Boolean){
         isTermsAndConditionsAccepted.value = isAccepted
@@ -90,6 +96,21 @@ class SharedViewModel : ViewModel() {
     }
     fun saveDurationOfAPomodoroSession(durationInMinutes:Int){
         numOfSessionDuration.value = durationInMinutes
+    }
+    fun saveSkills(skillList: ArrayList<Skill>){
+        actualSkills.value = skillList
+    }
+    fun saveStatus(status:Skill){
+        profileStatus.value = status
+    }
+    fun saveProfileRole(role:String){
+        profileRole.value = role
+    }
+    fun saveMessageColleagueUserId(user_id: Int){
+        messageColleagueUserId.value = user_id
+    }
+    fun saveMessageColleagueUserName(user_name: String){
+        messageColleagueUserName.value = user_name
     }
 
 

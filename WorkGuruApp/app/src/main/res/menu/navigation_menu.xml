@@ -34,6 +34,11 @@
             android:title="@string/invite_user"
             android:checked="true" />
         <item
+            android:id="@+id/waiting_users_list"
+            android:icon="@drawable/ic_baseline_hourglass_top_24"
+            android:title="@string/accept_users"
+            android:checked="true" />
+        <item
             android:id="@+id/settings"
             android:icon="@drawable/ic_baseline_settings_24"
             android:title="@string/settings"

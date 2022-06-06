@@ -73,7 +73,7 @@
                     style="@style/TextInputLayoutStyleExposed"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Select a skill"
+                    android:hint="@string/select_a_skill"
                     android:orientation="horizontal"
                     >
 
@@ -99,7 +99,7 @@
                     android:layout_gravity="left"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Colleague status"
+                    android:text="@string/colleague_status"
                     android:textAppearance="?attr/textAppearanceHeadline6"
                     android:fontFamily="@font/intermedium"
                     />
@@ -109,7 +109,7 @@
                     style="@style/TextInputLayoutStyleExposed"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Select a status"
+                    android:hint="@string/select_a_status"
                     android:orientation="horizontal"
                     >
 
@@ -137,7 +137,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Minimum work time in hour:"
+                    android:text="@string/minimum_work_time_in_hour"
                     android:textAppearance="?attr/textAppearanceHeadline6"
                     android:fontFamily="@font/intermedium"
                     />
