@@ -23,17 +23,26 @@ interface TimeTrackingApi {
     suspend fun listCategories(@Header("Authorization") token:String): CategoryResponse
 
     @POST(Constants.CREATE_TIMER)
-    suspend fun startTimer(@Header("Authorization") token:String,@Body request: StartStopTimerRequest): StartTimerResponse
+    suspend fun startTimer(@Header("Authorization") token:String, @Body request: StartStopTimerRequest): StartTimerResponse
 
     @PUT(Constants.PAUSE_TIMER)
     suspend fun pauseTimer(@Header("Authorization") token:String, @Body request: PauseTimerRequest): MessageResponse
 
     @PUT(Constants.STOP_TIMER)
-    suspend fun stopTimer(@Header("Authorization") token:String, @Body request: StartStopTimerRequest): Response<Unit>
+    suspend fun stopTimer(@Header("Authorization") token:String, @Body request: StopRequest): Response<Unit>
 
     @POST(Constants.CREATE_PROJECT)
     suspend fun newProject(@Header("Authorization") token:String,@Body request: ProjecttRequest): NewProjectResponse
 
     @POST(Constants.CREATE_CATEGORY)
     suspend fun newCategory(@Header("Authorization") token:String,@Body request: CategoryRequest): NewCategoryResponse
+
+    @PUT(Constants.CREATE_TIMER)
+    suspend fun updateTimer(@Header("Authorization") token:String, @Body request: UpdateTimerRequest): Response<Unit>
+
+    @PUT(Constants.UPDATE_PROJECT+"{id}")
+    suspend fun updateProject(@Header("Authorization") token:String, @Path("id") project_id:Int, @Body request: UpdateProjectRequest): MessageResponse
+
+    @GET(Constants.GET_A_SPECIFIC_TIMER+"{id}")
+    suspend fun getSpecificTimer(@Header("Authorization") token:String, @Path("id") timer_id:Int): TimerResponse
 }

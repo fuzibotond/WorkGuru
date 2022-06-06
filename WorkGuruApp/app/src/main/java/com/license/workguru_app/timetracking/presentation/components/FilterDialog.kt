@@ -21,7 +21,7 @@ import com.license.workguru_app.R
 import com.license.workguru_app.di.SharedViewModel
 import com.license.workguru_app.databinding.FilterDialogBinding
 import com.license.workguru_app.timetracking.data.remote.DTO.Category
-import com.license.workguru_app.timetracking.domain.repository.TimeTrackingRepository
+import com.license.workguru_app.timetracking.data.repository.TimeTrackingRepository
 import com.license.workguru_app.timetracking.domain.use_case.list_categories.ListCategoriesViewModel
 import com.license.workguru_app.timetracking.domain.use_case.list_categories.ListCategoriesViewModelFactory
 import kotlinx.coroutines.launch
@@ -121,7 +121,7 @@ class FilterDialog(
 
         binding.categorySpinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                Toast.makeText(requireActivity(), "You not selected any category", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireActivity(), getString(R.string.tYouNotSelectedAnyCategory), Toast.LENGTH_SHORT).show()
             }
 
             @SuppressLint("NotifyDataSetChanged")
@@ -153,7 +153,7 @@ class FilterDialog(
 
         binding.memberSpinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                Toast.makeText(requireActivity(), "You not selected any category", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireActivity(), getString(R.string.tYouNotSelectedAnyCategory), Toast.LENGTH_SHORT).show()
             }
 
             @SuppressLint("NotifyDataSetChanged")

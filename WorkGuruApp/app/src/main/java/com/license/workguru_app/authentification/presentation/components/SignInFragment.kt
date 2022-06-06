@@ -1,6 +1,5 @@
 package com.license.workguru_app.authentification.presentation.components
 
-import android.accounts.AccountManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -19,7 +18,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.license.workguru_app.AuthorizedActivity
-import com.license.workguru_app.authentification.domain.repository.AuthRepository
+import com.license.workguru_app.authentification.data.repository.AuthRepository
 import com.license.workguru_app.authentification.domain.use_case.log_in_with_email.LoginViewModel
 import com.license.workguru_app.authentification.domain.use_case.log_in_with_email.LoginViewModelFactory
 import com.license.workguru_app.databinding.FragmentSignInBinding
@@ -191,7 +190,7 @@ class SignInFragment : Fragment() {
         binding.emailAddressInput.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
                 if (binding.emailAddressInput.text!!.toString().isEmpty()){
-                    binding.emailAddressLayoutInput.helperText = "This field is required!"
+                    binding.emailAddressLayoutInput.helperText = getString(R.string.htRequiredField)
                     binding.emailAddressLayoutInput.hintTextColor = context?.resources?.getColorStateList(R.color.text_input_box_stroke_error)
                     binding.emailAddressLayoutInput.setBoxStrokeColorStateList(resources.getColorStateList(R.color.text_input_box_stroke_error))
                     binding.emailAddressLayoutInput.setEndIconDrawable(R.drawable.ic_baseline_error_outline_24)
@@ -207,7 +206,7 @@ class SignInFragment : Fragment() {
         binding.passwordInput.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
                 if (binding.passwordInput.text.toString().isEmpty()){
-                    binding.passwordInputLayout.helperText = "This field is required"
+                    binding.passwordInputLayout.helperText = getString(R.string.htNotValidEmail)
                     binding.passwordInputLayout.hintTextColor = context?.resources?.getColorStateList(R.color.text_input_box_stroke_error)
                     binding.passwordInputLayout.setBoxStrokeColorStateList(resources.getColorStateList(R.color.text_input_box_stroke_error))
                 }else {
@@ -251,7 +250,7 @@ class SignInFragment : Fragment() {
                     loginViewModel.access_token.value = savedToken
                 }else{
                     sharedPreferences.edit().clear().commit()
-                    Toast.makeText(requireContext(), "Your session has been expired! You need to log in again...", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.tSessionExpired), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -298,14 +297,14 @@ class SignInFragment : Fragment() {
             override fun handleOnBackPressed() {
                 val builder = AlertDialog.Builder(requireActivity())
                 builder.setTitle("Exit")
-                builder.setMessage("Are you sure you want to exit?")
+                builder.setMessage(getString(R.string.mAreYouSureExit))
 //builder.setPositiveButton("OK", DialogInterface.OnClickListener(function = x))
 
                 builder.setPositiveButton(android.R.string.yes) { dialog, which ->
                     requireActivity().finish()
                 }
 
-                builder.setNegativeButton("Cancel") { dialog, which ->
+                builder.setNegativeButton(getString(R.string.bCancel)) { dialog, which ->
 
                 }
 

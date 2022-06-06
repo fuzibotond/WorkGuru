@@ -4,9 +4,8 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
-import com.license.workguru_app.authentification.data.remote.DTO.ForgotPasswordRequest
 import com.license.workguru_app.authentification.data.remote.DTO.RegisterRequest
-import com.license.workguru_app.authentification.domain.repository.AuthRepository
+import com.license.workguru_app.authentification.data.repository.AuthRepository
 
 class RegisterViewModel(val context: Context, val repository: AuthRepository) : ViewModel() {
     suspend fun signUp( email: String,

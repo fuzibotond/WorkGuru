@@ -32,7 +32,7 @@ class TermsAndConditionsDialog(
     private fun initialize() {
         binding.termsAndCondAcceptBtn.setOnClickListener {
 
-            Toast.makeText(context,"You just accepted the Terms and Conditions" , Toast.LENGTH_SHORT).show()
+            Toast.makeText(context,getString(R.string.tTermsAndConditions) , Toast.LENGTH_SHORT).show()
             sharedViewModel.acceptTermsAndConditions(true)
             dialog?.dismiss()
         }

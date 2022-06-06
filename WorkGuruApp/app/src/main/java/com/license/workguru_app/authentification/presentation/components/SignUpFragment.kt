@@ -22,7 +22,7 @@ import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.license.workguru_app.R
-import com.license.workguru_app.authentification.domain.repository.AuthRepository
+import com.license.workguru_app.authentification.data.repository.AuthRepository
 import com.license.workguru_app.authentification.domain.use_case.register_manually.RegisterViewModel
 import com.license.workguru_app.authentification.domain.use_case.register_manually.RegisterViewModelFactory
 import com.license.workguru_app.authentification.domain.use_case.register_with_google.GoogleRegisterViewModel

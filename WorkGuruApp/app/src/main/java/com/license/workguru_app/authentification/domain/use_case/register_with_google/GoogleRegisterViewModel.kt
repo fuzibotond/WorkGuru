@@ -3,13 +3,12 @@ package com.license.workguru_app.authentification.domain.use_case.register_with_
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.license.workguru_app.authentification.data.remote.DTO.GoogleRequest
-import com.license.workguru_app.authentification.domain.repository.AuthRepository
+import com.license.workguru_app.authentification.data.repository.AuthRepository
 import com.license.workguru_app.utils.Constants
 
 class GoogleRegisterViewModel(val context: Context, val repository: AuthRepository) : ViewModel() {

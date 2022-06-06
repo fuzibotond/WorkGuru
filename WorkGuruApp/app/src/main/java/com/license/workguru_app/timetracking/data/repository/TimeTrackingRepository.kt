@@ -1,8 +1,5 @@
-package com.license.workguru_app.timetracking.domain.repository
+package com.license.workguru_app.timetracking.data.repository
 
-import com.google.firebase.installations.remote.TokenResult
-import com.license.workguru_app.authentification.data.remote.DTO.LoginRequest
-import com.license.workguru_app.authentification.data.remote.DTO.LoginResponse
 import com.license.workguru_app.di.RetrofitInstance
 import com.license.workguru_app.timetracking.data.remote.DTO.*
 import retrofit2.Response
@@ -32,7 +29,7 @@ class TimeTrackingRepository {
     suspend fun pauseTimer(access_token:String, request: PauseTimerRequest): MessageResponse {
         return RetrofitInstance.apiTimeTracking.pauseTimer(access_token, request)
     }
-    suspend fun stopTimer(access_token:String, request: StartStopTimerRequest): Response<Unit> {
+    suspend fun stopTimer(access_token:String, request: StopRequest): Response<Unit> {
         return RetrofitInstance.apiTimeTracking.stopTimer(access_token, request)
     }
 
@@ -42,5 +39,17 @@ class TimeTrackingRepository {
 
     suspend fun newCategory(access_token:String, request: CategoryRequest): NewCategoryResponse {
         return RetrofitInstance.apiTimeTracking.newCategory(access_token, request)
+    }
+
+    suspend fun updateTimer(access_token:String, request: UpdateTimerRequest): Response<Unit> {
+        return RetrofitInstance.apiTimeTracking.updateTimer(access_token, request)
+    }
+
+    suspend fun updateProject(access_token:String,project_id: Int, request: UpdateProjectRequest): MessageResponse {
+        return RetrofitInstance.apiTimeTracking.updateProject(access_token, project_id, request)
+    }
+
+    suspend fun getSpecificTimer(access_token:String,timer_id: Int): TimerResponse {
+        return RetrofitInstance.apiTimeTracking.getSpecificTimer(access_token, timer_id)
     }
 }

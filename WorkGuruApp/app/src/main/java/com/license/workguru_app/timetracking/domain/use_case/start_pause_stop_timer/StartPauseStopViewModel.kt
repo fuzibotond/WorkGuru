@@ -9,14 +9,17 @@ import androidx.lifecycle.ViewModel
 import com.license.workguru_app.timetracking.data.remote.DTO.PauseTimerRequest
 import com.license.workguru_app.timetracking.data.remote.DTO.StartStopTimerRequest
 import com.license.workguru_app.timetracking.data.remote.DTO.StartTimerResponse
-import com.license.workguru_app.timetracking.domain.repository.TimeTrackingRepository
+import com.license.workguru_app.timetracking.data.remote.DTO.StopRequest
+import com.license.workguru_app.timetracking.data.repository.TimeTrackingRepository
 
 class StartPauseStopViewModel(val context: Context, val repository: TimeTrackingRepository) : ViewModel() {
     val startedTimer:MutableLiveData<StartTimerResponse> = MutableLiveData()
-    suspend fun startTimer(automatic:Boolean, project_id:String, description:String ):Boolean {
+    suspend fun startTimer(automatic:Boolean, project_id:String, description:String, language_ids:List<String> ):Boolean {
         val access_token = getToken()
         try {
-            val request = StartStopTimerRequest(automatic = automatic, project_id = project_id, description = description)
+            val request = StartStopTimerRequest(automatic = automatic, project_id = project_id, description = description, language_ids = language_ids)
+            Log.d("TIMER", "${request}")
+
             val result = repository.startTimer("Bearer " + access_token, request)
             Toast.makeText(context, "You just started a new timer!", Toast.LENGTH_SHORT).show()
             Log.d("TIMER", "${result}")
@@ -32,7 +35,7 @@ class StartPauseStopViewModel(val context: Context, val repository: TimeTracking
     suspend fun stopTimer(automatic:Boolean, project_id:String ):Boolean {
         val access_token = getToken()
         try {
-            val request = StartStopTimerRequest(automatic, project_id, "")
+            val request = StopRequest(automatic = automatic, project_id = project_id)
             val result = repository.stopTimer("Bearer " + access_token, request)
             Log.d("TIMER", "${result}")
             Toast.makeText(context, "The timer was stopped!", Toast.LENGTH_SHORT).show()
@@ -44,10 +47,10 @@ class StartPauseStopViewModel(val context: Context, val repository: TimeTracking
         }
     }
 
-    suspend fun pauseTimer(automatic:Boolean, project_id:String ):Boolean {
+    suspend fun pauseTimer(automatic:Boolean, project_id:String, description: String):Boolean {
         val access_token = getToken()
         try {
-            val request = PauseTimerRequest(automatic, project_id)
+            val request = PauseTimerRequest(automatic, project_id, description)
             val result = repository.pauseTimer("Bearer " + access_token, request)
             Toast.makeText(context, "The timer was paused!", Toast.LENGTH_SHORT).show()
 

@@ -2,6 +2,7 @@ package com.license.workguru_app.timetracking.presentation.components
 
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,15 +17,20 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.license.workguru_app.R
 import com.license.workguru_app.di.SharedViewModel
-import com.license.workguru_app.timetracking.domain.repository.TimeTrackingRepository
+import com.license.workguru_app.timetracking.data.repository.TimeTrackingRepository
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.chip.Chip
+import com.license.workguru_app.admin.presentation.components.CreateNewSkillDialog
 import com.license.workguru_app.databinding.CreateTimerDialogLayoutBinding
+import com.license.workguru_app.help_request.data.remote.DTO.Skill
+import com.license.workguru_app.help_request.data.repository.HelpRequestRepository
+import com.license.workguru_app.help_request.domain.use_cases.list_skills.ListSkillsViewModel
+import com.license.workguru_app.help_request.domain.use_cases.list_skills.ListSkillsViewModelFactory
 import com.license.workguru_app.timetracking.data.remote.DTO.ShortProject
-import com.license.workguru_app.timetracking.domain.model.Project
 import com.license.workguru_app.timetracking.domain.use_case.list_projects.ListProjectsViewModel
 import com.license.workguru_app.timetracking.domain.use_case.list_projects.ListProjectsViewModelFactory
 import com.license.workguru_app.timetracking.domain.use_case.start_pause_stop_timer.StartPauseStopViewModel
@@ -35,10 +41,13 @@ class CreateTimerDialog(
 ): DialogFragment() {
     private var _binding: CreateTimerDialogLayoutBinding? = null
     private val binding get() = _binding!!
-    lateinit var listProjectsViewModel: ListProjectsViewModel
-    val choosenProject:MutableLiveData<ShortProject> = MutableLiveData()
+
+    val chosenProject:MutableLiveData<String> = MutableLiveData()
+    var chosenSkills = mutableListOf<Skill>()
     val sharedViewModel: SharedViewModel by activityViewModels()
     lateinit var startPauseStopViewModel: StartPauseStopViewModel
+    lateinit var listSkillsViewModel: ListSkillsViewModel
+    lateinit var listProjectsViewModel: ListProjectsViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         getDialog()!!.getWindow()?.setBackgroundDrawableResource(R.drawable.terms_and_conditions_icon_foreground);
@@ -55,7 +64,16 @@ class CreateTimerDialog(
         lifecycleScope.launch {
             if(listProjectsViewModel.listAllProjectsWithoutPagination(false)){
                 val projects = listProjectsViewModel.fullList.value
-                choseCategory(projects as ArrayList<ShortProject>)
+                chooseCategory(projects as ArrayList<ShortProject>)
+            }
+        }
+
+        val factoryListSkill = ListSkillsViewModelFactory(requireActivity(), HelpRequestRepository())
+        listSkillsViewModel = ViewModelProvider(this, factoryListSkill).get(ListSkillsViewModel::class.java)
+        lifecycleScope.launch {
+            if(listSkillsViewModel.listSkillsViewModel(1)){
+                val skills = listSkillsViewModel.skillList.value
+                chooseSkill(skills as ArrayList<Skill>)
             }
         }
 
@@ -71,20 +89,32 @@ class CreateTimerDialog(
         binding.startTrackingBtn.setOnClickListener {
             if (sharedViewModel.isTimerStarted.value == false){
                 lifecycleScope.launch {
-                    if (choosenProject.value != null){
-
-                        val projectId = choosenProject.value!!.project_id.toString()
+                    if (chosenProject.value != null && !chosenSkills.isEmpty() && binding.descriptionTextInput.text.isNullOrEmpty()){
+                        val skillIds = mutableListOf<String>()
+                        chosenSkills.forEach {
+                            skillIds.add(it.id.toString())
+                            Log.d("HELP_REQUEST", "${it}")
+                        }
+                        val projectId = chosenProject.value!!
                         val description = binding.descriptionTextInput.text.toString()
-                        if(startPauseStopViewModel.startTimer(false, project_id = projectId, description = description)){
+                        if(startPauseStopViewModel.startTimer(
+                                false,
+                                project_id = projectId,
+                                description = description,
+                                skillIds as ArrayList<String>
+                            )){
+
+                                sharedViewModel.saveSkills(chosenSkills as ArrayList<Skill>)
                             sharedViewModel.saveCurrentTimer(startPauseStopViewModel.startedTimer.value!!)
                             sharedViewModel.saveTimerState(true)
                         }
+                    }else{
+                        Toast.makeText(requireActivity(), "Please do not let any field empty!", Toast.LENGTH_SHORT).show()
                     }
-
                 }
             }
             else{
-                Toast.makeText(context, "A timer is started on project ${sharedViewModel.currentProject.value!!.project_name} at ${sharedViewModel.currentProject.value!!.started_at}!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.tTimerStarted), Toast.LENGTH_SHORT).show()
             }
         }
         startPauseStopViewModel.startedTimer.observe(viewLifecycleOwner){
@@ -95,9 +125,19 @@ class CreateTimerDialog(
             }
         }
         binding.createNewProjectBtn.setOnClickListener {
-            val manager = (this as AppCompatActivity).supportFragmentManager
+            val manager = (requireActivity()).supportFragmentManager
             CreateProjectDialog().show(manager, "CustomManager")
         }
+        if (sharedViewModel.profileRole.value == "admin"){
+            binding.createNewSkillBtn.setOnClickListener {
+                val manager = (requireActivity()).supportFragmentManager
+                CreateNewSkillDialog().show(manager, "CustomManager")
+            }
+        }
+        else{
+            binding.createNewSkillBtn.visibility = View.GONE
+        }
+
     }
 
 
@@ -116,7 +156,7 @@ class CreateTimerDialog(
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
-    private fun choseCategory(categoryList:ArrayList<ShortProject>) {
+    private fun chooseCategory(categoryList:ArrayList<ShortProject>) {
 
         val itemList = mutableListOf<String>()
         categoryList.forEach {
@@ -125,18 +165,43 @@ class CreateTimerDialog(
 
         val adapter = ArrayAdapter(requireContext(), R.layout.custom_list_item, itemList as List<String>)
         binding.projectSpinner.setAdapter(adapter)
-
         binding.projectSpinner.setOnItemClickListener { adapterView, view, i, l ->
-
-            val selectedItem = adapterView.adapter.getItem(i)
             categoryList.forEach {
-                if (it.project_name+"(${it.category_name})" == selectedItem){
-                    choosenProject.value = it
+                if (adapter.getItem(i).toString() == it.project_name+"(${it.category_name})"){
+                    chosenProject.value = it.project_id.toString()
                 }
             }
 
         }
 
+    }
+
+    private fun chooseSkill(skillList:ArrayList<Skill>) {
+        val itemList = mutableListOf<String>()
+        skillList.forEach {
+            itemList.add(it.name)
+        }
+        val adapter = ArrayAdapter(requireContext(), R.layout.custom_list_item, itemList as List<String>)
+        binding.skillSpinner.setAdapter(adapter)
+
+       binding.skillSpinner.setOnItemClickListener { adapterView, view, i, l ->
+           skillList.forEach {
+               if(it.name == adapter.getItem(i)){
+                   chosenSkills.add(it)
+                   val chip = Chip(context)
+                   chip.text = it.name
+                   chip.setChipBackgroundColorResource(R.color.teal_100)
+                   chip.setCloseIconResource(R.drawable.ic_baseline_cancel_24);
+                   chip.setCloseIconEnabled(true)
+                   binding.createTimerLanguagesChipGroup.addView(chip)
+                   val temp = it
+                   chip.setOnCloseIconClickListener {
+                       chosenSkills.remove(temp)
+                       binding.createTimerLanguagesChipGroup.removeView(chip)
+                   }
+               }
+           }
+       }
     }
 
 

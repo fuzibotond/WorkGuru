@@ -4,15 +4,11 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.navigation.Navigator
 import com.license.workguru_app.authentification.data.remote.DTO.LoginRequest
-import com.license.workguru_app.authentification.domain.repository.AuthRepository
+import com.license.workguru_app.authentification.data.repository.AuthRepository
 import com.license.workguru_app.di.SessionManager
-import com.license.workguru_app.di.SharedViewModel
 import com.license.workguru_app.utils.Constants
 
 
@@ -43,6 +39,7 @@ class LoginViewModel(val context: Context, val repository: AuthRepository) : Vie
             if(remember_me.value == true){
 
             }
+
             val sharedPreferences:SharedPreferences = context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
             access_token.value = sharedPreferences.getString("TOKEN_KEY", null)
             return true
@@ -57,7 +54,6 @@ class LoginViewModel(val context: Context, val repository: AuthRepository) : Vie
 private fun saveUserData(context: Context, access_token:String, expires_at:String, name:String, email:String ){
     val sharedPreferences: SharedPreferences = context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
     val editor = sharedPreferences.edit()
-
 
     editor.apply{
         putString("ACCESS_TOKEN", access_token)

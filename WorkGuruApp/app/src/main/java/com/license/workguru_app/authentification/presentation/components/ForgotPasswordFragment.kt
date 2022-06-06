@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.license.workguru_app.R
-import com.license.workguru_app.authentification.domain.repository.AuthRepository
+import com.license.workguru_app.authentification.data.repository.AuthRepository
 import com.license.workguru_app.authentification.domain.use_case.reset_your_password.ForgotPasswordViewModel
 import com.license.workguru_app.authentification.domain.use_case.reset_your_password.ForgotPasswordViewModelFactory
 import com.license.workguru_app.databinding.FragmentForgotPasswordBinding
@@ -49,13 +49,13 @@ class ForgotPasswordFragment : Fragment() {
             val emailTocheck = (text!!.reversed()).takeWhile { it=='.' }
             if (Patterns.EMAIL_ADDRESS.matcher(emailTocheck.toString()).matches() ){
                 Log.d("email", emailTocheck.toString());
-                binding.emailAddressResetPasswordLayoutInput.helperText = "Not an email type!"
+                binding.emailAddressResetPasswordLayoutInput.helperText = getString(R.string.htNotValidEmail)
                 binding.emailAddressResetPasswordLayoutInput.hintTextColor = context?.resources?.getColorStateList(R.color.text_input_box_stroke_error)
                 binding.emailAddressResetPasswordLayoutInput.setBoxStrokeColorStateList(resources.getColorStateList(R.color.text_input_box_stroke_error))
                 isCorrectEmail = false
             }
             if (text!!.toString().isEmpty()){
-                binding.emailAddressResetPasswordLayoutInput.helperText = "This field is required!"
+                binding.emailAddressResetPasswordLayoutInput.helperText = getString(R.string.htRequiredField)
                 binding.emailAddressResetPasswordLayoutInput.hintTextColor = context?.resources?.getColorStateList(R.color.text_input_box_stroke_error)
                 binding.emailAddressResetPasswordLayoutInput.setBoxStrokeColorStateList(resources.getColorStateList(R.color.text_input_box_stroke_error))
                 binding.emailAddressResetPasswordLayoutInput.setEndIconTintList(resources.getColorStateList(R.color.text_input_box_stroke_error))
@@ -74,13 +74,13 @@ class ForgotPasswordFragment : Fragment() {
                     lifecycleScope.launch {
                         binding.continueResetPasswordBtn.isEnabled = !forgotPasswordViewModel.forgotPassword(binding.emailAddressResetPasswordInput.text.toString())
                     }
-                    binding.emailAddressResetPasswordLayoutInput.helperText = "One more chance left... just joking :D\nIf you didn't get any email from us check it twice or try again this flow."
+                    binding.emailAddressResetPasswordLayoutInput.helperText = getString(R.string.htEmailWasNotSent)
                     binding.emailAddressResetPasswordLayoutInput.hintTextColor = context?.resources?.getColorStateList(R.color.text_input_box_stroke)
                     binding.emailAddressResetPasswordLayoutInput.setBoxStrokeColorStateList(resources.getColorStateList(R.color.text_input_box_stroke))
                 }
                 else
                 {
-                    binding.emailAddressResetPasswordLayoutInput.helperText = "This field is required!"
+                    binding.emailAddressResetPasswordLayoutInput.helperText = getString(R.string.htRequiredField)
                     binding.emailAddressResetPasswordLayoutInput.hintTextColor = context?.resources?.getColorStateList(R.color.text_input_box_stroke_error)
                     binding.emailAddressResetPasswordLayoutInput.setBoxStrokeColorStateList(resources.getColorStateList(R.color.text_input_box_stroke_error))
                     binding.emailAddressResetPasswordLayoutInput.setEndIconTintList(resources.getColorStateList(R.color.text_input_box_stroke_error))

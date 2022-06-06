@@ -75,7 +75,7 @@
                     android:layout_gravity="left"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Didn't find what you're looking for? You might need to create a project first"
+                    android:text="@string/didn_t_find_what_you_re_looking_for_you_might_need_to_create_a_project_first"
                     android:textAppearance="?attr/textAppearanceHeadline6"
                     android:fontFamily="@font/interlight"
                     android:textSize="12sp"
@@ -104,7 +104,75 @@
                     android:layout_gravity="left"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Task descriptions"
+                    android:text="@string/please_select_a_skill_you_need_for_this_task"
+                    android:textAppearance="?attr/textAppearanceHeadline6"
+                    android:fontFamily="@font/interlight"
+                    android:textSize="18sp"
+                    />
+
+                <com.google.android.material.textfield.TextInputLayout
+
+                    style="@style/TextInputLayoutStyleExposed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/select_a_skill"
+                    android:orientation="horizontal"
+                    >
+
+                    <AutoCompleteTextView
+                        style="@style/TextInputLayoutStyle"
+                        android:id="@+id/skill_spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textAutoComplete"
+                        />
+
+                </com.google.android.material.textfield.TextInputLayout>
+                <TextView
+                    android:layout_gravity="left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/didn_t_find_what_you_re_looking_for_you_might_need_to_create_a_new_skill"
+                    android:textAppearance="?attr/textAppearanceHeadline6"
+                    android:fontFamily="@font/interlight"
+                    android:textSize="12sp"
+                    />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/create_new_skill_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:backgroundTint="@color/teal_500"
+                    android:text="@string/create_new_skill"
+                    android:fontFamily="@font/inter"
+                    android:drawableLeft="@drawable/ic_baseline_add_circle_24"
+                    android:drawableTint="@color/white"
+                    />
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/create_timer_languages_chip_group"
+                        android:layout_margin="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        app:singleLine="true">
+                    </com.google.android.material.chip.ChipGroup>
+                </HorizontalScrollView>
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Title, secondary and supporting text -->
+                <TextView
+                    android:layout_gravity="left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/task_descriptions"
                     android:textAppearance="?attr/textAppearanceHeadline6"
                     android:fontFamily="@font/interlight"
                     />
@@ -117,7 +185,6 @@
                     app:errorIconDrawable="@drawable/ic_baseline_error_outline_24"
                     app:errorIconTint="@color/red_500"
                     app:helperTextTextColor="@color/red_500"
-                    android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
                     >
 
