@@ -4,11 +4,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import android.widget.Toast
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.license.workguru_app.timetracking.data.remote.DTO.Category
 import com.license.workguru_app.timetracking.data.remote.DTO.ProjecttRequest
-import com.license.workguru_app.timetracking.domain.repository.TimeTrackingRepository
+import com.license.workguru_app.timetracking.data.repository.TimeTrackingRepository
 
 class NewProjectViewModel(val context: Context, val repository: TimeTrackingRepository) : ViewModel() {
     suspend fun createNewProject(category_name:String, name:String ):Boolean {

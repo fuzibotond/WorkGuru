@@ -1,19 +1,13 @@
 package com.license.workguru_app.timetracking.presentation.components
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.SpinnerAdapter
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
@@ -22,20 +16,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.license.workguru_app.R
 import com.license.workguru_app.di.SharedViewModel
-import com.license.workguru_app.databinding.FilterDialogBinding
 import com.license.workguru_app.timetracking.data.remote.DTO.Category
-import com.license.workguru_app.timetracking.domain.repository.TimeTrackingRepository
+import com.license.workguru_app.timetracking.data.repository.TimeTrackingRepository
 import com.license.workguru_app.timetracking.domain.use_case.list_categories.ListCategoriesViewModel
 import com.license.workguru_app.timetracking.domain.use_case.list_categories.ListCategoriesViewModelFactory
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.ZoneOffset
-import java.util.*
 import kotlin.collections.ArrayList
-import android.widget.CalendarView
 
-import android.widget.CalendarView.OnDateChangeListener
 import androidx.appcompat.app.AppCompatActivity
 import com.license.workguru_app.databinding.CreateProjectDialogBinding
 import com.license.workguru_app.timetracking.domain.model.Project
@@ -43,7 +30,6 @@ import com.license.workguru_app.timetracking.domain.use_case.create_new_project.
 import com.license.workguru_app.timetracking.domain.use_case.create_new_project.NewProjectViewModelFactory
 import com.license.workguru_app.timetracking.domain.use_case.list_projects.ListProjectsViewModel
 import com.license.workguru_app.timetracking.domain.use_case.list_projects.ListProjectsViewModelFactory
-import kotlinx.android.synthetic.main.activity_authorized.*
 
 
 class CreateProjectDialog(
@@ -101,14 +87,14 @@ class CreateProjectDialog(
             if (!avoidDuplicates( listProjectsViewModel.dataList.value as ArrayList<Project>)){
                 lifecycleScope.launch {
                     if(newProjectViewModel.createNewProject(binding.newCategorySpinner.text.toString(), binding.newProjectNameTextInput.text.toString())){
-                        Toast.makeText(requireActivity(), "A new project just created successfully!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireActivity(), getString(R.string.tNewProjectCreated), Toast.LENGTH_SHORT).show()
                         binding.newProjectProgressBar.visibility = View.GONE
 
                     }
                 }
             }
             else{
-                Toast.makeText(requireActivity(), "This project is already exist!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireActivity(), getString(R.string.tProjectAlreadyExist), Toast.LENGTH_SHORT).show()
                 binding.newProjectProgressBar.visibility = View.GONE
             }
         }

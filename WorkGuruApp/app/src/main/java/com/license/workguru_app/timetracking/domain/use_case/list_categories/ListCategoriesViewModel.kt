@@ -7,7 +7,7 @@ import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.license.workguru_app.timetracking.data.remote.DTO.Category
-import com.license.workguru_app.timetracking.domain.repository.TimeTrackingRepository
+import com.license.workguru_app.timetracking.data.repository.TimeTrackingRepository
 
 class ListCategoriesViewModel(val context: Context, val repository: TimeTrackingRepository) : ViewModel() {
     val dataList: MutableLiveData<List<Category>> = MutableLiveData()

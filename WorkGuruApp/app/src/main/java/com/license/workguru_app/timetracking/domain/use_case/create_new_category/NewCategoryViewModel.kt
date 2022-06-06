@@ -6,7 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import com.license.workguru_app.timetracking.data.remote.DTO.CategoryRequest
-import com.license.workguru_app.timetracking.domain.repository.TimeTrackingRepository
+import com.license.workguru_app.timetracking.data.repository.TimeTrackingRepository
 
 class NewCategoryViewModel(val context: Context, val repository: TimeTrackingRepository) : ViewModel() {
     suspend fun createNewCategory(name:String):Boolean {

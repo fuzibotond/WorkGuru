@@ -1,45 +1,29 @@
 package com.license.workguru_app.timetracking.presentation.components
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.SpinnerAdapter
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.license.workguru_app.R
 import com.license.workguru_app.di.SharedViewModel
-import com.license.workguru_app.databinding.FilterDialogBinding
 import com.license.workguru_app.timetracking.data.remote.DTO.Category
-import com.license.workguru_app.timetracking.domain.repository.TimeTrackingRepository
+import com.license.workguru_app.timetracking.data.repository.TimeTrackingRepository
 import com.license.workguru_app.timetracking.domain.use_case.list_categories.ListCategoriesViewModel
 import com.license.workguru_app.timetracking.domain.use_case.list_categories.ListCategoriesViewModelFactory
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.ZoneOffset
-import java.util.*
 import kotlin.collections.ArrayList
-import android.widget.CalendarView
 
-import android.widget.CalendarView.OnDateChangeListener
 import com.license.workguru_app.databinding.CreateCategoryDialogBinding
 import com.license.workguru_app.timetracking.domain.use_case.create_new_category.NewCategoryViewModel
 import com.license.workguru_app.timetracking.domain.use_case.create_new_category.NewCategoryViewModelFactory
-import kotlinx.android.synthetic.main.activity_authorized.*
 
 
 class CreateCategoryDialog(
@@ -79,13 +63,13 @@ class CreateCategoryDialog(
             if (!avoidDuplicates(listCategoriesViewModel.dataList.value as ArrayList<Category>)){
                 lifecycleScope.launch {
                     if(newCategoryViewModel.createNewCategory(binding.categoryNameTextInput.text.toString())){
-                        Toast.makeText(requireActivity(), "A new category just created successfully!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireActivity(), getString(R.string.tNewCategoryCreated), Toast.LENGTH_SHORT).show()
                         binding.categoryProgressBar.visibility = View.GONE
                     }
                 }
             }
             else{
-                Toast.makeText(requireActivity(), "This category is already exist!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireActivity(), getString(R.string.tCategoryAlreadyExist), Toast.LENGTH_SHORT).show()
                 binding.categoryProgressBar.visibility = View.GONE
             }
         }
