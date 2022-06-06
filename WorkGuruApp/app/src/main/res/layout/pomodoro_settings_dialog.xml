@@ -66,7 +66,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Pomodoro mode:"
+                    android:text="@string/pomodoro_mode"
                     android:textAppearance="?attr/textAppearanceHeadline6"
                     android:fontFamily="@font/intermedium"
                     />
@@ -83,20 +83,23 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:padding="16dp"
-                android:paddingVertical="10dp">
+                android:weightSum="4"
+                >
 
                 <!-- Title, secondary and supporting text -->
                 <TextView
+                    android:layout_weight="1"
                     android:layout_gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="How many session?"
+                    android:text="@string/how_many_session"
                     android:textAppearance="?attr/textAppearanceHeadline6"
                     android:fontFamily="@font/intermedium"
 
                     />
 
                 <NumberPicker
+                    android:layout_weight="3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/number_session_number_picker"
@@ -108,25 +111,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="16dp">
+                android:padding="16dp"
+                android:weightSum="4">
 
                 <!-- Title, secondary and supporting text -->
                 <TextView
+                    android:layout_weight="1"
                     android:layout_gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="One session duration:"
+                    android:text="@string/one_session_duration"
                     android:textAppearance="?attr/textAppearanceHeadline6"
                     android:fontFamily="@font/intermedium"
                     />
 
                 <NumberPicker
+                    android:orientation="horizontal"
+                    android:layout_weight="3"
                     android:layout_gravity="center_vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/session_duration_number_picker"
-                    >
-                </NumberPicker>
+                    android:id="@+id/session_duration_number_picker" />
 
             </LinearLayout>
             <LinearLayout
