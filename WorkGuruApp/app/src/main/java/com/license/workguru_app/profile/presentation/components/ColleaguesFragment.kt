@@ -22,7 +22,7 @@ import com.license.workguru_app.R
 import com.license.workguru_app.databinding.FragmentColleguesBinding
 import com.license.workguru_app.di.SharedViewModel
 import com.license.workguru_app.profile.data.remote.DTO.Colleague
-import com.license.workguru_app.profile.domain.repository.ProfileRepository
+import com.license.workguru_app.profile.data.repository.ProfileRepository
 import com.license.workguru_app.profile.domain.use_case.display_all_colleagues.ListColleaguesViewModel
 import com.license.workguru_app.profile.domain.use_case.display_all_colleagues.ListColleaguesViewModelFactory
 import com.license.workguru_app.profile.presentation.adapetrs.ColleagueAdaptor
@@ -109,7 +109,7 @@ class ColleaguesFragment : Fragment() {
 
         sharedViewModel.searchingKeyword.observe(viewLifecycleOwner){
             if(sharedViewModel.searchingKeyword.value!!.length < 1){
-                Toast.makeText(requireActivity(), "Empty key", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(requireActivity(), "Empty key", Toast.LENGTH_SHORT).show()
                 adapter.setData(itemList)
                 adapter.notifyDataSetChanged()
             }else{
@@ -138,7 +138,7 @@ class ColleaguesFragment : Fragment() {
 //                    }
 //                }
                 if (filteredResultList.isEmpty()){
-                    Toast.makeText(requireActivity(), "Oops! Not a single match...", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireActivity(), getString(R.string.tNotASingleMatch), Toast.LENGTH_SHORT).show()
                 }else{
                     adapter.setData(filteredResultList)
                     setupOrder(filteredResultList)
@@ -163,11 +163,12 @@ class ColleaguesFragment : Fragment() {
 
     private fun setupOrder(itemList:ArrayList<Colleague>) {
         binding.colleagueOrder?.adapter = activity?.let { ArrayAdapter(it.applicationContext, R.layout.ordering_item_layout,
-            listOf("Order by name", "Order by start date", "Order by category") ) } as SpinnerAdapter
+            listOf(getString(R.string.orderByName), getString(R.string.orderByStartDate), getString(
+                            R.string.orderByCategory)) ) } as SpinnerAdapter
 
         binding.colleagueOrder?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                Toast.makeText(requireActivity(), "You not selected any category", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireActivity(), getString(R.string.tYouNotSelectedAnyCategory), Toast.LENGTH_SHORT).show()
             }
 
             @SuppressLint("NotifyDataSetChanged")
@@ -179,18 +180,20 @@ class ColleaguesFragment : Fragment() {
             ) {
 
                 val type = parent?.getItemAtPosition(position).toString()
-                if (type == "Order by name"){
+                if (type == getString(R.string.orderByName)){
                     val temp = itemList.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.name }))
                     itemList.clear()
                     itemList.addAll(temp)
                 }
-                if (type == "Order by status (only who is available)"){
+                if (type == getString(R.string.orderByCategory)){
                     val temp = itemList.filter{it.role == "admin"} // TODO: update to availability
                     itemList.clear()
                     itemList.addAll(temp)
                 }
-                if (type == "Order by tracked time"){
-                    itemList.sortBy { it.tracked }
+                if (type == getString(R.string.orderByStartDate)){
+                    val temp = itemList.filter{it.status == "Available"} // TODO: update to availability
+                    itemList.clear()
+                    itemList.addAll(temp)
                 }
                 adapter.notifyDataSetChanged()
             }
