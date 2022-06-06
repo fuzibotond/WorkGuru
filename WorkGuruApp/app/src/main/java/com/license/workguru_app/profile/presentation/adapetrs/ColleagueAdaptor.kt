@@ -16,12 +16,17 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.license.workguru_app.R
 import com.license.workguru_app.di.SharedViewModel
+import com.license.workguru_app.help_request.presentation.components.SendMessageDialog
 import com.license.workguru_app.profile.data.remote.DTO.Colleague
 import com.license.workguru_app.utils.Constants
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
+import androidx.navigation.findNavController
+
 
 class ColleagueAdaptor(
     private var list: ArrayList<Colleague>,
@@ -37,7 +42,7 @@ class ColleagueAdaptor(
         val colleagueAvatar:ImageView = itemView.findViewById(R.id.colleague_image)
         val colleagueRole:Chip = itemView.findViewById(R.id.colleague_role)
         val colleagueEmail:TextView = itemView.findViewById(R.id.colleague_email)
-        val colleagueStatus:TextView = itemView.findViewById(R.id.colleague_status)
+        val colleagueStatus:Chip = itemView.findViewById(R.id.colleague_status)
         val colleagueLanguages:ChipGroup = itemView.findViewById(R.id.colleague_languages_chip_group)
         val colleagueTracked:TextView = itemView.findViewById(R.id.colleague_tracked)
 
@@ -49,6 +54,15 @@ class ColleagueAdaptor(
         }
         override fun onClick(p0: View?) {
             val currentPosition = this.adapterPosition
+            val currentItem = list[currentPosition]
+            sharedViewModel.saveMessageColleagueUserId(currentItem.id)
+            sharedViewModel.saveMessageColleagueUserName(currentItem.name)
+
+            val activity = context as FragmentActivity
+            activity.findNavController(R.id.auth_nav_host_fragment).navigate(R.id.chatFragment)
+//            val fm: FragmentManager = activity.supportFragmentManager
+//            val alertDialog = SendMessageDialog()
+//            alertDialog.show(fm, "fragment_alert");
 
         }
 
@@ -69,7 +83,7 @@ class ColleagueAdaptor(
 
 
     // 3. Called many times, when we scroll the list
-    @SuppressLint("UseCompatLoadingForDrawables")
+    @SuppressLint("UseCompatLoadingForDrawables", "ResourceAsColor", "ResourceType")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: DataViewHolder, position: Int) {
         val currentItem = list[position]
@@ -84,10 +98,50 @@ class ColleagueAdaptor(
         }
 
         holder.colleagueEmail.setText(currentItem.email)
-        holder.colleagueRole.setText(currentItem.role)
+        when(currentItem.role){
+            "admin" -> {
+                holder.colleagueRole.setText(currentItem.role)
+                holder.colleagueRole.setChipBackgroundColorResource(R.color.yellow_100)
+            }
+            "user" -> {
+                holder.colleagueRole.setText(currentItem.role)
+                holder.colleagueRole.setChipBackgroundColorResource(R.color.teal_100)
+            }
+        }
         holder.colleagueTracked.setText(convertIntToMinutes(currentItem.tracked))
-        holder.colleagueStatus.setText("Available") //TODO: Change to variable when update is done
-        val languages = listOf<String>("C++", "PHP", "Kotlin", "Vue.Js", ".NET")
+        when(currentItem.status){
+            "Available" -> {
+                holder.colleagueStatus.setText(currentItem.status)
+                holder.colleagueStatus.setChipIconResource(R.drawable.ic_baseline_check_circle_24)
+                holder.colleagueStatus.setChipIconTintResource(R.color.teal_200)
+//                holder.colleagueStatus.setChipBackgroundColorResource(R.color.teal_200)
+            }
+            "Busy" -> {
+                holder.colleagueStatus.setText(currentItem.status)
+                holder.colleagueStatus.setChipIconResource(R.drawable.ic_baseline_cancel_24)
+                holder.colleagueStatus.setChipIconTintResource(R.color.yellow_500)
+//                holder.colleagueStatus.setChipBackgroundColorResource(R.color.yellow_200)
+
+            }
+            "Offline" -> {
+                holder.colleagueStatus.setText(currentItem.status)
+                holder.colleagueStatus.setChipIconResource(R.drawable.ic_baseline_remove_circle_24)
+                holder.colleagueStatus.setChipIconTintResource(R.color.red_200)
+//                holder.colleagueStatus.setChipBackgroundColorResource(R.color.red_200)
+
+            }
+            null-> {
+                holder.colleagueStatus.setText(context.getString(R.string.j_dont_know))
+                holder.colleagueStatus.setChipIconResource(R.drawable.ic_baseline_recommend_24)
+                holder.colleagueStatus.setChipIconTintResource(R.color.purple_200)
+//                holder.colleagueStatus.setChipBackgroundColorResource(R.color.purple_200)
+            }
+        }
+        val languages = mutableListOf<String>()
+        currentItem.languages.forEach {
+            val temp = it.name + " " + convertIntToMinutes(it.tracked.toInt())
+            languages.add(temp)
+        }
         holder.colleagueLanguages.removeAllViews()
         languages.forEach {
             val chip = Chip(context)
