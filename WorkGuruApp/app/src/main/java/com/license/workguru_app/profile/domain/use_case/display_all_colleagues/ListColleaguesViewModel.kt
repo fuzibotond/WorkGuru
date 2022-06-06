@@ -6,9 +6,8 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.license.workguru_app.profile.data.remote.DTO.City
 import com.license.workguru_app.profile.data.remote.DTO.Colleague
-import com.license.workguru_app.profile.domain.repository.ProfileRepository
+import com.license.workguru_app.profile.data.repository.ProfileRepository
 
 class ListColleaguesViewModel(val context: Context, val repository: ProfileRepository) : ViewModel() {
     val colleagues: MutableLiveData<List<Colleague>> = MutableLiveData()
