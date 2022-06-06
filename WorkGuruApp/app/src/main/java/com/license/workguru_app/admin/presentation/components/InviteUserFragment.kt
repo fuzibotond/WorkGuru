@@ -8,19 +8,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.license.workguru_app.R
-import com.license.workguru_app.admin.domain.repository.AdminRepository
+import com.license.workguru_app.admin.data.repository.AdminRepository
 import com.license.workguru_app.admin.domain.use_cases.invite_a_new_user.InviteUserViewModel
 import com.license.workguru_app.admin.domain.use_cases.invite_a_new_user.InviteUserViewModelFactory
-import com.license.workguru_app.authentification.domain.use_case.log_out.LogoutViewModel
 import com.license.workguru_app.databinding.FragmentInviteUserBinding
 import kotlinx.coroutines.launch
-import java.util.regex.Pattern
 
 class InviteUserFragment : Fragment() {
     private var _binding: FragmentInviteUserBinding? = null
@@ -41,11 +38,11 @@ class InviteUserFragment : Fragment() {
         binding.continueInviteUserBtn.setOnClickListener {
             binding.inviteUserProgressBar.visibility = View.VISIBLE
             if (binding.emailAddressInviteUserInput.text.toString().isEmpty()){
-                binding.emailAddressInviteUserLayoutInput.helperText = "This field is required!"
+                binding.emailAddressInviteUserLayoutInput.helperText = getString(R.string.htRequiredField)
                 binding.emailAddressInviteUserLayoutInput.setHelperTextColor( ColorStateList.valueOf(Color.RED))
                 binding.inviteUserProgressBar.visibility = View.GONE
             }else if (!Patterns.EMAIL_ADDRESS.matcher( binding.emailAddressInviteUserInput.text).matches()){
-                binding.emailAddressInviteUserLayoutInput.helperText = "Not a valid email!"
+                binding.emailAddressInviteUserLayoutInput.helperText = getString(R.string.htNotValidEmail)
                 binding.emailAddressInviteUserLayoutInput.setHelperTextColor( ColorStateList.valueOf(Color.RED))
                 binding.inviteUserProgressBar.visibility = View.GONE
             }else{

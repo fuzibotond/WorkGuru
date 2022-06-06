@@ -1,26 +1,27 @@
-package com.license.workguru_app.admin.domain.use_cases.invite_a_new_user
+package com.license.workguru_app.admin.domain.use_cases.create_new_skill
 
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
-import com.license.workguru_app.admin.data.remote.DTO.InviteUserRequest
+import com.license.workguru_app.R
+import com.license.workguru_app.admin.data.remote.DTO.NewSkillRequest
 import com.license.workguru_app.admin.data.repository.AdminRepository
 
-class InviteUserViewModel(val context: Context, val repository: AdminRepository) : ViewModel() {
-    suspend fun inviteUser(email: String):Boolean {
+class CreateNewSkillViewModel(val context: Context, val repository: AdminRepository) : ViewModel() {
+    suspend fun createNewSkill(name: String):Boolean {
         val access_token = getToken()
-        val request = InviteUserRequest(email)
+        val request = NewSkillRequest(name)
 
         try {
-            val result = repository.inviteUser("Bearer " + access_token, request)
-            Log.d("INVITE", result.message)
+            val result = repository.createNewSkill("Bearer " + access_token, request)
+            Log.d("NEW_SKILL", result.message)
             Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
             return true
         } catch (e: Exception) {
-            Toast.makeText(context, "The given email already exist in the database or not correct. Try something else...", Toast.LENGTH_SHORT).show()
-            Log.d("INVITE", "InviteUserViewModel - exception: ${e.toString()}")
+            Toast.makeText(context, context.getString(R.string.email_already_exist), Toast.LENGTH_SHORT).show()
+            Log.d("NEW_SKILL", "CreateNewViewModel - exception: ${e.toString()}")
 
             return false
         }
@@ -31,4 +32,3 @@ class InviteUserViewModel(val context: Context, val repository: AdminRepository)
         return savedToken
     }
 }
-
