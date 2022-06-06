@@ -6,10 +6,9 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.license.workguru_app.timetracking.data.remote.DTO.Data
 import com.license.workguru_app.timetracking.data.remote.DTO.ShortProject
 import com.license.workguru_app.timetracking.domain.model.Project
-import com.license.workguru_app.timetracking.domain.repository.TimeTrackingRepository
+import com.license.workguru_app.timetracking.data.repository.TimeTrackingRepository
 
 class ListProjectsViewModel(val context: Context, val repository: TimeTrackingRepository) : ViewModel() {
     val dataList:MutableLiveData<List<Project>> = MutableLiveData()

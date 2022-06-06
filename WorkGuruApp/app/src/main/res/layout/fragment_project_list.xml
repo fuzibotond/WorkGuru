@@ -98,6 +98,25 @@
                 android:fontFamily="@font/interlight"
                 android:text="@string/order_by"
                 android:textColor="@color/black" />
+
+<!--            <com.google.android.material.textfield.TextInputLayout-->
+
+<!--                style="@style/TextInputLayoutStyleExposed"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:hint="@string/select_ordering"-->
+<!--                android:orientation="horizontal"-->
+<!--                >-->
+
+<!--                <AutoCompleteTextView-->
+<!--                    style="@style/TextInputLayoutStyle"-->
+<!--                    android:id="@+id/project_order_spinner"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:inputType="textAutoComplete"-->
+<!--                    />-->
+
+<!--            </com.google.android.material.textfield.TextInputLayout>-->
         </LinearLayout>
     </LinearLayout>
     <RelativeLayout
@@ -114,7 +133,7 @@
                 android:id="@+id/project_list_swipe_refresh_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingBottom="60dp"
+                android:paddingBottom="20dp"
                 >
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view"
@@ -126,18 +145,6 @@
                     tools:listitem="@layout/project_item_layout"
                     />
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-
         </LinearLayout>
-
-        <ProgressBar
-            android:id="@+id/loading_progressbar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"/>
     </RelativeLayout>
-
-
-
 </RelativeLayout>

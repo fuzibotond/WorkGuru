@@ -22,8 +22,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.license.workguru_app.R
 import com.license.workguru_app.di.SharedViewModel
 import com.license.workguru_app.databinding.FragmentProjectListBinding
+import com.license.workguru_app.timetracking.data.remote.DTO.ShortProject
 import com.license.workguru_app.timetracking.domain.model.Project
-import com.license.workguru_app.timetracking.domain.repository.TimeTrackingRepository
+import com.license.workguru_app.timetracking.data.repository.TimeTrackingRepository
 import com.license.workguru_app.timetracking.domain.use_case.list_projects.ListProjectsViewModel
 import com.license.workguru_app.timetracking.domain.use_case.list_projects.ListProjectsViewModelFactory
 import com.license.workguru_app.timetracking.presentation.adapters.ProjectAdapter
@@ -109,7 +110,7 @@ class ProjectListFragment : Fragment() {
         }
         sharedViewModel.searchingKeyword.observe(viewLifecycleOwner){
             if(sharedViewModel.searchingKeyword.value!!.length < 1){
-                Toast.makeText(requireActivity(), "Empty key", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(requireActivity(), "Empty key", Toast.LENGTH_SHORT).show()
                 adapter.setData(itemList)
                 adapter.notifyDataSetChanged()
             }else{
@@ -120,6 +121,7 @@ class ProjectListFragment : Fragment() {
                     }
                 }
                 adapter.setData(searchResultList)
+//                choseOrder()
                 setupOrder(searchResultList)
             }
 
@@ -138,9 +140,10 @@ class ProjectListFragment : Fragment() {
                     }
                 }
                 if (filteredResultList.isEmpty()){
-                    Toast.makeText(requireActivity(), "Oops! Not a single match...", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireActivity(), getString(R.string.tNotASingleMatch), Toast.LENGTH_SHORT).show()
                 }else{
                     adapter.setData(filteredResultList)
+//                    choseOrder()
                     setupOrder(filteredResultList)
                 }
 
@@ -163,11 +166,11 @@ class ProjectListFragment : Fragment() {
 
     private fun setupOrder(itemList:ArrayList<Project>) {
         binding.projectOrder?.adapter = activity?.let { ArrayAdapter(it.applicationContext, R.layout.ordering_item_layout,
-            listOf("Order by name", "Order by start date", "Order by category") ) } as SpinnerAdapter
+            listOf(getString(R.string.orderByName), getString(R.string.orderByStartDate), getString(R.string.orderByCategory)) ) } as SpinnerAdapter
 
         binding.projectOrder?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                Toast.makeText(requireActivity(), "You not selected any category", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireActivity(), getString(R.string.tYouNotSelectedAnyCategory), Toast.LENGTH_SHORT).show()
             }
 
             @SuppressLint("NotifyDataSetChanged")
@@ -179,17 +182,17 @@ class ProjectListFragment : Fragment() {
             ) {
 
                 val type = parent?.getItemAtPosition(position).toString()
-                if (type == "Order by name"){
+                if (type == getString(R.string.orderByName)){
                     val temp = itemList.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.name }))
                     itemList.clear()
                     itemList.addAll(temp)
                 }
-                if (type == "Order by category"){
+                if (type == getString(R.string.orderByCategory)){
                     val temp = itemList.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.category_name }))
                     itemList.clear()
                     itemList.addAll(temp)
                 }
-                if (type == "Order by start date"){
+                if (type == getString(R.string.orderByStartDate)){
                     itemList.sortBy { it.start_date }
                 }
                 adapter.notifyDataSetChanged()
@@ -197,6 +200,32 @@ class ProjectListFragment : Fragment() {
         }
 
     }
+//    private fun choseOrder() {
+//        val orderList = listOf(getString(R.string.orderByName), getString(R.string.orderByStartDate), getString(R.string.orderByCategory))
+//        val adapter = ArrayAdapter(requireContext(), R.layout.custom_list_item, orderList)
+//        binding.projectOrderSpinner.setAdapter(adapter)
+//
+//        binding.projectOrderSpinner.setOnItemClickListener { adapterView, view, i, l ->
+//
+//            val selectedItem = adapterView.adapter.getItem(i)
+//            if (selectedItem == getString(R.string.orderByName)){
+//                val temp = itemList.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.name }))
+//                itemList.clear()
+//                itemList.addAll(temp)
+//            }
+//            if (selectedItem == getString(R.string.orderByCategory)){
+//                val temp = itemList.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.category_name }))
+//                itemList.clear()
+//                itemList.addAll(temp)
+//            }
+//            if (selectedItem == getString(R.string.orderByStartDate)){
+//                itemList.sortBy { it.start_date }
+//            }
+//            adapter.notifyDataSetChanged()
+//
+//        }
+//
+//    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -213,6 +242,7 @@ class ProjectListFragment : Fragment() {
            if(listProjectsViewModel.listAllProjects(false, "0")){
                itemList.addAll((listProjectsViewModel.dataList.value as ArrayList<Project>?)!!)
                setAdapter(itemList = itemList)
+//               choseOrder()
                setupOrder(itemList)
                binding.progressBar.visibility = View.GONE
            }
