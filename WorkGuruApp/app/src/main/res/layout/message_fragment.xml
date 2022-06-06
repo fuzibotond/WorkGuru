@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    tools:context="com.license.workguru_app.help_request.presentation.components.MessageFragment"
+    android:background="@color/white_wrapped">
+    <com.google.android.material.tabs.TabLayout
+
+        android:id="@+id/messages_layout"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:backgroundTint="@color/teal_900"
+        app:tabTextColor="@color/white"
+        app:tabIconTint="@color/white"
+        app:tabIndicatorColor="@color/white"
+        >
+        <com.google.android.material.tabs.TabItem
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:text="@string/sent_messages"
+            android:icon="@drawable/ic_baseline_pie_chart_24"
+            >
+
+        </com.google.android.material.tabs.TabItem>
+        <com.google.android.material.tabs.TabItem
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:text="@string/received_messages"
+            android:icon="@drawable/ic_baseline_insights_24">
+
+        </com.google.android.material.tabs.TabItem>
+
+    </com.google.android.material.tabs.TabLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/messages_page_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </ScrollView>
+
+</LinearLayout>

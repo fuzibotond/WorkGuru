@@ -23,6 +23,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.anychart.enums.Position
+import com.license.workguru_app.R
 import com.license.workguru_app.di.SharedViewModel
 import com.license.workguru_app.profile.domain.use_case.display_user_insights.UserHistoryViewModel
 
@@ -31,8 +32,8 @@ class ChartFragment : Fragment() {
     private var _binding: FragmentChartBinding? = null
     private val binding get() = _binding!!
     val sharedViewModel: SharedViewModel by activityViewModels()
-    var names = mutableListOf<String>()
-    var numbers = mutableListOf<Int>()
+    var namesForToday = mutableListOf<String>()
+    var numbersForToday = mutableListOf<Int>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,7 +43,7 @@ class ChartFragment : Fragment() {
         // Kotlin DSL example
 
         _binding = FragmentChartBinding.inflate(inflater, container, false)
-        binding.chartProgressBar.visibility = View.VISIBLE
+        binding.chartProgressBarForToday.visibility = View.VISIBLE
         setObservers()
 
 
@@ -51,13 +52,16 @@ class ChartFragment : Fragment() {
 
     private fun setObservers() {
         sharedViewModel.chartData.observe(viewLifecycleOwner){
-            names.clear()
-            numbers.clear()
+            namesForToday.clear()
+
+            numbersForToday.clear()
+
             sharedViewModel.chartData.value?.forEach {
-                names.add(it.name)
-                numbers.add(it.project_id)
+                namesForToday.add(it.name)
+                numbersForToday.add(it.project_id)
             }
-            binding.chartProgressBar.visibility = View.GONE
+            binding.chartProgressBarForToday.visibility = View.GONE
+
             setupPieChart()
         }
     }
@@ -71,8 +75,8 @@ class ChartFragment : Fragment() {
 
         val data = ArrayList<DataEntry>()
 
-        for(i in names.indices)
-            data.add(ValueDataEntry(names[i],numbers[i]))
+        for(i in namesForToday.indices)
+            data.add(ValueDataEntry(namesForToday[i],numbersForToday[i]))
 
         pie.data(data)
 
@@ -82,7 +86,7 @@ class ChartFragment : Fragment() {
             Configuration.UI_MODE_NIGHT_YES -> {
                 pie.tooltip().background("#000")
 
-                pie.title("Tracked - Last 30 Days no dark")
+                pie.title(getString(R.string.mTrackedLastDays))
                 pie.title().fontFamily("Inter")
                 pie.title().fontColor("#000")
                 pie.title().fontSize(18)
@@ -104,7 +108,7 @@ class ChartFragment : Fragment() {
             }
             Configuration.UI_MODE_NIGHT_NO -> {
                 pie.tooltip().background("#000")
-                pie.title("Tracked - Last 30 Days no dark")
+                pie.title(getString(R.string.mTrackedLastDays))
                 pie.title().fontFamily("Inter")
                 pie.title().fontColor("#000")
                 pie.title().fontSize(18)
@@ -115,12 +119,12 @@ class ChartFragment : Fragment() {
                 pie.legend()
                     .position("bottom")
                     .align(Align.CENTER)
-                    .itemsLayout(LegendLayout.HORIZONTAL_EXPANDABLE)
+                    .itemsLayout(LegendLayout.VERTICAL_EXPANDABLE)
                     .iconSize(10)
                 pie.credits(false)
             }
             Configuration.UI_MODE_NIGHT_UNDEFINED -> {
-                pie.title("Tracked - Last 30 Days undefined")
+                pie.title(getString(R.string.mTrackedLastDays))
                 pie.title().fontFamily("Inter")
                 pie.title().fontColor("#000")
                 pie.title().fontSize(18)
@@ -139,7 +143,7 @@ class ChartFragment : Fragment() {
         }
         pie.palette(arrayOf("#DDFFE7", "#98D7C2", "#167D7F", "#29A0B1","#05445E","#189AB4", "#75E6DA", "#D4F1F4", "#5885AF", "#FF03DAC5", "#FF018786", "#134E4A"))
 
-        binding.chartView.setChart(pie)
+        binding.chartViewForToday.setChart(pie)
 
 
     }
