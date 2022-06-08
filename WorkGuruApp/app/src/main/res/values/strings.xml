@@ -156,4 +156,6 @@
     <string name="they_are_waiting_to_be_accapted">They are waiting to be accapted</string>
     <string name="accept">Accept</string>
     <string name="accept_users">Accept users</string>
+    <string name="store">Store</string>
+    <string name="update">Update</string>
 </resources>
