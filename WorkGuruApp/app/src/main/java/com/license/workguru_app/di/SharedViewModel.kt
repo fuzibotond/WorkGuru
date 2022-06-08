@@ -42,6 +42,7 @@ class SharedViewModel : ViewModel() {
     val profileRole: MutableLiveData<String> = MutableLiveData<String>()
     val messageColleagueUserId : MutableLiveData<Int> = MutableLiveData<Int>()
     val messageColleagueUserName : MutableLiveData<String> = MutableLiveData<String>()
+    val faceEmail: MutableLiveData<String> = MutableLiveData<String>()
 
     fun acceptTermsAndConditions(isAccepted:Boolean){
         isTermsAndConditionsAccepted.value = isAccepted
@@ -112,6 +113,8 @@ class SharedViewModel : ViewModel() {
     fun saveMessageColleagueUserName(user_name: String){
         messageColleagueUserName.value = user_name
     }
-
+    fun saveFaceEmail(email:String){
+        faceEmail.value = email
+    }
 
 }

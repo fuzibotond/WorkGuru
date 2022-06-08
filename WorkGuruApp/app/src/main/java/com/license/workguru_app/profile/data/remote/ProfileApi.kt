@@ -51,11 +51,38 @@ interface ProfileApi {
     @Part("street_address") street_address:String?,
     @Part("country") country: String?,
     @Part avatar: MultipartBody.Part?,
-    @Part("_method") _method:String?,
     @Part("state") state:String?,
     @Part("delete_avatar") delete:Boolean?,
     @Part("phone_number") phone_number:String?,
     @Part("zip") zip:String?
+    ): MessageResponse
+
+    @Multipart
+    @PUT(Constants.CHANGE_USER_PROFILE)
+    suspend fun changeProfileData(
+        @Header("Authorization") token:String,
+        @Part("city") city:RequestBody?,
+        @Part("street_address") street_address:RequestBody?,
+        @Part("country") country: RequestBody?,
+        @Part avatar: MultipartBody.Part?,
+        @Part("state") state:RequestBody?,
+        @Part("delete_avatar") delete:RequestBody?,
+        @Part("phone_number") phone_number:RequestBody?,
+        @Part("zip") zip:RequestBody?
+    ): MessageResponse
+
+    @Multipart
+    @PUT(Constants.CHANGE_USER_PROFILE)
+    suspend fun changeProfileData(
+        @Header("Authorization") token:String?,
+        @Part("city") city:RequestBody?,
+        @Part("street_address") street_address:RequestBody?,
+        @Part("country") country: RequestBody?,
+        @Part("avatar") avatar:RequestBody,
+        @Part("state") state:RequestBody?,
+        @Part("delete_avatar") delete:RequestBody?,
+        @Part("phone_number") phone_number:RequestBody?,
+        @Part("zip") zip:RequestBody?
     ): MessageResponse
 
 //    @POST(Constants.CHANGE_USER_PROFILE)
@@ -76,11 +103,20 @@ interface ProfileApi {
         @Body file: RequestBody?
     ): MessageResponse
 
+    @Multipart
     @POST(Constants.STORE_FACE)
-    suspend fun storeFace(@Header("Authorization")token:String,@Body request:StoreFaceRequest ):Response<Unit>
+    suspend fun storeFace(@Header("Authorization")token:String,@Part avatar: MultipartBody.Part?, ):Response<Unit>
 
+    @POST(Constants.STORE_FACE)
+    suspend fun storeFace(@Header("Authorization")token:String,@Body request:StoreFaceRequest, ):MessageResponse
+
+    @Multipart
     @PUT(Constants.STORE_FACE)
-    suspend fun updateFace(@Header("Authorization")token:String, @Body request:StoreFaceRequest ):Response<Unit>
+    suspend fun updateFace(@Header("Authorization")token:String, @Part avatar: MultipartBody.Part?, ):Response<Unit>
+
+    @Multipart
+    @POST(Constants.STORE_FACE)
+    suspend fun updateFace(@Header("Authorization")token:String, @Part avatar: MultipartBody.Part?,@Part("_method") request: RequestBody ):Response<Unit>
 
     @DELETE(Constants.STORE_FACE)
     suspend fun deleteFace(@Header("Authorization")token:String):Response<Unit>

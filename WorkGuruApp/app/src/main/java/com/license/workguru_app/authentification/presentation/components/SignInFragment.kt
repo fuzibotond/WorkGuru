@@ -28,6 +28,7 @@ import kotlinx.coroutines.launch
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -42,7 +43,9 @@ import com.google.android.gms.tasks.Task
 import com.license.workguru_app.authentification.domain.use_case.log_in_with_google.GoogleLoginViewModel
 import com.license.workguru_app.authentification.domain.use_case.log_in_with_google.GoogleLoginViewModelFactory
 import com.license.workguru_app.di.SessionManager
+import com.license.workguru_app.di.SharedViewModel
 import com.license.workguru_app.utils.Constants
+import com.license.workguru_app.utils.ProfileUtil
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -55,6 +58,7 @@ class SignInFragment : Fragment() {
     private var _binding: FragmentSignInBinding? = null
     private val binding get() = _binding!!
     val token:MutableLiveData<String> = MutableLiveData<String>()
+    val sharedViewModel:SharedViewModel by activityViewModels()
 
     private lateinit var sessionManager: SessionManager
 
@@ -217,7 +221,20 @@ class SignInFragment : Fragment() {
             }
         }
         binding.signInWithFaceBtn.setOnClickListener {
-           findNavController().navigate(R.id.action_signInFragment_to_faceRecFragment)
+            if(ProfileUtil.getStringPref(requireActivity(), "USER_EMAIL") == null){
+                if (binding.emailAddressInput.text.toString().isNotEmpty()){
+                    sharedViewModel.saveFaceEmail(binding.emailAddressInput.text.toString())
+                    findNavController().navigate(R.id.action_signInFragment_to_faceRecFragment)
+                }else{
+                    Toast.makeText(requireActivity(), "Please add your email first!", Toast.LENGTH_SHORT).show()
+                }
+            }
+            else{
+                sharedViewModel.saveFaceEmail(ProfileUtil.getStringPref(requireActivity(), "USER_EMAIL")!!)
+                findNavController().navigate(R.id.action_signInFragment_to_faceRecFragment)
+            }
+
+
         }
 
         token.observe(viewLifecycleOwner){
@@ -231,6 +248,8 @@ class SignInFragment : Fragment() {
             }
         }
     }
+
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun loadData() {
 
