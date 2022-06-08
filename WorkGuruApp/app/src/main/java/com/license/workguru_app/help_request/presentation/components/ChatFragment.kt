@@ -120,49 +120,9 @@ class ChatFragment : Fragment() {
     private fun resetInput() {
         // Clean text box
         binding.messageTextInput.text?.clear()
-
-        // Hide keyboard
-//       hideKeyboard()
+        
     }
 
-//    fun Fragment.hideKeyboard() {
-//        view?.let { activity?.hideKeyboard(it) }
-//    }
-//
-//    fun Activity.hideKeyboard() {
-//        hideKeyboard(currentFocus ?: View(this))
-//    }
-//
-//    fun Context.hideKeyboard(view: View) {
-//        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-//        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
-//    }
-
-//    fun bindToEvents() {
-//        channel.bind("message-sent", object : PrivateChannelEventListener {
-//            override fun onAuthenticationFailure(string: String, ex: Exception) {}
-//            override fun onEvent(event: PusherEvent?) {
-//                val jsonObject = JSONObject(event!!.data)
-//                Log.d("HELP_REQUEST", jsonObject.toString())
-//                val message = Message(
-//                    jsonObject["created_at"].toString(),
-//                    jsonObject["id"].toString().toInt(),
-//                    jsonObject["message"].toString(),
-//                    jsonObject["receiver_id"].toString().toInt(),
-//                    jsonObject["sender_id"].toString().toInt()
-//                )
-//
-//                requireActivity().runOnUiThread {
-//                    adapter.addMessage(message)
-//                    // scroll the RecyclerView to the last added element
-//                    binding.messageList.scrollToPosition(adapter.itemCount - 1);
-//                }
-//            }
-//
-//            override fun onSubscriptionSucceeded(string: String) {}
-//            fun onEvent(string: String?, string1: String?, string2: String?) {}
-//        })
-//    }
     @SuppressLint("NotifyDataSetChanged")
     private fun setupPusher() {
 

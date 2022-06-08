@@ -16,7 +16,10 @@ import android.graphics.BitmapFactory
 
 import android.net.Uri
 import android.provider.MediaStore
+import android.util.Base64
+import android.util.Base64OutputStream
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import java.io.ByteArrayOutputStream
 
 
@@ -25,12 +28,11 @@ class ChangeProfileDataViewModel(val context: Context, val repository: ProfileRe
         city:String?,
         street_address:String?,
         country: String?,
-        avatar: Uri?,
-        _method:String,
-        state:String,
-        isRemoving:Boolean,
-        phone_number:String,
-        zip:String
+        avatar: String?,
+        state:String?,
+        isRemoving:Boolean?,
+        phone_number:String?,
+        zip:String?
     ):Boolean {
 
 
@@ -39,40 +41,55 @@ class ChangeProfileDataViewModel(val context: Context, val repository: ProfileRe
 
             if (avatar != null){
 
-                val path = Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_DCIM
+                val path = avatar
+                val part = path.let { getMultipartBody(it) }
+                val cityRequestBody: RequestBody? =
+                    city?.let { RequestBody.create("application/json".toMediaTypeOrNull(), it) }
+                val streetAddressRequestBody: RequestBody? =
+                    street_address?.let {
+                        RequestBody.create("application/json".toMediaTypeOrNull(),
+                            it
+                        )
+                    }
+                val countryRequestBody: RequestBody? =
+                    country?.let { RequestBody.create("application/json".toMediaTypeOrNull(), it) }
+                val stateRequestBody: RequestBody? =
+                    state?.let { RequestBody.create("application/json".toMediaTypeOrNull(), it) }
+                val isRemovingRequestBody: RequestBody? =
+                    RequestBody.create("application/json".toMediaTypeOrNull(), isRemoving.toString())
+                val phoneNumberRequestBody: RequestBody? =
+                    phone_number?.let {
+                        RequestBody.create("application/json".toMediaTypeOrNull(),
+                            it
+                        )
+                    }
+                val zipRequestBody: RequestBody? =
+                    zip?.let { RequestBody.create("application/json".toMediaTypeOrNull(), it) }
+
+                val result = repository.changeProfileData(
+                    "Bearer " + access_token,
+                    cityRequestBody,
+                    streetAddressRequestBody,
+                    countryRequestBody,
+                    part,
+                    stateRequestBody,
+                    isRemovingRequestBody,
+                    phoneNumberRequestBody,
+                    zipRequestBody
                 )
 
-                val file = File( getRealPathFromUri(context, avatar))
-                val bmp = BitmapFactory.decodeFile(file.getAbsolutePath())
-                val bos = ByteArrayOutputStream()
-                bmp.compress(Bitmap.CompressFormat.JPEG, 30, bos)
-                val requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), bos.toByteArray())
-                val part = MultipartBody.Part.createFormData("avatar",file.name , requestBody)
-
-                Log.d("PROFILE", "${city} ${street_address} ${country} ${part.headers()?.names()?.size} ${_method} ${state} ${isRemoving} ${phone_number} ${zip}")
-
-                val result = repository.changeProfileData("Bearer " + access_token,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    "0734484839",
-                    null,
+//                val result = repository.changeProfileData(
+//                    "Bearer " + access_token,
 //                    city,
-//                    "Szezam utca",
+//                    street_address,
 //                    country,
 //                    part,
-//                    _method,
 //                    state,
 //                    isRemoving,
 //                    phone_number,
 //                    zip
-                )
-
+//                )
+//
 //                val builder = MultipartBody.Builder().setType(MultipartBody.FORM)
 //                builder.addFormDataPart("city", "City")
 //                    .addFormDataPart("street_address", "Street Address")
@@ -92,26 +109,6 @@ class ChangeProfileDataViewModel(val context: Context, val repository: ProfileRe
                 Log.d("PROFILE", "${result.message}")
                 Toast.makeText(context, "${result.message}", Toast.LENGTH_SHORT).show()
             }
-//            else{
-//                val path = Environment.getExternalStoragePublicDirectory(
-//                    Environment.DIRECTORY_DCIM
-//                )
-//
-//
-//                val result = repository.changeProfileData("Bearer " + access_token,
-//                    city,
-//                    "Szezam utca",
-//                    country,
-//                    null,
-//                    _method,
-//                    state,
-//                    true,
-//                    phone_number,
-//                    zip
-//                )
-//                Log.d("PROFILE", "${result.message}")
-//                Toast.makeText(context, "${result.message}", Toast.LENGTH_SHORT).show()
-//            }
 
 
 
@@ -145,5 +142,33 @@ class ChangeProfileDataViewModel(val context: Context, val repository: ProfileRe
             cursor.close()
         }
         return picturePath
+    }
+    fun convertImageFileToBase64(imageFile: File): String {
+        return ByteArrayOutputStream().use { outputStream ->
+            Base64OutputStream(outputStream, Base64.DEFAULT).use { base64FilterStream ->
+                imageFile.inputStream().use { inputStream ->
+                    inputStream.copyTo(base64FilterStream)
+                }
+            }
+            return@use outputStream.toString()
+        }
+    }
+    private fun getRealPathFromURI(contentURI: Uri): String? {
+        val result: String?
+        val cursor: Cursor = context.getContentResolver().query(contentURI, null, null, null, null)!!
+        if (cursor == null) { // Source is Dropbox or other similar local file path
+            result = contentURI.path
+        } else {
+            cursor.moveToFirst()
+            val idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
+            result = cursor.getString(idx)
+            cursor.close()
+        }
+        return result
+    }
+    private fun getMultipartBody(filePath: String): MultipartBody.Part {
+        val file = File(filePath)
+        val requestBody = RequestBody.create("image/*".toMediaTypeOrNull(), file)
+        return MultipartBody.Part.createFormData("avatar", file.name, requestBody)
     }
 }

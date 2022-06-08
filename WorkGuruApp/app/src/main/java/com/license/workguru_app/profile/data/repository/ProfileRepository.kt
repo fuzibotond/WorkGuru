@@ -3,6 +3,7 @@ package com.license.workguru_app.profile.data.repository
 import com.license.workguru_app.di.RetrofitInstance
 import com.license.workguru_app.profile.data.remote.DTO.*
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.Response
 
 class ProfileRepository {
@@ -32,7 +33,6 @@ class ProfileRepository {
         street_address:String?,
         country: String?,
         avatar: MultipartBody.Part?,
-        _method: String?,
         state: String?,
         isRemoving: Boolean?,
         phone_number:String?,
@@ -40,18 +40,41 @@ class ProfileRepository {
     ): MessageResponse{
         return RetrofitInstance.apiProfile.changeProfileData(
             access_token,
-
             city,
             street_address,
             country,
             avatar,
-            _method,
             state,
             isRemoving,
             phone_number,
             zip
         )
     }
+    suspend fun changeProfileData(
+        access_token:String,
+        city:RequestBody?,
+        street_address:RequestBody?,
+        country: RequestBody?,
+        avatar: MultipartBody.Part?,
+        state: RequestBody?,
+        isRemoving: RequestBody?,
+        phone_number:RequestBody?,
+        zip:RequestBody?
+    ): MessageResponse{
+        return RetrofitInstance.apiProfile.changeProfileData(
+            access_token,
+            city,
+            street_address,
+            country,
+            avatar,
+            state,
+            isRemoving,
+            phone_number,
+            zip
+        )
+    }
+
+
 
 //    suspend fun changeProfileData(
 //        access_token:String,
@@ -70,15 +93,23 @@ class ProfileRepository {
         return RetrofitInstance.apiProfile.listColleagues(access_token,page )
     }
 
-    suspend fun storeFace(access_token:String, request: StoreFaceRequest): retrofit2.Response<Unit> {
+    suspend fun storeFace(access_token:String,avatar: MultipartBody.Part?): retrofit2.Response<Unit> {
+        return RetrofitInstance.apiProfile.storeFace(access_token,avatar )
+    }
+
+    suspend fun storeFace(access_token:String,request: StoreFaceRequest): MessageResponse {
         return RetrofitInstance.apiProfile.storeFace(access_token,request )
     }
 
-    suspend fun updateFace(access_token:String, request: StoreFaceRequest): retrofit2.Response<Unit> {
-        return RetrofitInstance.apiProfile.updateFace(access_token,request )
+    suspend fun updateFace(access_token:String, avatar: MultipartBody.Part?): retrofit2.Response<Unit> {
+        return RetrofitInstance.apiProfile.updateFace(access_token,avatar )
     }
 
-    suspend fun deleteFace(access_token:String, request: StoreFaceRequest): retrofit2.Response<Unit> {
+    suspend fun updateFace(access_token:String, avatar: MultipartBody.Part?, method:RequestBody): retrofit2.Response<Unit> {
+        return RetrofitInstance.apiProfile.updateFace(access_token,avatar, method )
+    }
+
+    suspend fun deleteFace(access_token:String): retrofit2.Response<Unit> {
         return RetrofitInstance.apiProfile.deleteFace(access_token )
     }
 

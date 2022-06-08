@@ -83,7 +83,66 @@
                 android:layout_gravity="center_vertical"
                 android:shadowColor="@color/black"/>
 
+
         </LinearLayout>
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:dividerInsetStart="16dp"
+            app:dividerInsetEnd="16dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3"
+            android:layout_margin="10dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/face_profile_image"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:src="@drawable/ic_baseline_person_24"
+                android:layout_margin="20dp"
+                />
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/face_photo_change_btn"
+                android:text="@string/update"
+                android:fontFamily="@font/interlight"
+                android:textAllCaps="false"
+                android:backgroundTint="@color/teal_700"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="10dp"
+                android:shadowColor="@color/black"/>
+            <com.google.android.material.button.MaterialButton
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/face_photo_remove"
+                android:text="@string/remove"
+                android:fontFamily="@font/interlight"
+                android:textAllCaps="false"
+                android:backgroundTint="@color/white"
+                android:textColor="@color/black"
+                android:layout_margin="10dp"
+                android:layout_gravity="center_vertical"
+                android:shadowColor="@color/black"/>
+
+
+        </LinearLayout>
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/face_profile_save_btn"
+            android:text="@string/store"
+            android:textColor="@color/white"
+            android:outlineAmbientShadowColor="@color/teal_700"
+            android:backgroundTint="@color/teal_700"
+            android:layout_weight="1"
+            android:layout_margin="10dp"/>
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -1,6 +1,8 @@
 package com.license.workguru_app.profile.presentation.components
 
 import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -26,6 +28,8 @@ import com.license.workguru_app.profile.data.remote.DTO.States
 import com.license.workguru_app.profile.data.repository.ProfileRepository
 import com.license.workguru_app.profile.domain.use_case.change_user_profile_data.ChangeProfileDataViewModel
 import com.license.workguru_app.profile.domain.use_case.change_user_profile_data.ChangeProfileDataViewModelFactory
+import com.license.workguru_app.profile.domain.use_case.delete_face_from_profile.DeleteFaceViewModel
+import com.license.workguru_app.profile.domain.use_case.delete_face_from_profile.DeleteFaceViewModelFactory
 import com.license.workguru_app.profile.domain.use_case.display_cities.ListCitiesViewModel
 import com.license.workguru_app.profile.domain.use_case.display_cities.ListCitiesViewModelFactory
 import com.license.workguru_app.profile.domain.use_case.display_countries.ListCountriesViewModel
@@ -34,9 +38,18 @@ import com.license.workguru_app.profile.domain.use_case.display_states.ListState
 import com.license.workguru_app.profile.domain.use_case.display_states.ListStatesViewModelFactory
 import com.license.workguru_app.profile.domain.use_case.display_user_profile.UserProfileViewModel
 import com.license.workguru_app.profile.domain.use_case.display_user_profile.UserProfileViewModelFactory
+import com.license.workguru_app.profile.domain.use_case.store_face.StoreFaceViewModel
+import com.license.workguru_app.profile.domain.use_case.store_face.StoreFaceViewModelFactory
+import com.license.workguru_app.profile.domain.use_case.update_face.UpdateFaceViewModel
+import com.license.workguru_app.profile.domain.use_case.update_face.UpdateFaceViewModelFactory
 import com.license.workguru_app.profile.presentation.adapetrs.StateAdapter
 import com.license.workguru_app.utils.Constants
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.OutputStream
+import java.util.*
 
 
 class ProfileFragment : Fragment() {
@@ -46,7 +59,7 @@ class ProfileFragment : Fragment() {
 
     val countries:MutableLiveData<List<String>> = MutableLiveData()
     val uploadedImage:MutableLiveData<Uri> = MutableLiveData()
-    val filePath:MutableLiveData<String> = MutableLiveData("")
+    val filePath:MutableLiveData<String> = MutableLiveData()
     val bitmap:MutableLiveData<Bitmap> = MutableLiveData()
     private var mImageFileLocation = ""
     private var isRemoved = false
@@ -57,6 +70,9 @@ class ProfileFragment : Fragment() {
     lateinit var listCountriesViewModel: ListCountriesViewModel
     lateinit var getUserProfileViewModel: UserProfileViewModel
     lateinit var changeProfileDataViewModel: ChangeProfileDataViewModel
+    lateinit var storeFaceViewModel: StoreFaceViewModel
+    lateinit var updateFaceViewModel: UpdateFaceViewModel
+    lateinit var deleteFaceViewModel: DeleteFaceViewModel
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
@@ -133,7 +149,6 @@ class ProfileFragment : Fragment() {
             binding.zipInputProfile.setText(user.zip)
             }
             uploadedImage.value = Uri.parse(Constants.VUE_APP_USER_AVATAR_URL + user.avatar)
-            //TODO: "active_timer": null,"id": 54,"role": "admin" - never used
         }
     }
 
@@ -159,6 +174,15 @@ class ProfileFragment : Fragment() {
 
         val changeProfileDataViewModelFactory = ChangeProfileDataViewModelFactory(requireActivity(), ProfileRepository())
         changeProfileDataViewModel = ViewModelProvider(this, changeProfileDataViewModelFactory).get(ChangeProfileDataViewModel::class.java)
+
+        val storeFaceFactory = StoreFaceViewModelFactory(requireActivity(), ProfileRepository())
+        storeFaceViewModel = ViewModelProvider(this, storeFaceFactory).get(StoreFaceViewModel::class.java)
+
+        val updateFaceFactory = UpdateFaceViewModelFactory(requireActivity(), ProfileRepository())
+        updateFaceViewModel = ViewModelProvider(this, updateFaceFactory).get(UpdateFaceViewModel::class.java)
+
+        val deleteFaceFactory = DeleteFaceViewModelFactory(requireActivity(), ProfileRepository())
+        deleteFaceViewModel = ViewModelProvider(this, deleteFaceFactory).get(DeleteFaceViewModel::class.java)
 
         setHasOptionsMenu(true)
     }
@@ -215,8 +239,7 @@ class ProfileFragment : Fragment() {
                                 binding.citySpinnerProfile.text.toString(),
                                 binding.streetAddressInputProfile.text.toString(),
                                 binding.countrySpinnerProfile.text.toString(),
-                                path,
-                                "PUT",
+                                filePath.value,
                                 binding.stateSpinnerProfile.text.toString(),
                                 isRemoving,
                                 binding.phoneNumberInputProfile.text.toString(),
@@ -256,6 +279,21 @@ class ProfileFragment : Fragment() {
             openURL.data = Uri.parse("http://workguru-hr.herokuapp.com/reset-password")
             startActivity(openURL)
         }
+        binding.facePhotoChangeBtn.setOnClickListener {
+            lifecycleScope.launch {
+                updateFaceViewModel.updateFaceImage(filePath.value)
+            }
+        }
+        binding.faceProfileSaveBtn.setOnClickListener {
+            lifecycleScope.launch {
+                storeFaceViewModel.storeFaceImage(filePath.value)
+            }
+        }
+        binding.facePhotoRemove.setOnClickListener {
+            lifecycleScope.launch {
+                deleteFaceViewModel.deleteFacePhoto()
+            }
+        }
 
     }
 
@@ -275,8 +313,17 @@ class ProfileFragment : Fragment() {
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE){
             uploadedImage.value = data!!.data
             binding.profileImage.setImageURI(data?.data) // handle chosen image
-            filePath.value = data.data?.path
+
             bitmap.value = MediaStore.Images.Media.getBitmap(requireActivity().contentResolver,data?.data )
+            filePath.value = saveImageToInternalStorage(bitmap.value)?.path
+            Glide.with(this)
+                .load(uploadedImage.value)
+                .centerCrop()
+                .into(binding.profileImage);
+            Glide.with(this)
+                .load(uploadedImage.value)
+                .centerCrop()
+                .into(binding.faceProfileImage);
         }
     }
 
@@ -298,6 +345,38 @@ class ProfileFragment : Fragment() {
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+    }
+    private fun saveImageToInternalStorage(bitmap: Bitmap?): Uri? {
+
+        // Get the context wrapper instance
+        val wrapper = ContextWrapper(requireActivity())
+
+        // Initializing a new file
+        // The bellow line return a directory in internal storage
+        var file = wrapper.getDir("images", Context.MODE_PRIVATE)
+
+
+        // Create a file to save the image
+        file = File(file, "${UUID.randomUUID()}.jpg")
+
+        try {
+            // Get the file output stream
+            val stream: OutputStream = FileOutputStream(file)
+
+            // Compress bitmap
+            bitmap?.compress(Bitmap.CompressFormat.JPEG, 95, stream)
+
+            // Flush the stream
+            stream.flush()
+
+            // Close stream
+            stream.close()
+        } catch (e: IOException){ // Catch the exception
+            e.printStackTrace()
+        }
+
+        // Return the saved image uri
+        return Uri.parse(file.absolutePath)
     }
 
 }

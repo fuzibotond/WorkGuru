@@ -25,7 +25,7 @@ class ProfileUtil {
             return savedItem
         }
 
-        private fun saveUserIntData(context: Context, data:Int, key: String ){
+         fun saveUserIntData(context: Context, data:Int, key: String ){
             val sharedPreferences: SharedPreferences = context.getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE)
             val editor = sharedPreferences.edit()
             editor.apply{
@@ -33,7 +33,7 @@ class ProfileUtil {
             }.apply()
         }
 
-        private fun saveUserStringData(context: Context, data:String, key: String ){
+         fun saveUserStringData(context: Context, data:String, key: String ){
             val sharedPreferences: SharedPreferences = context.getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE)
             val editor = sharedPreferences.edit()
             editor.apply{
@@ -41,7 +41,7 @@ class ProfileUtil {
             }.apply()
         }
 
-        private fun saveUserLongData(context: Context, data:Long, key: String ){
+         fun saveUserLongData(context: Context, data:Long, key: String ){
             val sharedPreferences: SharedPreferences = context.getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE)
             val editor = sharedPreferences.edit()
             editor.apply{
