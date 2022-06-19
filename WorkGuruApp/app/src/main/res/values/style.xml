@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">28sp</item>
+    </style>
+    <style name="BottomAppBarStyle" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:actionMenuTextColor">@color/bottom_menu_item_color</item>
+    </style>
+    <style name="BottomAppBarTheme" parent="ThemeOverlay.MaterialComponents.BottomAppBar.Surface">
+        <item name="colorControlNormal">@color/bottom_menu_item_color</item>
+        <item name="android:background">@drawable/transparent_background</item>
+
+    </style>
+
+    <style name="ShapeAppearanceOverlay.MyApp.Button.Circle" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+        <item name="backgroundColor">@color/black</item>
+    </style>
+    <style name="SpinnerStyle" parent="Widget.AppCompat.ListView.DropDown">
+        <item name="android:divider">#d1d1d1</item>
+        <item name="android:dividerHeight">0.5dp</item>
+    </style>
+
+
+
+
+</resources>

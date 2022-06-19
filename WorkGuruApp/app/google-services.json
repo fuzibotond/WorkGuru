@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "866931911552",
+    "project_id": "workguru",
+    "storage_bucket": "workguru.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:866931911552:android:5981d2f75e1743f0916f65",
+        "android_client_info": {
+          "package_name": "com.license.workguru_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "866931911552-4tg50kd3edrpbdk97rtvfakjl37vum9t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8JQacRC1b2lL8Hve8wbe_wNOyIffgicw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "866931911552-4tg50kd3edrpbdk97rtvfakjl37vum9t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

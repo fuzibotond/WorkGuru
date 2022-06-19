@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AuthorizedActivity"
+    android:background="@color/white_wrapped"
+    >
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:openDrawer="start"
+        tools:ignore="ExtraText">
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            android:layout_alignParentTop="true"
+            >
+
+                    <!-- Note: A RecyclerView can also be used -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+                <androidx.core.widget.NestedScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/topAppBarLayout"
+                    android:background="@color/teal_700"
+                    android:fillViewport="true"
+                    android:overScrollMode="ifContentScrolls"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    tools:ignore="UnknownId">
+                    <!-- Scrollable content -->
+                    <fragment
+                        android:id="@+id/auth_nav_host_fragment"
+                        android:name="androidx.navigation.fragment.NavHostFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:defaultNavHost="true"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:navGraph="@navigation/authorized_nav_graph" />
+
+                </androidx.core.widget.NestedScrollView>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_add_new_project"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="70dp"
+                    android:backgroundTint="@color/teal_500"
+                    android:insetLeft="0dp"
+                    android:insetTop="0dp"
+                    android:insetRight="0dp"
+                    android:insetBottom="0dp"
+                    android:padding="0dp"
+                    app:icon="@drawable/ic_baseline_add_24"
+                    app:iconTint="@color/white"
+                    app:iconGravity="textStart"
+                    app:iconPadding="0dp"
+                    app:iconSize="34dp"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyApp.Button.Circle" />
+                <com.google.android.material.appbar.AppBarLayout
+                    android:id="@+id/topAppBarLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.AppBarLayout.PrimarySurface"
+                    android:layout_alignParentTop="true">
+                    <com.google.android.material.appbar.MaterialToolbar
+                        android:id="@+id/topAppBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.MaterialComponents.Toolbar.PrimarySurface"
+                        android:background="@color/teal_900"
+                        android:elevation="0dp"
+                        app:menu="@menu/app_bar_menu"
+                        app:navigationIcon="@drawable/ic_mark"
+                        />
+                </com.google.android.material.appbar.AppBarLayout>
+
+                <ProgressBar
+                    android:id="@+id/no_network_progress_bar"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_centerInParent="true" />
+            </RelativeLayout>
+
+
+
+            <com.google.android.material.bottomappbar.BottomAppBar
+                        android:id="@+id/bottomAppBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        app:fabCradleMargin="10dp"
+                        app:fabCradleRoundedCornerRadius="20dp"
+                        app:fabCradleVerticalOffset="5dp"
+                        app:menu="@menu/bottom_app_bar"
+                        app:backgroundTint="@color/teal_900"
+                        app:navigationIcon="@null"
+                        app:hideOnScroll="true"
+                        app:elevation="0dp"
+                        android:background="@android:color/transparent"
+                        app:theme="@style/Theme.AppCompat.DayNight.DarkActionBar"
+                        >
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent">
+
+                            <TextView
+                                android:id="@+id/current_timer"
+                                style="?android:attr/borderlessButtonStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/inter"
+                                android:text="00:00:00"
+                                android:textColor="#FFFFFF"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:id="@+id/current_pomodoro"
+                                style="?android:attr/borderlessButtonStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/current_timer"
+                                android:fontFamily="@font/inter"
+                                android:text="00:00"
+                                android:textColor="#FFFFFF"
+                                android:textSize="16sp" />
+
+                        </RelativeLayout>
+                    </com.google.android.material.bottomappbar.BottomAppBar>
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_baseline_play_arrow_24"
+                        app:layout_anchor="@id/bottomAppBar"
+                        app:tint="@color/white"
+                        android:backgroundTint="@color/teal_500"
+                        android:id="@+id/timer_launcher_float_button"
+                        />
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_stop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="10dp"
+                app:srcCompat="@drawable/ic_baseline_stop_24" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_pause"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center"
+                android:layout_margin="10dp"
+                app:srcCompat="@drawable/ic_baseline_pause_24" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|start"
+                android:layout_margin="10dp"
+                app:srcCompat="@drawable/ic_baseline_play_arrow_24" />
+
+                </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <com.google.android.material.navigation.NavigationView
+
+            android:id="@+id/menu_navigation_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            app:menu="@menu/navigation_menu"
+            app:headerLayout="@layout/header_navigation_drawer"
+            android:background="@color/teal_900"
+            app:itemTextColor="@color/drawer_item"
+            app:itemIconTint="@color/drawer_item"
+            >
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:paddingBottom="10dp"
+                    android:orientation="vertical"
+                    android:layout_margin="20dp"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/actualTimer"
+                        android:fontFamily="@font/inter"
+                        android:textSize="20sp"
+                        android:textColor="@color/white"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/timer_on"
+                            android:fontFamily="@font/inter"
+                            android:textColor="@color/white"/>
+                        <TextView
+                            android:id="@+id/active_timer_project_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/project_name"
+                            android:fontFamily="@font/inter"
+                            android:textColor="@color/teal_100"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/task_on"
+                            android:fontFamily="@font/inter"
+                            android:textColor="@color/white"/>
+                        <TextView
+                            android:id="@+id/active_timer_task_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/task_name"
+                            android:fontFamily="@font/inter"
+                            android:textColor="@color/teal_100"/>
+                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/actual_timer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="00:00:00"
+                        android:fontFamily="@font/inter"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"/>
+
+                </LinearLayout>
+            </RelativeLayout>
+
+        </com.google.android.material.navigation.NavigationView>
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

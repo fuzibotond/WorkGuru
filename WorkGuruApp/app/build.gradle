@@ -5,14 +5,15 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    compileSdk 32
 
     defaultConfig {
-        applicationId "com.example.workguru_app"
+        applicationId "com.license.workguru_app"
         minSdk 21
         targetSdk 31
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -28,6 +29,26 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+
+    }
+    buildFeatures {
+        viewBinding true
+        dataBinding true
+    }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
+        exclude("META-INF/*.kotlin_module")
+    }
+    testOptions {
+        unitTests.includeAndroidResources = true
+
     }
 
 }
@@ -37,39 +58,126 @@ ext{
     glide_version='4.12.0'
 }
 apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'kotlin-android-extensions'
+
 
 dependencies {
+
     //moshi
     implementation "com.squareup.moshi:moshi:$moshi_version"
     implementation "com.squareup.moshi:moshi-kotlin:$moshi_version"
+    implementation 'com.google.ar:core:1.23.0'
+    implementation 'androidx.fragment:fragment-testing:1.4.1'
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"
+    implementation 'com.squareup.moshi:moshi-adapters:1.9.1'
+
 
     //retrofit
     implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"
-    implementation 'com.google.code.gson:gson:2.8.7'
+    implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    testImplementation 'junit:junit:4.+'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+
+    //interceptor
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.2.1'
+
 
     //Glide
     implementation "com.github.bumptech.glide:glide:$glide_version"
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'com.squareup.picasso:picasso:2.71828'
 
     //Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
 
     //navigation
-    implementation("androidx.navigation:navigation-fragment-ktx:2.3.5")
-    implementation("androidx.navigation:navigation-ui-ktx:2.3.5")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.4.2")
+    implementation("androidx.navigation:navigation-ui-ktx:2.4.2")
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.google.android.material:material:1.5.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
-    testImplementation 'junit:junit:4.+'
+    //google
+    implementation 'com.google.android.gms:play-services-auth:20.2.0'
+
+    //face-recognition
+    implementation 'com.google.firebase:firebase-ml-vision:24.0.1'
+    implementation 'com.google.firebase:firebase-core:21.0.0'
+    implementation 'com.google.android.gms:play-services-mlkit-face-detection:17.0.1'
+
+    //camera api
+    implementation 'com.camerakit:camerakit:1.0.0-beta3.11'
+    implementation 'com.camerakit:jpegkit:0.1.0'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.31'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
+    implementation "androidx.camera:camera-camera2:${versions.cameraX}"
+    implementation "androidx.camera:camera-core:${versions.cameraX}"
+    implementation "androidx.camera:camera-lifecycle:${versions.cameraX}"
+    implementation "androidx.camera:camera-view:1.0.0-alpha14"
+    implementation 'com.wonderkiln:camerakit:0.13.1'
+    implementation 'com.github.d-max:spots-dialog:1.1@aar'
+
+    //circle image view
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    //multidex
+    implementation 'com.android.support:multidex:1.0.3'
+
+    //pusher
+    implementation 'com.pusher:pusher-java-client:2.2.6'
+
+    // Pie Chart Dependency
+//    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    implementation 'com.github.AnyChart:AnyChart-Android:1.1.2'
+
+    //testing
+    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1"
+    // retrofit
+    testImplementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    testImplementation "com.squareup.okhttp3:mockwebserver:4.9.1"
+    // lib for parsing JSON api responses
+    testImplementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    //mockito
+    testImplementation 'com.nhaarman:mockito-kotlin-kt1.1:1.5.0'
+
+
+
+    // Local unit tests
+    testImplementation "androidx.test:core:1.4.0"
+    testImplementation "junit:junit:4.13.2"
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1"
+    testImplementation "com.google.truth:truth:1.1.3"
+    testImplementation "com.squareup.okhttp3:mockwebserver:4.9.1"
+    testImplementation "io.mockk:mockk:1.10.5"
+    debugImplementation "androidx.compose.ui:ui-test-manifest:1.2.0-rc01"
+    testImplementation 'androidx.test:runner:1.4.0'
+    testImplementation 'org.robolectric:robolectric:4.8'
+
+    // Instrumentation tests
+    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.37'
+    kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.37'
+    androidTestImplementation "junit:junit:4.13.2"
+    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1"
+    androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
+    androidTestImplementation "com.google.truth:truth:1.1.3"
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test:core-ktx:1.4.0'
+    androidTestImplementation "com.squareup.okhttp3:mockwebserver:4.9.1"
+    androidTestImplementation "io.mockk:mockk-android:1.10.5"
+    androidTestImplementation 'androidx.test:runner:1.4.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.2.0'
+    androidTestImplementation "androidx.navigation:navigation-testing:2.4.2"
+
+
+
 }

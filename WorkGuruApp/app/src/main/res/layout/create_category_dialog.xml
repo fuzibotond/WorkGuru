@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp">
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <!-- Title, secondary and supporting text -->
+                <TextView
+                    android:layout_gravity="left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/new_category"
+                    android:textAppearance="?attr/textAppearanceHeadline6"
+                    android:fontFamily="@font/inter"
+                    android:textSize="34sp"
+                    android:lineSpacingExtra="5sp"
+
+                    />
+
+                <ProgressBar
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/category_progress_bar" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Title, secondary and supporting text -->
+                <TextView
+                    android:layout_gravity="left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/please_type_some_category_name"
+                    android:textAppearance="?attr/textAppearanceHeadline6"
+                    android:fontFamily="@font/interlight"
+                    />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/description_text_input_layout"
+                    style="@style/TextInputLayoutStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:errorIconDrawable="@drawable/ic_baseline_error_outline_24"
+                    app:errorIconTint="@color/red_500"
+                    app:helperTextTextColor="@color/red_500"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    >
+
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/category_name_text_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLength="80"
+                        android:selectAllOnFocus="true"
+                        android:singleLine="false"
+                        app:boxStrokeColor="@color/red_500"
+                        android:autofillHints="name"
+                        android:textCursorDrawable="@drawable/color_cursor">
+
+                    </com.google.android.material.textfield.TextInputEditText>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+            <!-- Buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:orientation="vertical">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/save_category_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:backgroundTint="@color/teal_500"
+                    android:text="@string/save"
+                    android:fontFamily="@font/inter"
+                    />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/create_category_cancel_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:backgroundTint="@color/teal_500"
+                    android:text="@string/cancel"
+                    android:fontFamily="@font/inter"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</ScrollView>

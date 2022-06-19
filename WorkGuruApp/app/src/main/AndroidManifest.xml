@@ -1,14 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.workguru_app">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.license.workguru_app">
+
+    <uses-feature android:name="android.hardware.camera.any" />
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+
+    <uses-feature
+        android:name="android.hardware.camera.front"
+        android:required="true" />
+
+    <meta-data
+        android:name="com.google.firebase.ml.vision.DEPENDENCIES"
+        android:value="face" />
 
     <application
+        android:preserveLegacyExternalStorage="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.WorkGuruApp">
+        android:theme="@style/splashScreenTheme"
+        tools:targetApi="r">
+        <receiver
+            android:name=".pomodoro.data.source.receivers.TimerExpiredReceiver"
+            android:enabled="true"
+            android:exported="true" />
+        <receiver
+            android:name=".pomodoro.data.source.receivers.TimerNotificationActionReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="stop" />
+                <action android:name="pause" />
+                <action android:name="resume" />
+                <action android:name="start" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".AuthorizedActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -18,6 +60,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service android:name=".timetracking.data.source.services.TimerService" />
     </application>
 
 </manifest>

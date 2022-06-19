@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/authorized_nav_graph"
+    app:startDestination="@id/dashboardFragment">
+
+
+    <fragment
+        android:id="@+id/dashboardFragment"
+        android:name="com.license.workguru_app.profile.presentation.components.DashboardFragment"
+        android:label="DashboardFragment" >
+        <action
+            android:id="@+id/action_dashboardFragment_to_colleaguesFragment"
+            app:destination="@id/colleaguesFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_projectListFragment"
+            app:destination="@id/projectListFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_waitingUserListFragment"
+            app:destination="@id/waitingUserListFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_inviteUserFragment"
+            app:destination="@id/inviteUserFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.license.workguru_app.profile.presentation.components.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/projectListFragment"
+        android:name="com.license.workguru_app.timetracking.presentation.components.ProjectListFragment"
+        android:label="fragment_project_list"
+        tools:layout="@layout/fragment_project_list" />
+    <fragment
+        android:id="@+id/colleaguesFragment"
+        android:name="com.license.workguru_app.profile.presentation.components.ColleaguesFragment"
+        android:label="fragment_collegues"
+        tools:layout="@layout/fragment_collegues" >
+        <action
+            android:id="@+id/action_colleaguesFragment_to_filterColleaguesDialog"
+            app:destination="@id/filterColleaguesDialog" />
+        <action
+            android:id="@+id/action_colleaguesFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+        <action
+            android:id="@+id/action_colleaguesFragment_to_chartFragment"
+            app:destination="@id/chartFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/inviteUserFragment"
+        android:name="com.license.workguru_app.admin.presentation.components.InviteUserFragment"
+        android:label="InviteUserFragment" />
+    <fragment
+        android:id="@+id/messageListFragment"
+        android:name="com.license.workguru_app.help_request.presentation.components.MessageListFragment"
+        android:label="fragment_message_list"
+        tools:layout="@layout/fragment_message_list" />
+    <fragment
+        android:id="@+id/messageFragment"
+        android:name="com.license.workguru_app.help_request.presentation.components.MessageFragment"
+        android:label="message_fragment"
+        tools:layout="@layout/message_fragment" />
+    <fragment
+        android:id="@+id/waitingUserListFragment"
+        android:name="com.license.workguru_app.admin.presentation.components.WaitingUserListFragment"
+        android:label="waiting_user_list_fragment"
+        tools:layout="@layout/waiting_user_list_fragment" />
+    <fragment
+        android:id="@+id/chartFragment"
+        android:name="com.license.workguru_app.profile.presentation.components.ChartFragment"
+        android:label="fragment_chart"
+        tools:layout="@layout/fragment_chart" />
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.license.workguru_app.help_request.presentation.components.ChatFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat" />
+    <dialog
+        android:id="@+id/changeStatusDialog"
+        android:name="com.license.workguru_app.profile.presentation.components.ChangeStatusDialog"
+        android:label="ChangeStatusDialog" />
+    <dialog
+        android:id="@+id/createNewSkillDialog"
+        android:name="com.license.workguru_app.admin.presentation.components.CreateNewSkillDialog"
+        android:label="CreateNewSkillDialog" />
+    <dialog
+        android:id="@+id/createTimerDialog"
+        android:name="com.license.workguru_app.timetracking.presentation.components.CreateTimerDialog"
+        android:label="CreateTimerDialog" />
+    <dialog
+        android:id="@+id/filterColleaguesDialog"
+        android:name="com.license.workguru_app.profile.presentation.components.FilterColleaguesDialog"
+        android:label="FilterColleaguesDialog" />
+    <dialog
+        android:id="@+id/pomodoroSettingsDialog"
+        android:name="com.license.workguru_app.pomodoro.presentation.PomodoroSettingsDialog"
+        android:label="PomodoroSettingsDialog" />
+    <fragment
+        android:id="@+id/statementsFragment"
+        android:name="com.license.workguru_app.profile.presentation.components.StatementsFragment"
+        android:label="fragment_statments"
+        tools:layout="@layout/fragment_statments" />
+</navigation>
