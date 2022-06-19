@@ -75,11 +75,36 @@ class AuthorizedActivityTest{
             onView(withId(R.id.category_name_text_input))
                 .inRoot(isDialog())
                 .check(matches(isDisplayed()))
-                .perform(typeText("Brand new test category"))
+                .perform(typeText("Brand new test category1"))
             onView(withId(R.id.save_category_btn))
                 .check(matches(isDisplayed()))
                 .perform(click())
             onView(withText(R.string.tNewCategoryCreated))
+                .inRoot(ToastMatcher())
+                .check(matches(isDisplayed()))
+        }
+    }
+    @Test
+    fun testCreatingNewCategoryReturnsFalse(){
+        launchActivity<AuthorizedActivity>().use {
+            onView(withId(R.id.timer_launcher_float_button))
+                .perform(click())
+            onView(withId(R.id.create_new_project_btn))
+                .check(matches(isDisplayed()))
+                .perform(click())
+            onView(withId(R.id.create_new_category_btn))
+                .check(matches(isDisplayed()))
+                .perform(click())
+            onView(withId(R.id.description_text_input_layout))
+                .check(matches(isDisplayed()))
+            onView(withId(R.id.category_name_text_input))
+                .inRoot(isDialog())
+                .check(matches(isDisplayed()))
+                .perform(typeText("Brand new test category1"))
+            onView(withId(R.id.save_category_btn))
+                .check(matches(isDisplayed()))
+                .perform(click())
+            onView(withText(R.string.category_name_already_exist))
                 .inRoot(ToastMatcher())
                 .check(matches(isDisplayed()))
         }

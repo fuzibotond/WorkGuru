@@ -151,7 +151,7 @@ class FaceRecFragment : Fragment() {
             lifecycleScope.launch {
                 delay(1000)
                 val imageURI = saveImageToInternalStorage(image)
-                Toast.makeText(requireActivity(), "${imageURI?.path}", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(requireActivity(), "${imageURI?.path}", Toast.LENGTH_SHORT).show()
                 if (imageURI != null){
                     if(faceRecognitionViewModel.loginWithFace(imageURI.path,sharedViewModel.faceEmail.value)){
                         Log.d("AUTH", "Login with email")

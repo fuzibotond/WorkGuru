@@ -19,7 +19,7 @@ class ListUsersWhoAreWaitingViewModel(val context: Context, val repository: Admi
             val result = repository.listUsersWhoAreWaiting("Bearer " + access_token, page)
             userList.value = result.data
             Log.d("ADMIN", result.toString())
-            Toast.makeText(context, result.toString(), Toast.LENGTH_SHORT).show()
+//            Toast.makeText(context, result.toString(), Toast.LENGTH_SHORT).show()
             return true
         } catch (e: Exception) {
             Toast.makeText(context, context.getString(R.string.we_can_not_accept), Toast.LENGTH_SHORT).show()
