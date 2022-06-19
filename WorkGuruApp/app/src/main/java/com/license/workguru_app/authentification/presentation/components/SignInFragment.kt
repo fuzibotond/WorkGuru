@@ -40,12 +40,14 @@ import com.license.workguru_app.R
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import com.license.workguru_app.authentification.data.source.utils.LoginUtil
 import com.license.workguru_app.authentification.domain.use_case.log_in_with_google.GoogleLoginViewModel
 import com.license.workguru_app.authentification.domain.use_case.log_in_with_google.GoogleLoginViewModelFactory
 import com.license.workguru_app.di.SessionManager
 import com.license.workguru_app.di.SharedViewModel
 import com.license.workguru_app.utils.Constants
 import com.license.workguru_app.utils.ProfileUtil
+import kotlinx.android.synthetic.main.custom_spinner_item.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -105,7 +107,6 @@ class SignInFragment : Fragment() {
 
             val am = acct.idToken
             Log.d("GOOGLE-SIGN-IN", "signInResult is successful ${am}")
-            Toast.makeText(requireContext(), "Hello ${personName}!", Toast.LENGTH_SHORT).show()
             token.value = acct.idToken
         }
     }
@@ -115,14 +116,14 @@ class SignInFragment : Fragment() {
         loginViewModel.access_token.observe(viewLifecycleOwner){
             Log.d("AUTH", "Login with email")
             val intent = Intent(context, AuthorizedActivity::class.java).apply {
-                putExtra(AlarmClock.EXTRA_MESSAGE, "You are logged in!${loginViewModel.access_token.value}")
+                putExtra(AlarmClock.EXTRA_MESSAGE, "${loginViewModel.access_token.value}")
             }
             startActivity(intent)
         }
         googleLoginViewModel.access_token.observe(viewLifecycleOwner){
             Log.d("GOOGLE-SIGN-IN", "Login with google ${googleLoginViewModel.access_token.value}")
             val intent = Intent(context, AuthorizedActivity::class.java).apply {
-                putExtra(AlarmClock.EXTRA_MESSAGE, "You are logged in!${googleLoginViewModel.access_token.value}")
+                putExtra(AlarmClock.EXTRA_MESSAGE, "${googleLoginViewModel.access_token.value}")
             }
             startActivity(intent)
         }
@@ -153,7 +154,7 @@ class SignInFragment : Fragment() {
             loginViewModel.remember_me.value = binding.rememberMeChxbx.isChecked
 
             if (NetworkHelper.isNetworkConnected(this.requireActivity())){
-                if (binding.emailAddressInput.text.toString().isNotEmpty() && binding.emailAddressInput.text.toString().isNotEmpty()){
+                if (LoginUtil.validateLoginInput(binding.emailAddressInput.text.toString(), binding.passwordInput.text.toString())){
                     lifecycleScope.launch {
                         if (loginViewModel.login(binding.emailAddressInput.text.toString(),
                                 binding.emailAddressInput.text.toString()
@@ -179,7 +180,7 @@ class SignInFragment : Fragment() {
             }else{
                 lifecycleScope.launch {
                     delay(1000)
-                    Toast.makeText(requireActivity(), "Check your connection!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireActivity(), getString(R.string.check_your_connection), Toast.LENGTH_SHORT).show()
                     binding.signInProgressBar.visibility = View.GONE
                 }
             }
@@ -226,7 +227,7 @@ class SignInFragment : Fragment() {
                     sharedViewModel.saveFaceEmail(binding.emailAddressInput.text.toString())
                     findNavController().navigate(R.id.action_signInFragment_to_faceRecFragment)
                 }else{
-                    Toast.makeText(requireActivity(), "Please add your email first!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireActivity(), getString(R.string.please_add_your_email_first), Toast.LENGTH_SHORT).show()
                 }
             }
             else{
@@ -241,7 +242,7 @@ class SignInFragment : Fragment() {
             lifecycleScope.launch {
                 if(googleLoginViewModel.googleLogin(token.value!!)){
                     val intent = Intent(context, AuthorizedActivity::class.java).apply {
-                        putExtra(AlarmClock.EXTRA_MESSAGE, "You are logged in!${googleLoginViewModel.access_token.value}")
+                        putExtra(AlarmClock.EXTRA_MESSAGE, "${googleLoginViewModel.access_token.value}")
                     }
                     startActivity(intent)
                 }
@@ -317,10 +318,9 @@ class SignInFragment : Fragment() {
                 val builder = AlertDialog.Builder(requireActivity())
                 builder.setTitle("Exit")
                 builder.setMessage(getString(R.string.mAreYouSureExit))
-//builder.setPositiveButton("OK", DialogInterface.OnClickListener(function = x))
 
                 builder.setPositiveButton(android.R.string.yes) { dialog, which ->
-                    requireActivity().finish()
+                    requireActivity().finishAffinity()
                 }
 
                 builder.setNegativeButton(getString(R.string.bCancel)) { dialog, which ->

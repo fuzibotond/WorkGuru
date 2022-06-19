@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.license.workguru_app.profile.data.repository.ProfileRepository
 import com.google.gson.GsonBuilder
+import com.license.workguru_app.R
 import com.license.workguru_app.profile.data.remote.DTO.*
 
 class UserHistoryViewModel(val context: Context, val repository: ProfileRepository) : ViewModel() {
@@ -84,7 +85,7 @@ class UserHistoryViewModel(val context: Context, val repository: ProfileReposito
                 monthlyHistory.value = monthlyH
             }else{
 
-                Toast.makeText(context, "You haven't start any project yet!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.you_havent_start_any_project_yet), Toast.LENGTH_SHORT).show()
                 dataList.value = arrayListOf()
                 return false
             }
@@ -92,7 +93,7 @@ class UserHistoryViewModel(val context: Context, val repository: ProfileReposito
 
             return true
         } catch (e: Exception) {
-            Toast.makeText(context, "Something went wrong. Try again!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show()
             Log.d("HISTORY", "userHistoryVM - exception: ${e.toString()}")
             return false
         }

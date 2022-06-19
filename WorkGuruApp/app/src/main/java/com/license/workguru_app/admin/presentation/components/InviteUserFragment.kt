@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -31,6 +33,7 @@ class InviteUserFragment : Fragment() {
         _binding = FragmentInviteUserBinding.inflate(inflater, container, false)
         initialize()
         setListener()
+        handleThatBackPress()
         return binding.root
     }
 
@@ -74,5 +77,24 @@ class InviteUserFragment : Fragment() {
         val factory = InviteUserViewModelFactory(requireActivity(), AdminRepository())
         inviteUserViewModel = ViewModelProvider(this, factory).get(InviteUserViewModel::class.java)
 
+    }
+
+    private fun handleThatBackPress(){
+        val callback: OnBackPressedCallback = object: OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                val builder = AlertDialog.Builder(requireActivity())
+                builder.setTitle("Exit")
+                builder.setMessage(getString(R.string.mAreYouSureLeave))
+                builder.setPositiveButton(android.R.string.yes) { dialog, which ->
+                    findNavController().navigate(R.id.dashboardFragment)
+                }
+                builder.setNegativeButton(getString(R.string.cancel)) { dialog, which ->
+                    dialog.dismiss()
+                }
+                builder.show()
+
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
 }

@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
+import com.license.workguru_app.R
 import com.license.workguru_app.profile.data.remote.DTO.StoreFaceRequest
 import com.license.workguru_app.profile.data.repository.ProfileRepository
 
@@ -21,7 +22,7 @@ class DeleteFaceViewModel(val context: Context, val repository: ProfileRepositor
             return true
 
         } catch (e: Exception) {
-            Toast.makeText(context, "Something went wrong. Try again!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show()
             Log.d("PROFILE", "DeleteFaceViewModel - exception: ${e.toString()}")
             return false
         }

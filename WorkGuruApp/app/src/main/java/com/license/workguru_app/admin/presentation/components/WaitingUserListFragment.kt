@@ -32,6 +32,7 @@ import com.license.workguru_app.admin.presentation.adapters.WaitingUserAdapter
 import com.license.workguru_app.databinding.WaitingUserListFragmentBinding
 import com.license.workguru_app.di.SharedViewModel
 import com.license.workguru_app.timetracking.presentation.components.FilterDialog
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -128,6 +129,15 @@ class WaitingUserListFragment : Fragment() {
 
         }
 
+        binding.waitingUsersListSwipeRefreshLayout.setOnRefreshListener {
+            lifecycleScope.launch {
+                delay(2000)
+                binding.waitingUsersListSwipeRefreshLayout.isRefreshing = false
+                binding.waitingUsersListSwipeRefreshLayout.setProgressViewEndTarget(false, 0)
+
+            }
+        }
+
     }
     @SuppressLint("NotifyDataSetChanged")
     private fun getNextPage(){
@@ -200,7 +210,7 @@ class WaitingUserListFragment : Fragment() {
                     binding.waitingUsersProgressBar.visibility = View.GONE
                 }
                 else{
-                    Toast.makeText(requireActivity(), "You haven't got any request yet.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireActivity(), getString(R.string.you_havent_got_any_request_yet), Toast.LENGTH_SHORT).show()
                 }
             }
         }

@@ -18,6 +18,7 @@ import android.net.Uri
 import android.provider.MediaStore
 import android.util.Base64
 import android.util.Base64OutputStream
+import com.license.workguru_app.R
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import java.io.ByteArrayOutputStream
@@ -115,7 +116,7 @@ class ChangeProfileDataViewModel(val context: Context, val repository: ProfileRe
 
             return true
         } catch (e: Exception) {
-            Toast.makeText(context, "Something went wrong. Try again!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show()
             Log.d("PROFILE", "ChangeProfileDataViewModel - exception: ${e.toString()}")
             return false
         }

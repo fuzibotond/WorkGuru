@@ -35,6 +35,7 @@ import com.license.workguru_app.timetracking.domain.use_case.list_projects.ListP
 import com.license.workguru_app.timetracking.domain.use_case.list_projects.ListProjectsViewModelFactory
 import com.license.workguru_app.timetracking.domain.use_case.start_pause_stop_timer.StartPauseStopViewModel
 import com.license.workguru_app.timetracking.domain.use_case.start_pause_stop_timer.StartPauseStopViewModelFactory
+import com.license.workguru_app.utils.ProfileUtil
 
 
 class CreateTimerDialog(
@@ -89,12 +90,14 @@ class CreateTimerDialog(
         binding.startTrackingBtn.setOnClickListener {
             if (sharedViewModel.isTimerStarted.value == false){
                 lifecycleScope.launch {
-                    if (chosenProject.value != null && !chosenSkills.isEmpty() && binding.descriptionTextInput.text.isNullOrEmpty()){
+                    if (chosenProject.value != null && !chosenSkills.isEmpty() && binding.descriptionTextInput.text!!.isNotEmpty()){
                         val skillIds = mutableListOf<String>()
                         chosenSkills.forEach {
                             skillIds.add(it.id.toString())
-                            Log.d("HELP_REQUEST", "${it}")
+
+                            Log.d("HELP_REQUEST", "${it} ")
                         }
+                        val skills = skillIds.joinToString("|")
                         val projectId = chosenProject.value!!
                         val description = binding.descriptionTextInput.text.toString()
                         if(startPauseStopViewModel.startTimer(
@@ -103,13 +106,15 @@ class CreateTimerDialog(
                                 description = description,
                                 skillIds as ArrayList<String>
                             )){
-
+                            ProfileUtil.saveUserStringData(requireActivity(), skills, "USER_SKILLS_LIST")
+                            ProfileUtil.saveUserLongData(requireActivity(),System.currentTimeMillis(), "USER_TIMER_START_DATE")
                                 sharedViewModel.saveSkills(chosenSkills as ArrayList<Skill>)
                             sharedViewModel.saveCurrentTimer(startPauseStopViewModel.startedTimer.value!!)
                             sharedViewModel.saveTimerState(true)
                         }
                     }else{
-                        Toast.makeText(requireActivity(), "Please do not let any field empty!", Toast.LENGTH_SHORT).show()
+
+                        Toast.makeText(requireActivity(), getString(R.string.please_do_not_let_any_field_empty), Toast.LENGTH_SHORT).show()
                     }
                 }
             }

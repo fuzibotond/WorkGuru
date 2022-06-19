@@ -14,6 +14,10 @@ import com.license.workguru_app.profile.domain.use_case.display_user_insights.us
 import com.license.workguru_app.timetracking.presentation.adapters.TabAdapter
 import kotlinx.coroutines.launch
 import android.view.*
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
+import androidx.navigation.fragment.findNavController
+import com.license.workguru_app.MainActivity
 import com.license.workguru_app.R
 
 
@@ -45,6 +49,7 @@ class DashboardFragment : Fragment() {
 
 
         setObservers()
+        handleThatBackPress()
         return binding.root
     }
 
@@ -58,6 +63,7 @@ class DashboardFragment : Fragment() {
             userHistoryViewModel.listUserHistory()
         }
         setHasOptionsMenu(true)
+
 
     }
 
@@ -95,6 +101,26 @@ class DashboardFragment : Fragment() {
                 )
             }
         }
+    }
+
+    private fun handleThatBackPress(){
+        val callback: OnBackPressedCallback = object: OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                val builder = AlertDialog.Builder(requireActivity())
+                builder.setTitle("Exit")
+                builder.setMessage(getString(R.string.mAreYouSureExit))
+                builder.setPositiveButton(android.R.string.yes) { dialog, which ->
+                    activity?.finishAffinity()
+
+                }
+                builder.setNegativeButton(getString(R.string.cancel)) { dialog, which ->
+                    dialog.dismiss()
+                }
+                builder.show()
+
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
 
 }

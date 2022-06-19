@@ -12,9 +12,19 @@ import android.widget.ArrayAdapter
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.license.workguru_app.R
 import com.license.workguru_app.di.SharedViewModel
+import com.license.workguru_app.help_request.data.remote.DTO.Skill
+import com.license.workguru_app.help_request.data.repository.HelpRequestRepository
+import com.license.workguru_app.help_request.domain.use_cases.list_skills.ListSkillsViewModel
+import com.license.workguru_app.help_request.domain.use_cases.list_skills.ListSkillsViewModelFactory
+import com.license.workguru_app.help_request.domain.use_cases.list_statuses.ListStatusesViewModel
+import com.license.workguru_app.help_request.domain.use_cases.list_statuses.ListStatusesViewModelFactory
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -24,14 +34,17 @@ class FilterColleaguesDialog(
 ): DialogFragment() {
     private var _binding: FilterColleaguesDialogBinding? = null
     private val binding get() = _binding!!
-//    lateinit var listCategoriesViewModel: ListCategoriesViewModel
-//    lateinit var listProjectsViewModel:ListProjectsViewModel
+    lateinit var listSkillsViewModel: ListSkillsViewModel
+    lateinit var listStatusesViewModel: ListStatusesViewModel
 
     var skill: String = ""
     var status: String = ""
     var minNumberOfWorkHours: Int = 0
 
     val sharedViewModel: SharedViewModel by activityViewModels()
+
+    var statusList = MutableLiveData<List<Skill>>()
+    var skillList = MutableLiveData<List<Skill>>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         getDialog()!!.getWindow()?.setBackgroundDrawableResource(R.drawable.terms_and_conditions_icon_foreground);
@@ -44,32 +57,46 @@ class FilterColleaguesDialog(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        val factory = ListCategoriesViewModelFactory(requireActivity(), TimeTrackingRepository())
-//        listCategoriesViewModel = ViewModelProvider(this, factory).get(ListCategoriesViewModel::class.java)
-//
-//        val factoryProjects = ListProjectsViewModelFactory(requireActivity(), TimeTrackingRepository())
-//        listProjectsViewModel = ViewModelProvider(this, factoryProjects).get(ListProjectsViewModel::class.java)
-//
-//        lifecycleScope.launch {
-//            listCategoriesViewModel.listCategories()
-//        }
+        val factory = ListSkillsViewModelFactory(requireActivity(), HelpRequestRepository())
+        listSkillsViewModel = ViewModelProvider(this, factory).get(ListSkillsViewModel::class.java)
+
+        val factoryStatuses = ListStatusesViewModelFactory(requireActivity(), HelpRequestRepository())
+        listStatusesViewModel = ViewModelProvider(this, factoryStatuses).get(ListStatusesViewModel::class.java)
+
+        lifecycleScope.launch {
+
+            if (listSkillsViewModel.listSkillsViewModel(0)){
+                skillList.value = listSkillsViewModel.skillList.value!!
+            }
+
+            if (listStatusesViewModel.listStatuses(0)) {
+                statusList.value = listStatusesViewModel.statusList.value
+            }
+        }
     }
 
     @SuppressLint("ResourceAsColor")
     private fun initialize() {
         binding.minColleagueWorkTimeInHour.maxValue = 999
         binding.minColleagueWorkTimeInHour.minValue = 1
-        chooseSkill(arrayListOf("C++", "Kotlin", "PHP", "Vue.js", ".NET"))
-        chooseStatus(arrayListOf("Available", "Busy", "Out of House", "On Vacation", "Available but can't help") )
 
-//        listCategoriesViewModel.dataList.observe(viewLifecycleOwner){
-//            //TODO: Request for languages and statuses
-//
-//
-//        }
+        skillList.observe(viewLifecycleOwner){
+            val temp = mutableListOf<String>()
+            skillList.value?.forEach {
+                temp.add(it.name)
+            }
+            chooseSkill(temp as ArrayList<String>)
+        }
+        statusList.observe(viewLifecycleOwner){
+            val temp = mutableListOf<String>()
+            statusList.value!!.forEach {
+                temp.add(it.name)
+            }
+            chooseStatus(temp as ArrayList<String>)
+        }
 
         binding.colleagueFilterBtn.setOnClickListener {
-            sharedViewModel.saveColleagueFilterCriteria(skill,binding.minColleagueWorkTimeInHour.value, status, true)
+            sharedViewModel.saveColleagueFilterCriteria(skill, binding.minColleagueWorkTimeInHour.value, status, true)
             dialog?.dismiss()
         }
         binding.termsAndCondCancelBtn.setOnClickListener {

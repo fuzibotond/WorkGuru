@@ -37,6 +37,9 @@ import kotlinx.coroutines.launch
 import android.graphics.Color
 import android.graphics.Color.GREEN
 import android.graphics.PorterDuff
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
 import android.os.Build
 import android.view.*
 import android.widget.EditText
@@ -70,9 +73,17 @@ import kotlinx.coroutines.delay
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
+import android.view.WindowManager
+import androidx.core.content.ContextCompat
+import com.license.workguru_app.databinding.ActivityAuthorizedBinding
+import com.license.workguru_app.utils.NetworkHelper
+import com.license.workguru_app.utils.ProfileUtil
+import java.util.concurrent.TimeUnit
+import kotlin.math.roundToLong
 
 
 class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
+    private lateinit var binding: ActivityAuthorizedBinding
     private lateinit var navigationView: NavigationView
     lateinit var topAppBar: MaterialToolbar
     lateinit var topAppBarLayout: AppBarLayout
@@ -134,7 +145,40 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_authorized)
+
+        binding = ActivityAuthorizedBinding.inflate(layoutInflater)
+        val view = binding.root
+
+        setContentView(view)
+
+        val connectivityManager = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                super.onAvailable(network)
+                this@AuthorizedActivity.runOnUiThread {
+                    no_network_progress_bar.visibility = View.GONE
+                    Toast.makeText(this@AuthorizedActivity, getString(R.string.connected), Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onLost(network: Network) {
+                super.onLost(network)
+                this@AuthorizedActivity.runOnUiThread {
+                    no_network_progress_bar.visibility = View.VISIBLE
+                    Toast.makeText(this@AuthorizedActivity, getString(R.string.lost_internet_connection), Toast.LENGTH_SHORT).show()
+
+                }
+
+            }
+
+        })
+
+
+        getWindow().setStatusBarColor(ContextCompat.getColor(this,R.color.teal_900)); //status bar or the time bar at the top (see example image1)
+
+        getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.teal_900)); // Navigation bar the soft bottom of some phones like nexus and some Samsung note series  (see example image2)
+
+
 
         btn_add_new_project.visibility = View.GONE
 
@@ -162,6 +206,8 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
         current_pomodoro.visibility = View.GONE
 
+        Toast.makeText(this, getString(R.string.you_logged_in), Toast.LENGTH_SHORT).show()
+
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -171,17 +217,22 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     }
     override fun onPause() {
         super.onPause()
-
+        val passedSession = PrefUtil.getIntDataFromPref(this@AuthorizedActivity,"sharedPrefs", "POMODORO_SESSION_PASSED")
+        val duration = PrefUtil.getIntDataFromPref(this@AuthorizedActivity,"sharedPrefs", "DURATION_OF_SESSION")
         if (timerState.value == TimerState.Running){
             val wakeUpTime = setAlarm(this, nowSeconds, secondsRemaining)
-            showTimerRunning(this, wakeUpTime)
+            val temp = ProfileUtil.getLongPref(this,"USER_TIMER_START_DATE")
+            if (temp != null) {
+                showTimerRunning(this, temp+TimeUnit.MINUTES.toMillis(duration.toLong()*passedSession))
+
+            }
         }
         else if (timerState.value == TimerState.Paused){
             showTimerPaused(this)
         }
 
         PrefUtil.setPreviousTimerLengthSeconds(timerLengthSeconds, this)
-        PrefUtil.setSecondsRemaining(secondsRemaining, this)
+//        PrefUtil.setSecondsRemaining(secondsRemaining, this)
         timerState.value?.let { PrefUtil.setTimerState(it, this) }
 
     }
@@ -203,6 +254,7 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
             current_timer.text = getTimeStringFromDouble(time)
             current_pomodoro.text = getTimeStringFromDouble(passedSession*duration*60 - time)
             actual_timer.setText(getTimeStringFromDouble(time))
+
 //            Log.d("TIMER", "${passedSession} ${time}")
             if (sharedViewModel.pomodoroIsON.value == true && passedSession-1 != sharedViewModel.numOfPomodoroSession.value!!){
                 if (((passedSession * duration * 60) - time) <= 0.0){
@@ -273,11 +325,11 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     private fun initMenu(){
         bottomAppBar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.settings -> {
-//                    Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show()
-                    // Handle more item (inside overflow menu) press
-                    true
-                }
+//                R.id.settings -> {
+////                    Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show()
+//                    // Handle more item (inside overflow menu) press
+//                    true
+//                }
                 R.id.pomodoro -> {
                     val manager = (this).supportFragmentManager
                     PomodoroSettingsDialog().show(manager, "CustomManager")
@@ -292,7 +344,6 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
             active_timer_project_name.setText(sharedViewModel.currentProject.value?.project_name)
             active_timer_task_name.setText(sharedViewModel.currentProject.value?.timer_description)
-            active_timer_skill_language.setText("Kotlin")
         }
 
         topAppBar.setOnMenuItemClickListener { menuItem ->
@@ -318,8 +369,6 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
                             sharedViewModel.searchWithKeyword("")
                         }
                     }
-
-
                     true
                 }
                 else -> false
@@ -352,11 +401,11 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
                     btn_add_new_project.visibility = View.GONE
                     findNavController(R.id.auth_nav_host_fragment).navigate(R.id.colleaguesFragment)
                 }
-                R.id.help_requests -> {
-                    disableSearching(false)
-                    btn_add_new_project.visibility = View.GONE
-                    findNavController(R.id.auth_nav_host_fragment).navigate(R.id.messageFragment)
-                }
+//                R.id.help_requests -> {
+//                    disableSearching(false)
+//                    btn_add_new_project.visibility = View.GONE
+//                    findNavController(R.id.auth_nav_host_fragment).navigate(R.id.messageFragment)
+//                }
                 R.id.invite_user ->{
                     if (getUserProfileViewModel.data.value?.role == "admin"){
                         disableSearching(true)
@@ -468,7 +517,6 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
                     actual_timer.text = getTimeStringFromDouble(time)
                     active_timer_project_name.setText(timer?.project_name)
                     active_timer_task_name.setText(timer?.task)
-                    active_timer_skill_language.setText("Kotlin")
                     when (state){
                         "paused" -> {
                             timerState.value = TimerState.Paused
@@ -509,7 +557,6 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
                 if(activeTimer == null){
                     active_timer_project_name.setText(getString(R.string.no_timer))
                     active_timer_task_name.setText("")
-                    active_timer_skill_language.setText("")
                 }
             }
         }
@@ -660,19 +707,32 @@ class AuthorizedActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         if (sharedViewModel.currentProject.value != null){
             lifecycleScope.launch {
                 val skills = mutableListOf<String>()
-                sharedViewModel.actualSkills.value?.forEach {
-                    skills.add(it.id.toString())
+                val skillList = ProfileUtil.getStringPref(this@AuthorizedActivity, "USER_SKILLS_LIST")
+                println(skillList)
+                val temp = skillList?.split('|')
+                temp?.forEach {
+                    skills.add(it)
+                    Log.d("TIMER", "${it}")
                 }
-                if(startPauseStopViewModel.startTimer(
-                        true, sharedViewModel.currentProject.value!!.project_id,
-                        sharedViewModel.currentProject.value!!.timer_description!!,
-                        skills as ArrayList<String>
-                    )){
-                    timerState.value = TimerState.Running
-                    serviceIntent.putExtra(TimerService.TIME_EXTRA, time)
-                    startService(serviceIntent)
-                    timer_launcher_float_button.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_pause_24))
+//                sharedViewModel.actualSkills.value?.forEach {
+//                    skills.add(it.id.toString())
+//                }
+                if (skills.isNotEmpty() == true){
+                    if(startPauseStopViewModel.startTimer(
+                            true, sharedViewModel.currentProject.value!!.project_id,
+                            sharedViewModel.currentProject.value!!.timer_description!!,
+                            skills
+                        )){
+                        timerState.value = TimerState.Running
+                        serviceIntent.putExtra(TimerService.TIME_EXTRA, time)
+                        startService(serviceIntent)
+                        timer_launcher_float_button.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_pause_24))
+                    }
                 }
+                else{
+                    Toast.makeText(this@AuthorizedActivity, "Ain't no skill here...", Toast.LENGTH_SHORT).show()
+                }
+                
             }
         }
 

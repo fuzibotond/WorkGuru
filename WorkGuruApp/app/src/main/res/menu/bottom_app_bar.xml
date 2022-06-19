@@ -8,9 +8,9 @@
         android:icon="@drawable/ic_baseline_alarm_24"
         android:title="@string/pomodoro"
         app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/settings"
-        android:title="@string/settings"
-        android:icon="@drawable/ic_baseline_settings_24"
-        app:showAsAction="ifRoom" />
+<!--    <item-->
+<!--        android:id="@+id/settings"-->
+<!--        android:title="@string/settings"-->
+<!--        android:icon="@drawable/ic_baseline_settings_24"-->
+<!--        app:showAsAction="ifRoom" />-->
 </menu>

@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.license.workguru_app.R
 import com.license.workguru_app.timetracking.data.remote.DTO.PauseTimerRequest
 import com.license.workguru_app.timetracking.data.remote.DTO.StartStopTimerRequest
 import com.license.workguru_app.timetracking.data.remote.DTO.StartTimerResponse
@@ -21,12 +22,12 @@ class StartPauseStopViewModel(val context: Context, val repository: TimeTracking
             Log.d("TIMER", "${request}")
 
             val result = repository.startTimer("Bearer " + access_token, request)
-            Toast.makeText(context, "You just started a new timer!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.you_started_a_new_timer), Toast.LENGTH_SHORT).show()
             Log.d("TIMER", "${result}")
             startedTimer.value = result
             return true
         } catch (e: Exception) {
-            Toast.makeText(context, "Something went wrong. Try again!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context,  context.getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show()
             Log.d("TIMER", "startTimer - exception: ${e.toString()}")
             return false
         }
@@ -38,10 +39,10 @@ class StartPauseStopViewModel(val context: Context, val repository: TimeTracking
             val request = StopRequest(automatic = automatic, project_id = project_id)
             val result = repository.stopTimer("Bearer " + access_token, request)
             Log.d("TIMER", "${result}")
-            Toast.makeText(context, "The timer was stopped!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.the_timer_was_stopped), Toast.LENGTH_SHORT).show()
             return true
         } catch (e: Exception) {
-            Toast.makeText(context, "Something went wrong. Try again!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context,  context.getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show()
             Log.d("TIMER", "stopTimer - exception: ${e.toString()}")
             return false
         }
@@ -52,12 +53,12 @@ class StartPauseStopViewModel(val context: Context, val repository: TimeTracking
         try {
             val request = PauseTimerRequest(automatic, project_id, description)
             val result = repository.pauseTimer("Bearer " + access_token, request)
-            Toast.makeText(context, "The timer was paused!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.the_timer_was_paused), Toast.LENGTH_SHORT).show()
 
             Log.d("TIMER", "${result}")
             return true
         } catch (e: Exception) {
-            Toast.makeText(context, "Something went wrong. Try again!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context,  context.getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show()
             Log.d("TIMER", "pauseTimer - exception: ${e.toString()}")
             return false
         }

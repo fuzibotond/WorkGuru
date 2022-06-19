@@ -2,9 +2,14 @@ package com.license.workguru_app.utils
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.net.ConnectivityManager.NetworkCallback
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.os.Build
+import android.net.NetworkRequest
+
+
+
 
 object NetworkHelper {
     fun isNetworkConnected(context: Context):Boolean{
@@ -33,4 +38,6 @@ object NetworkHelper {
         }
         return false
     }
+
+
 }

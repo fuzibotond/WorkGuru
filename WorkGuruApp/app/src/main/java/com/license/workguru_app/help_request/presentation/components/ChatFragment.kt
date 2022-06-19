@@ -9,10 +9,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.JsonObject
 import com.license.workguru_app.R
@@ -64,6 +67,7 @@ class ChatFragment : Fragment() {
 
         initialize()
         loadEarlierMessages()
+        handleThatBackPress()
         return binding.root
     }
 
@@ -234,14 +238,24 @@ class ChatFragment : Fragment() {
         // The state change listener is notified when the connection has been re-established,
         // the subscription to "my-channel" and binding on "my-event" still exist.
     }
-    fun getMapAuthorizationHeaders(channel_name:String, socket_id:String): HashMap<String, String>? {
-        return try {
-            val authHeader: HashMap<String, String> = HashMap()
-            authHeader["channel_name"] = channel_name
-            authHeader["socket_id"] = socket_id
-            authHeader
-        } catch (e: Exception) {
-            null
+    private fun handleThatBackPress(){
+        val callback: OnBackPressedCallback = object: OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                val builder = AlertDialog.Builder(requireActivity())
+                builder.setTitle("Exit")
+                builder.setMessage(getString(R.string.mAreYouSureLeave))
+                builder.setPositiveButton(android.R.string.yes) { dialog, which ->
+                    findNavController().navigate(R.id.colleaguesFragment)
+                }
+                builder.setNegativeButton(getString(R.string.cancel)) { dialog, which ->
+                    dialog.dismiss()
+                }
+                builder.show()
+
+            }
         }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
+
+
 }

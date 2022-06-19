@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.license.workguru_app.R
 import com.license.workguru_app.profile.data.remote.DTO.States
 import com.license.workguru_app.profile.data.repository.ProfileRepository
 
@@ -27,7 +28,7 @@ class ListStatesViewModel(val context: Context, val repository: ProfileRepositor
 //            Log.d("STATES", "${states.value}")
             return true
         } catch (e: Exception) {
-            Toast.makeText(context, "Something went wrong. Try again!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context,  context.getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show()
             Log.d("STATES", "ListStatesViewModel - exception: ${e.toString()}")
             return false
         }

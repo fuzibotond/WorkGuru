@@ -169,12 +169,7 @@ class FaceRecFragment : Fragment() {
 
         }
     }
-//    override fun onStart() {
-//        super.onStart()
-//        val width = (resources.displayMetrics.widthPixels * 0.85).toInt()
-//        val height = (resources.displayMetrics.heightPixels * 0.40).toInt()
-//        dialog!!.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
-//    }
+
     private fun handleThatBackPress(){
         val callback: OnBackPressedCallback = object: OnBackPressedCallback(true){
             override fun handleOnBackPressed() {

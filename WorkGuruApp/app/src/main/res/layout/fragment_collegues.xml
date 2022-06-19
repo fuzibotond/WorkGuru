@@ -87,25 +87,70 @@
             android:layout_weight="1">
 
             <Spinner
-                android:overlapAnchor="false"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
                 android:id="@+id/colleague_order"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
                 android:background="@drawable/gradient_spinner"
                 android:fontFamily="@font/interlight"
+                android:overlapAnchor="false"
                 android:text="@string/order_by"
                 android:textColor="@color/black" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/colleague_available_and_admin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/colleague_filter_and_order"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <Switch
+                android:id="@+id/only_available_colleagues"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:backgroundTint="@color/teal_700"
+                android:fontFamily="@font/interlight"
+                android:text="@string/only_availables"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <Switch
+                android:id="@+id/colleague_role"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:fontFamily="@font/interlight"
+                android:overlapAnchor="false"
+                android:text="@string/only_admin"
+                android:textColor="@color/black"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
         </LinearLayout>
     </LinearLayout>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/colleague_filter_and_order"
+        android:layout_below="@+id/colleague_available_and_admin"
         >
         <LinearLayout
             android:layout_width="match_parent"

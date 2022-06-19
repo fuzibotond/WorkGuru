@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
+import com.license.workguru_app.R
 import com.license.workguru_app.timetracking.data.remote.DTO.CategoryRequest
 import com.license.workguru_app.timetracking.data.repository.TimeTrackingRepository
 
@@ -19,9 +20,9 @@ class NewCategoryViewModel(val context: Context, val repository: TimeTrackingRep
             return true
         } catch (e: Exception) {
             if (e.message?.takeLast(4) == "404 "){
-                Toast.makeText(context, "This category name is already taken! Please try something else!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.category_name_already_exist), Toast.LENGTH_SHORT).show()
             }else{
-                Toast.makeText(context, "Something went wrong! Please try again!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show()
             }
             Log.d("NEW", "NewCategoryViewModel - exception: ${e.toString()}")
             return false

@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.license.workguru_app.R
 import com.license.workguru_app.authentification.data.remote.DTO.LoginRequest
 import com.license.workguru_app.authentification.data.repository.AuthRepository
 import com.license.workguru_app.di.SessionManager
@@ -45,7 +46,7 @@ class LoginViewModel(val context: Context, val repository: AuthRepository) : Vie
             return true
         } catch (e: Exception) {
             Log.d("AUTH", "LoginViewModel - exception: ${e.toString()}")
-            Toast.makeText(context, "Something went wrong! Try again :(", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show()
             return false
         }
     }

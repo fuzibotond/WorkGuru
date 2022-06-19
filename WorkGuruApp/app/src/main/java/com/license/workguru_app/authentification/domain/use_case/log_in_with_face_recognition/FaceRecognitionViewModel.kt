@@ -50,7 +50,7 @@ class FaceRecognitionViewModel(val context: Context, val repository: AuthReposit
                 val path = avatar
                 val part = path?.let { getMultipartBody(it) }
                 val emailRequestBody: RequestBody =
-                    RequestBody.create("application/json".toMediaTypeOrNull(), "bob123@gmail.com")
+                    RequestBody.create("application/json".toMediaTypeOrNull(), email)
 //                val request = LoginWithFaceIdRequest( "hcollins@gmail.com", "/home/szabi/Desktop/Images for Face API/rosh3.jpg", )
                 val result = repository.loginWithFace( part, emailRequestBody )
                 access_token.value = result.access_token
@@ -67,7 +67,7 @@ class FaceRecognitionViewModel(val context: Context, val repository: AuthReposit
 
             return true
         } catch (e: Exception) {
-            Toast.makeText(context, "Something went wrong. Try again! ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
             Log.d("FACE_API", "FaceRecognitionViewModel - exception: ${e.toString()}")
             return false
         }

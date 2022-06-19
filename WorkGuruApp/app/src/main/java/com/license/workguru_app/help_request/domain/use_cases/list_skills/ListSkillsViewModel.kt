@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.license.workguru_app.R
 import com.license.workguru_app.help_request.data.remote.DTO.Skill
 import com.license.workguru_app.help_request.data.repository.HelpRequestRepository
 
@@ -22,7 +23,7 @@ class ListSkillsViewModel(val context: Context, val repository: HelpRequestRepos
             Log.d("HELP_REQUEST", "${result}")
             return true
         } catch (e: Exception) {
-            Toast.makeText(context, "Something went wrong. Try again!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show()
             Log.d("HELP_REQUEST", "ListSkillsViewModel - exception: ${e.toString()}")
             return false
         }

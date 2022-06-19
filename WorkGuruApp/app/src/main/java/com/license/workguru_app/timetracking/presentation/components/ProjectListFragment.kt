@@ -28,6 +28,7 @@ import com.license.workguru_app.timetracking.data.repository.TimeTrackingReposit
 import com.license.workguru_app.timetracking.domain.use_case.list_projects.ListProjectsViewModel
 import com.license.workguru_app.timetracking.domain.use_case.list_projects.ListProjectsViewModelFactory
 import com.license.workguru_app.timetracking.presentation.adapters.ProjectAdapter
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -149,6 +150,17 @@ class ProjectListFragment : Fragment() {
 
             }
         }
+
+        binding.projectListSwipeRefreshLayout.setOnRefreshListener {
+            getData()
+            page = 0
+            lifecycleScope.launch {
+                delay(2000)
+                binding.projectListSwipeRefreshLayout.setProgressViewEndTarget(false, 0)
+                binding.projectListSwipeRefreshLayout.isRefreshing = false
+            }
+        }
+
     }
     @SuppressLint("NotifyDataSetChanged")
     private fun getNextPage(){
@@ -193,39 +205,14 @@ class ProjectListFragment : Fragment() {
                     itemList.addAll(temp)
                 }
                 if (type == getString(R.string.orderByStartDate)){
-                    itemList.sortBy { it.start_date }
+                    itemList.sortByDescending { it.start_date }
                 }
                 adapter.notifyDataSetChanged()
             }
         }
 
     }
-//    private fun choseOrder() {
-//        val orderList = listOf(getString(R.string.orderByName), getString(R.string.orderByStartDate), getString(R.string.orderByCategory))
-//        val adapter = ArrayAdapter(requireContext(), R.layout.custom_list_item, orderList)
-//        binding.projectOrderSpinner.setAdapter(adapter)
-//
-//        binding.projectOrderSpinner.setOnItemClickListener { adapterView, view, i, l ->
-//
-//            val selectedItem = adapterView.adapter.getItem(i)
-//            if (selectedItem == getString(R.string.orderByName)){
-//                val temp = itemList.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.name }))
-//                itemList.clear()
-//                itemList.addAll(temp)
-//            }
-//            if (selectedItem == getString(R.string.orderByCategory)){
-//                val temp = itemList.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.category_name }))
-//                itemList.clear()
-//                itemList.addAll(temp)
-//            }
-//            if (selectedItem == getString(R.string.orderByStartDate)){
-//                itemList.sortBy { it.start_date }
-//            }
-//            adapter.notifyDataSetChanged()
-//
-//        }
-//
-//    }
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {

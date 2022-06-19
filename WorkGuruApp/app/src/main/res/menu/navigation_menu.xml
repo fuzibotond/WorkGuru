@@ -23,11 +23,11 @@
             android:icon="@drawable/ic_baseline_people_24"
             android:title="@string/colleagues"
             android:checked="true" />
-        <item
-            android:id="@+id/help_requests"
-            android:icon="@drawable/ic_baseline_waving_hand_24"
-            android:title="@string/help_requests"
-            android:checked="true" />
+<!--        <item-->
+<!--            android:id="@+id/help_requests"-->
+<!--            android:icon="@drawable/ic_baseline_waving_hand_24"-->
+<!--            android:title="@string/help_requests"-->
+<!--            android:checked="true" />-->
         <item
             android:id="@+id/invite_user"
             android:icon="@drawable/ic_baseline_contact_mail_24"
@@ -38,21 +38,21 @@
             android:icon="@drawable/ic_baseline_hourglass_top_24"
             android:title="@string/accept_users"
             android:checked="true" />
-        <item
-            android:id="@+id/settings"
-            android:icon="@drawable/ic_baseline_settings_24"
-            android:title="@string/settings"
-            android:checked="true" />
-        <item
-            android:id="@+id/about"
-            android:icon="@drawable/ic_baseline_coffee_24"
-            android:title="@string/about_us"
-            android:checked="true" />
-        <item
-            android:id="@+id/help"
-            android:icon="@drawable/ic_baseline_error_outline_24"
-            android:title="@string/help"
-            android:checked="true" />
+<!--        <item-->
+<!--            android:id="@+id/settings"-->
+<!--            android:icon="@drawable/ic_baseline_settings_24"-->
+<!--            android:title="@string/settings"-->
+<!--            android:checked="true" />-->
+<!--        <item-->
+<!--            android:id="@+id/about"-->
+<!--            android:icon="@drawable/ic_baseline_coffee_24"-->
+<!--            android:title="@string/about_us"-->
+<!--            android:checked="true" />-->
+<!--        <item-->
+<!--            android:id="@+id/help"-->
+<!--            android:icon="@drawable/ic_baseline_error_outline_24"-->
+<!--            android:title="@string/help"-->
+<!--            android:checked="true" />-->
         <item
             android:id="@+id/sign_out"
             android:icon="@drawable/ic_baseline_logout_24"

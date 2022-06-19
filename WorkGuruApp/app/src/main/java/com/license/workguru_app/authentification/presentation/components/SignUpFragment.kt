@@ -23,6 +23,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.license.workguru_app.R
 import com.license.workguru_app.authentification.data.repository.AuthRepository
+import com.license.workguru_app.authentification.data.source.utils.RegisterUtil
 import com.license.workguru_app.authentification.domain.use_case.register_manually.RegisterViewModel
 import com.license.workguru_app.authentification.domain.use_case.register_manually.RegisterViewModelFactory
 import com.license.workguru_app.authentification.domain.use_case.register_with_google.GoogleRegisterViewModel
@@ -80,9 +81,10 @@ class SignUpFragment : Fragment() {
         binding.signUpBtn.setOnClickListener {
             binding.signUpProgressBar.visibility = View.VISIBLE
             if (binding.termsAndCondAcceptChxbx.isChecked &&
-                    binding.emailAddressSignUpInput.text.toString().isNotEmpty() &&
-                    binding.fullNameSignUpInput.text.toString().isNotEmpty() &&
-                    binding.passwordSignUpInput.text.toString().isNotEmpty()){
+                RegisterUtil.validateRegisterInput(
+                    binding.emailAddressSignUpInput.text.toString(),
+                    binding.fullNameSignUpInput.text.toString(),
+                    binding.passwordSignUpInput.text.toString())){
                 binding.signUpProgressBar.visibility = View.VISIBLE
                 lifecycleScope.launch {
                     waiting.value = !registerViewModel.signUp(
@@ -141,10 +143,8 @@ class SignUpFragment : Fragment() {
         try {
             val account: GoogleSignInAccount = completedTask.getResult(ApiException::class.java)
             googleRegisterViewModel.access_token.value = account.idToken
-            // Signed in successfully, show authenticated UI.
             Log.d("GOOGLE-SIGN-IN", "signInResult is successful")
             binding.signUpButton.visibility = View.VISIBLE
-//            binding.signUpButton.visibility = View.GONE
             googleRegisterViewModel.access_token.observe(viewLifecycleOwner){
                 lifecycleScope.launch {
                     googleRegisterViewModel.googleRegister()
@@ -152,10 +152,8 @@ class SignUpFragment : Fragment() {
             }
 
         } catch (e: ApiException) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
+
             Log.d("GOOGLE-SIGN-IN", "signInResult:failed code=" + e.statusCode)
-//            binding.signUpButton.visibility = View.VISIBLE
         }
     }
 }

@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
+import com.license.workguru_app.R
 import com.license.workguru_app.timetracking.data.remote.DTO.ProjecttRequest
 import com.license.workguru_app.timetracking.data.repository.TimeTrackingRepository
 
@@ -19,10 +20,10 @@ class NewProjectViewModel(val context: Context, val repository: TimeTrackingRepo
             return true
         } catch (e: Exception) {
             if (e.message?.takeLast(4) == "400 "){
-                Toast.makeText(context, "This project name already exist under this category!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.project_name_already_exist), Toast.LENGTH_SHORT).show()
 
             }else{
-                Toast.makeText(context, "Something went wrong! Try again!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show()
 
             }
             Log.d("NEW", "NewProjectViewModel - exception: ${e.toString()}")

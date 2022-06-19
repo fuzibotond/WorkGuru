@@ -42,7 +42,7 @@ class TimerNotificationActionReceiver : BroadcastReceiver() {
                 val secondsRemaining = PrefUtil.getSecondsRemaining(context)
                 val wakeUpTime = AuthorizedActivity.setAlarm(context, AuthorizedActivity.nowSeconds, secondsRemaining)
                 PrefUtil.setTimerState(AuthorizedActivity.TimerState.Running, context)
-                NotificationUtil.showTimerRunning(context, wakeUpTime)
+//                NotificationUtil.showTimerRunning(context, wakeUpTime)
             }
             Constants.ACTION_START -> {
                 val minutesRemaining = PrefUtil.getTimerLength(context)
@@ -50,7 +50,7 @@ class TimerNotificationActionReceiver : BroadcastReceiver() {
                 val wakeUpTime = AuthorizedActivity.setAlarm(context, AuthorizedActivity.nowSeconds, secondsRemaining)
                 PrefUtil.setTimerState(AuthorizedActivity.TimerState.Running, context)
                 PrefUtil.setSecondsRemaining(secondsRemaining, context)
-                NotificationUtil.showTimerRunning(context, wakeUpTime)
+//                NotificationUtil.showTimerRunning(context, wakeUpTime)
             }
         }
     }

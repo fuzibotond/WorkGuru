@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,10 +23,12 @@ import com.license.workguru_app.R
 import com.license.workguru_app.databinding.FragmentColleguesBinding
 import com.license.workguru_app.di.SharedViewModel
 import com.license.workguru_app.profile.data.remote.DTO.Colleague
+import com.license.workguru_app.profile.data.remote.DTO.TrackedSkill
 import com.license.workguru_app.profile.data.repository.ProfileRepository
 import com.license.workguru_app.profile.domain.use_case.display_all_colleagues.ListColleaguesViewModel
 import com.license.workguru_app.profile.domain.use_case.display_all_colleagues.ListColleaguesViewModelFactory
 import com.license.workguru_app.profile.presentation.adapetrs.ColleagueAdaptor
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -48,6 +51,8 @@ class ColleaguesFragment : Fragment() {
     var visibleItemCount = 0
     var totalItemCount = 0
     var page = 1
+    var onlyAdmins = MutableLiveData<Boolean>()
+    var onlyAvailable = MutableLiveData<Boolean>()
 
 
 
@@ -75,11 +80,14 @@ class ColleaguesFragment : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     private fun btnListeners() {
         binding.colleagueListSwipeRefreshLayout.setOnRefreshListener {
+            binding.colleagueRole.isChecked = false
+            binding.onlyAvailableColleagues.isChecked = false
             sharedViewModel.saveColleagueFilterCriteria("", 0, "",false)
-            page = 1
+            page = 0
             itemList.clear()
             getNextPage()
             binding.colleagueListSwipeRefreshLayout.isRefreshing = false
+
 
         }
 
@@ -125,26 +133,61 @@ class ColleaguesFragment : Fragment() {
 
         }
 
-        sharedViewModel.isFiltered.observe(viewLifecycleOwner){
-            if (sharedViewModel.isFiltered.value == true ){
+        sharedViewModel.isColleaguesFilterActive.observe(viewLifecycleOwner){
+            if (sharedViewModel.isColleaguesFilterActive.value == true ){
                 val filteredResultList = arrayListOf<Colleague>()
-//                itemList.forEach {
-//                    if (
-//                        it.members >= sharedViewModel.numberOfWantedMembers.value!!
-//                        && it.category_name.equals(sharedViewModel.choosenCategory.value!!.category_name)
-//                        && formatDate(it.start_date) >= sharedViewModel.startedAtDate.value!!
-//                    ){
-//                        filteredResultList.add(it)
-//                    }
-//                }
+                itemList.forEach {
+                    if (
+                        it.status == sharedViewModel.statusToFilter.value
+                        && it.tracked >= sharedViewModel.minNumberOfWorkHour.value!!
+                        || it.languages.contains(TrackedSkill(sharedViewModel.skillToFilter.value!!, "0"))
+                    ){
+                        filteredResultList.add(it)
+                    }
+                }
                 if (filteredResultList.isEmpty()){
                     Toast.makeText(requireActivity(), getString(R.string.tNotASingleMatch), Toast.LENGTH_SHORT).show()
                 }else{
                     adapter.setData(filteredResultList)
                     setupOrder(filteredResultList)
+                    adapter.notifyDataSetChanged()
                 }
+                sharedViewModel.saveColleagueFilterCriteria("",0,"",false)
+            }
+        }
+
+        binding.colleagueListSwipeRefreshLayout.setOnRefreshListener {
+            getData()
+            page = 0
+            lifecycleScope.launch {
+                delay(2000)
+                binding.colleagueListSwipeRefreshLayout.setProgressViewEndTarget(false, 0)
+                binding.colleagueListSwipeRefreshLayout.isRefreshing = false
+            }
+        }
+        onlyAdmins.observe(viewLifecycleOwner){
+            if (onlyAdmins.value == true){
+                val temp = itemList.filter { it.role == "admin" }
+                itemList.clear()
+                itemList.addAll(temp)
 
             }
+            else{
+                getData()
+            }
+            adapter.notifyDataSetChanged()
+        }
+
+        onlyAvailable.observe(viewLifecycleOwner){
+            if (onlyAvailable.value == true){
+                val temp = itemList.filter { it.status == "Available" }
+                itemList.clear()
+                itemList.addAll(temp)
+            }
+            else{
+                getData()
+            }
+            adapter.notifyDataSetChanged()
         }
     }
     @SuppressLint("NotifyDataSetChanged")
@@ -162,9 +205,15 @@ class ColleaguesFragment : Fragment() {
     }
 
     private fun setupOrder(itemList:ArrayList<Colleague>) {
+        binding.onlyAvailableColleagues.setOnCheckedChangeListener { compoundButton, b ->
+           onlyAvailable.value = binding.onlyAvailableColleagues.isChecked
+        }
+        binding.colleagueRole.setOnCheckedChangeListener { compoundButton, b ->
+           onlyAdmins.value = binding.colleagueRole.isChecked
+        }
+
         binding.colleagueOrder?.adapter = activity?.let { ArrayAdapter(it.applicationContext, R.layout.ordering_item_layout,
-            listOf(getString(R.string.orderByName), getString(R.string.orderByStartDate), getString(
-                            R.string.orderByCategory)) ) } as SpinnerAdapter
+            listOf(getString(R.string.orderByName), getString(R.string.order_by_email), getString(R.string.order_by_working_hours)) ) } as SpinnerAdapter
 
         binding.colleagueOrder?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -185,13 +234,13 @@ class ColleaguesFragment : Fragment() {
                     itemList.clear()
                     itemList.addAll(temp)
                 }
-                if (type == getString(R.string.orderByCategory)){
-                    val temp = itemList.filter{it.role == "admin"} // TODO: update to availability
+                if (type == getString(R.string.order_by_email)){
+                    val temp = itemList.sortedByDescending { it.email }
                     itemList.clear()
                     itemList.addAll(temp)
                 }
                 if (type == getString(R.string.orderByStartDate)){
-                    val temp = itemList.filter{it.status == "Available"} // TODO: update to availability
+                    val temp = itemList.sortedByDescending { it.tracked }
                     itemList.clear()
                     itemList.addAll(temp)
                 }
@@ -215,6 +264,7 @@ class ColleaguesFragment : Fragment() {
     private fun getData() {
         lifecycleScope.launch {
             if(listColleaguesViewModel.listColleagues(page)){
+                itemList.clear()
                 itemList.addAll((listColleaguesViewModel.colleagues.value as ArrayList<Colleague>?)!!)
                 setAdapter(itemList = itemList)
                 setupOrder(itemList)

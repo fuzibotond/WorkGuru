@@ -58,7 +58,7 @@ class ChartFragment : Fragment() {
 
             sharedViewModel.chartData.value?.forEach {
                 namesForToday.add(it.name)
-                numbersForToday.add(it.project_id)
+                numbersForToday.add(it.result.toInt())
             }
             binding.chartProgressBarForToday.visibility = View.GONE
 
@@ -80,6 +80,7 @@ class ChartFragment : Fragment() {
 
         pie.data(data)
 
+
         val nightModeFlags = context!!.resources.configuration.uiMode and
                 Configuration.UI_MODE_NIGHT_MASK
         when (nightModeFlags) {
@@ -93,6 +94,17 @@ class ChartFragment : Fragment() {
                 pie.background("@color/what_wrapped")
                 pie.tooltip().fontColor("grey")
                 pie.tooltip().title().fontColor("grey")
+                pie.tooltip().format("function() {" +
+                        "    const sec = parseInt(this.value, 10); // convert value to number if it's string\n" +
+                        "    let hours   = Math.floor(sec / 3600); // get hours\n" +
+                        "    let minutes = Math.floor((sec - (hours * 3600)) / 60); // get minutes\n" +
+                        "    let seconds = sec - (hours * 3600) - (minutes * 60); //  get seconds\n" +
+                        "    // add 0 if value < 10; Example: 2 => 02\n" +
+                        "    if (hours   < 10) {hours   = \"0\"+hours;}\n" +
+                        "    if (minutes < 10) {minutes = \"0\"+minutes;}\n" +
+                        "    if (seconds < 10) {seconds = \"0\"+seconds;}\n" +
+                        "    return hours+':'+minutes+':'+seconds; // Return is HH : MM : SS\n" +
+                        "}")
                 pie.title().fontFamily("Inter")
                 pie.labels().position("outside")
                 pie.legend().title("Legend")
@@ -113,6 +125,17 @@ class ChartFragment : Fragment() {
                 pie.title().fontColor("#000")
                 pie.title().fontSize(18)
                 pie.labels().position("outside")
+                pie.tooltip().format("function() {" +
+                        "    const sec = parseInt(this.value, 10); // convert value to number if it's string\n" +
+                        "    let hours   = Math.floor(sec / 3600); // get hours\n" +
+                        "    let minutes = Math.floor((sec - (hours * 3600)) / 60); // get minutes\n" +
+                        "    let seconds = sec - (hours * 3600) - (minutes * 60); //  get seconds\n" +
+                        "    // add 0 if value < 10; Example: 2 => 02\n" +
+                        "    if (hours   < 10) {hours   = \"0\"+hours;}\n" +
+                        "    if (minutes < 10) {minutes = \"0\"+minutes;}\n" +
+                        "    if (seconds < 10) {seconds = \"0\"+seconds;}\n" +
+                        "    return hours+':'+minutes+':'+seconds; // Return is HH : MM : SS\n" +
+                        "}")
                 pie.legend().title("Legend")
                 pie.legend().enabled(true)
                 pie.legend().title().padding(0.0,0.0,10.0,0.0)
@@ -129,6 +152,17 @@ class ChartFragment : Fragment() {
                 pie.title().fontColor("#000")
                 pie.title().fontSize(18)
                 pie.labels().position("outside")
+                pie.tooltip().format("function() {" +
+                        "    const sec = parseInt(this.value, 10); // convert value to number if it's string\n" +
+                        "    let hours   = Math.floor(sec / 3600); // get hours\n" +
+                        "    let minutes = Math.floor((sec - (hours * 3600)) / 60); // get minutes\n" +
+                        "    let seconds = sec - (hours * 3600) - (minutes * 60); //  get seconds\n" +
+                        "    // add 0 if value < 10; Example: 2 => 02\n" +
+                        "    if (hours   < 10) {hours   = \"0\"+hours;}\n" +
+                        "    if (minutes < 10) {minutes = \"0\"+minutes;}\n" +
+                        "    if (seconds < 10) {seconds = \"0\"+seconds;}\n" +
+                        "    return hours+':'+minutes+':'+seconds; // Return is HH : MM : SS\n" +
+                        "}")
                 pie.legend().title("Legend")
                 pie.legend().enabled(true)
                 pie.legend().title().padding(0.0,0.0,10.0,0.0)
@@ -145,6 +179,40 @@ class ChartFragment : Fragment() {
 
         binding.chartViewForToday.setChart(pie)
 
+
+    }
+    private fun convertIntToMinutes(doubleValue: Int):String{
+
+        val value = doubleValue
+
+        val hours: Int = value / 3600
+        val minutes: Int = value % 3600 / 60
+        if (value == 0){
+            return "00:00"
+        }
+
+        else if (minutes.toInt() % 60 == 0){
+            if (minutes<10){
+                return "00:0"+ minutes
+            }else{
+                return "00:"+minutes
+            }
+        }else{
+            if (hours<10){
+                if (minutes<10){
+                    return "0"+hours+":0"+minutes
+                }else{
+                    return "0"+hours+":"+minutes
+                }
+
+            }else{
+                if (minutes<10){
+                    return ""+hours+":0"+minutes
+                }else{
+                    return ""+hours+":"+minutes
+                }
+            }
+        }
 
     }
 
