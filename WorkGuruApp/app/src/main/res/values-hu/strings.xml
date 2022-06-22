@@ -181,4 +181,10 @@
     <string name="project_name_already_exist">❗️Ez a projektnév már létezik!</string>
     <string name="please_do_not_let_any_field_empty">‼️Kérlek ne hagyd üresen a mezőket!</string>
 
+    <string name="only_availables">Csak aki elérhető</string>
+    <string name="only_admin">Csak adminok</string>
+    <string name="order_by_working_hours">Rendezés munkaóra szerint</string>
+    <string name="order_by_email">Rendezés munkaóra szerint</string>
+    <string name="no_more_item">Nincs több elem!</string>
+
 </resources>
