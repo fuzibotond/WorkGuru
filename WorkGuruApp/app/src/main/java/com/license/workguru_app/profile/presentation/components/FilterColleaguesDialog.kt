@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
@@ -37,8 +38,8 @@ class FilterColleaguesDialog(
     lateinit var listSkillsViewModel: ListSkillsViewModel
     lateinit var listStatusesViewModel: ListStatusesViewModel
 
-    var skill: String = ""
-    var status: String = ""
+    var skill: String = "Kotlin"
+    var status: String = "Available"
     var minNumberOfWorkHours: Int = 0
 
     val sharedViewModel: SharedViewModel by activityViewModels()
@@ -96,6 +97,7 @@ class FilterColleaguesDialog(
         }
 
         binding.colleagueFilterBtn.setOnClickListener {
+//            Toast.makeText(requireActivity(), "${skill} ${binding.minColleagueWorkTimeInHour.value} ${status}", Toast.LENGTH_SHORT).show()
             sharedViewModel.saveColleagueFilterCriteria(skill, binding.minColleagueWorkTimeInHour.value, status, true)
             dialog?.dismiss()
         }

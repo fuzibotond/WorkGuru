@@ -57,12 +57,15 @@ class WaitingUserListFragment : Fragment() {
     lateinit var acceptUserViewModel: AcceptUserViewModel
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         _binding = WaitingUserListFragmentBinding.inflate(inflater, container, false)
+
+        btnListeners()
         return binding.root
     }
 
@@ -80,7 +83,7 @@ class WaitingUserListFragment : Fragment() {
     private fun btnListeners() {
         binding.waitingUsersListSwipeRefreshLayout.setOnRefreshListener {
             sharedViewModel.saveFilterResult(null, 0, 0L,false)
-            page = 1
+            page = 0
             itemList.clear()
             getNextPage()
             binding.waitingUsersListSwipeRefreshLayout.isRefreshing = false
@@ -150,7 +153,11 @@ class WaitingUserListFragment : Fragment() {
                 adapter.notifyDataSetChanged()
                 loading = true
             }
+            else{
+                binding.waitingUsersProgressBar.visibility = View.GONE
+            }
         }
+
     }
 
     private fun setupOrder(itemList:ArrayList<WaitingUser>) {

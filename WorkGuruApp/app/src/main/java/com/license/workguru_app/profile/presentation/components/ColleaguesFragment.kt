@@ -138,9 +138,9 @@ class ColleaguesFragment : Fragment() {
                 val filteredResultList = arrayListOf<Colleague>()
                 itemList.forEach {
                     if (
-                        it.status == sharedViewModel.statusToFilter.value
+                        it.status.equals(sharedViewModel.statusToFilter.value)
                         && it.tracked >= sharedViewModel.minNumberOfWorkHour.value!!
-                        || it.languages.contains(TrackedSkill(sharedViewModel.skillToFilter.value!!, "0"))
+                        || containsLanguage(sharedViewModel.skillToFilter.value, it.languages)
                     ){
                         filteredResultList.add(it)
                     }
@@ -192,16 +192,19 @@ class ColleaguesFragment : Fragment() {
     }
     @SuppressLint("NotifyDataSetChanged")
     private fun getNextPage(){
-        lifecycleScope.launch {
-            if(listColleaguesViewModel.listColleagues(page)){
-                binding.colleagueProgressBar.visibility = View.GONE
-                page+=1
-                itemList.addAll(listColleaguesViewModel.colleagues.value!!)
-                adapter.setData(itemList)
-                adapter.notifyDataSetChanged()
-                loading = true
+        if(sharedViewModel.isColleaguesFilterActive.value == false){
+            lifecycleScope.launch {
+                if(listColleaguesViewModel.listColleagues(page)){
+                    binding.colleagueProgressBar.visibility = View.GONE
+                    page+=1
+                    itemList.addAll(listColleaguesViewModel.colleagues.value!!)
+                    adapter.setData(itemList)
+                    adapter.notifyDataSetChanged()
+                    loading = true
+                }
             }
         }
+
     }
 
     private fun setupOrder(itemList:ArrayList<Colleague>) {
@@ -302,5 +305,13 @@ class ColleaguesFragment : Fragment() {
 
     }
 
+    fun containsLanguage(value: String?, languages: List<TrackedSkill>):Boolean{
+        languages.forEach {
+            if (it.name == value){
+                return true
+            }
+        }
+        return false
+    }
 
 }
