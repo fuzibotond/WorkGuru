@@ -22,7 +22,11 @@ class ListUsersWhoAreWaitingViewModel(val context: Context, val repository: Admi
 //            Toast.makeText(context, result.toString(), Toast.LENGTH_SHORT).show()
             return true
         } catch (e: Exception) {
-            Toast.makeText(context, context.getString(R.string.we_can_not_accept), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                context,
+                context.getString(R.string.no_more_item),
+                Toast.LENGTH_SHORT
+            ).show()
             Log.d("ADMIN", "AcceptUserViewModel - exception: ${e.toString()}")
 
             return false

@@ -30,6 +30,7 @@ class ForgotPasswordFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentForgotPasswordBinding.inflate(inflater, container, false)
         settingListeners()
+        binding.forgotPasswordProgressBar.visibility = View.GONE
         return binding.root
     }
 
@@ -37,6 +38,7 @@ class ForgotPasswordFragment : Fragment() {
         super.onCreate(savedInstanceState)
         val factory = ForgotPasswordViewModelFactory(this.requireContext(), AuthRepository())
         forgotPasswordViewModel = ViewModelProvider(this, factory).get(ForgotPasswordViewModel::class.java)
+
     }
 
     private fun settingListeners() {
@@ -70,9 +72,15 @@ class ForgotPasswordFragment : Fragment() {
             }
         }
         binding.continueResetPasswordBtn.setOnClickListener {
-                if (binding.emailAddressResetPasswordInput.text.toString().isNotEmpty() && isCorrectEmail){
+            binding.continueResetPasswordBtn.visibility = View.VISIBLE
+            if (binding.emailAddressResetPasswordInput.text.toString().isNotEmpty() && isCorrectEmail){
                     lifecycleScope.launch {
+
                         binding.continueResetPasswordBtn.isEnabled = !forgotPasswordViewModel.forgotPassword(binding.emailAddressResetPasswordInput.text.toString())
+                        if (binding.continueResetPasswordBtn.isEnabled){
+                            binding.continueResetPasswordBtn.visibility = View.GONE
+                        }
+
                     }
                     binding.emailAddressResetPasswordLayoutInput.helperText = getString(R.string.htEmailWasNotSent)
                     binding.emailAddressResetPasswordLayoutInput.hintTextColor = context?.resources?.getColorStateList(R.color.text_input_box_stroke)

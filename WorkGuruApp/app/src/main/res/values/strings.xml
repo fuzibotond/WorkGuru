@@ -185,4 +185,5 @@
     <string name="only_admin">Only admin?</string>
     <string name="order_by_working_hours">Order by working hours</string>
     <string name="order_by_email">Order by email</string>
+    <string name="no_more_item">No more item!</string>
 </resources>
